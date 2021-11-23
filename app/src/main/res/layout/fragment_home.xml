@@ -4,11 +4,7 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-<<<<<<< HEAD:app/src/main/res/layout/fragment_home.xml
   tools:context=".ui.home.HomeFragment">
-=======
-  tools:context=".ui.FirstFragment">
->>>>>>> master:app/src/main/res/layout/fragment_first.xml
 
   <TextView
     android:id="@+id/textview_first"
