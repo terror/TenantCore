@@ -4,9 +4,14 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.17962962962962964" />
+        <entry key="app/src/main/res/layout/activity_tenantcore.xml" value="0.25" />
         <entry key="app/src/main/res/layout/content_main.xml" value="0.17962962962962964" />
         <entry key="app/src/main/res/layout/fragment_first.xml" value="0.17962962962962964" />
+        <entry key="app/src/main/res/layout/fragment_landlord_home.xml" value="0.43454038997214484" />
         <entry key="app/src/main/res/layout/fragment_second.xml" value="0.17962962962962964" />
+        <entry key="app/src/main/res/layout/fragment_tenant_request_list.xml" value="0.4901041666666667" />
+        <entry key="app/src/main/res/layout/list_item_tenant_request.xml" value="0.4901041666666667" />
+        <entry key="app/src/main/res/layout/recycler_view_item.xml" value="0.4901041666666667" />
       </map>
     </option>
   </component>
