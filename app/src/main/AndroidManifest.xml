@@ -9,7 +9,7 @@
     android:supportsRtl="true"
     android:theme="@style/Theme.TenantCore">
     <activity
-      android:name=".MainActivity"
+      android:name=".ui.TenantCoreActivity"
       android:exported="true"
       android:label="@string/app_name"
       android:theme="@style/Theme.TenantCore.NoActionBar">
