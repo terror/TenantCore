@@ -3,26 +3,29 @@
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/nav_graph"
-  app:startDestination="@id/FirstFragment">
+  app:startDestination="@id/HomeFragment">
 
   <fragment
-    android:id="@+id/FirstFragment"
-    android:name="com.example.tenantcore.ui.FirstFragment"
-    android:label="@string/first_fragment_label"
-    tools:layout="@layout/fragment_first">
+    android:id="@+id/HomeFragment"
+    android:name="com.example.tenantcore.ui.home.HomeFragment"
+    android:label="Home"
+    tools:layout="@layout/fragment_home">
 
     <action
-      android:id="@+id/action_FirstFragment_to_SecondFragment"
-      app:destination="@id/SecondFragment" />
+      android:id="@+id/action_HomeFragment_to_TenantHomeFragment"
+      app:destination="@id/TenantHomeFragment" />
+    <action
+      android:id="@+id/action_HomeFragment_to_LandlordHomeFragment"
+      app:destination="@id/LandlordHomeFragment" />
   </fragment>
   <fragment
-    android:id="@+id/SecondFragment"
-    android:name="com.example.tenantcore.ui.SecondFragment"
-    android:label="@string/second_fragment_label"
-    tools:layout="@layout/fragment_second">
-
-    <action
-      android:id="@+id/action_SecondFragment_to_FirstFragment"
-      app:destination="@id/FirstFragment" />
-  </fragment>
+    android:id="@+id/TenantHomeFragment"
+    android:name="com.example.tenantcore.ui.tenanthome.TenantHomeFragment"
+    android:label="Tenant Home"
+    tools:layout="@layout/fragment_tenant_home"/>
+  <fragment
+    android:id="@+id/LandlordHomeFragment"
+    android:name="com.example.tenantcore.ui.landlordhome.LandlordHomeFragment"
+    android:label="Landlord Home"
+    tools:layout="@layout/fragment_landlord_home" />
 </navigation>
