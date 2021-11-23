@@ -1,4 +1,4 @@
-package com.example.tenantcore;
+package com.example.tenantcore.ui;
 
 import android.os.Bundle;
 import android.view.Menu;
@@ -9,18 +9,19 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import com.example.tenantcore.databinding.ActivityMainBinding;
+import com.example.tenantcore.R;
+import com.example.tenantcore.databinding.ActivityTenantcoreBinding;
 import com.google.android.material.snackbar.Snackbar;
 
-public class MainActivity extends AppCompatActivity {
+public class TenantCoreActivity extends AppCompatActivity {
   private AppBarConfiguration appBarConfiguration;
-  private ActivityMainBinding binding;
+  private ActivityTenantcoreBinding binding;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    binding = ActivityMainBinding.inflate(getLayoutInflater());
+    binding = ActivityTenantcoreBinding.inflate(getLayoutInflater());
     setContentView(binding.getRoot());
 
     setSupportActionBar(binding.toolbar);
