@@ -9,7 +9,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import com.example.tenantcore.R;
-import com.example.tenantcore.databinding.ActivityTenantcoreBinding;
+import com.example.tenantcore.databinding.ActivityTenantCoreBinding;
 
 public class TenantCoreActivity extends AppCompatActivity {
   private AppBarConfiguration appBarConfiguration;
