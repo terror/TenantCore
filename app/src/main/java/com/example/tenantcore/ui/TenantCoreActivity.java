@@ -13,13 +13,13 @@ import com.example.tenantcore.databinding.ActivityTenantcoreBinding;
 
 public class TenantCoreActivity extends AppCompatActivity {
   private AppBarConfiguration appBarConfiguration;
-  private ActivityTenantcoreBinding binding;
+  private ActivityTenantCoreBinding binding;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    binding = ActivityTenantcoreBinding.inflate(getLayoutInflater());
+    binding = ActivityTenantCoreBinding.inflate(getLayoutInflater());
     setContentView(binding.getRoot());
 
     setSupportActionBar(binding.toolbar);

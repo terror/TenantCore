@@ -7,8 +7,26 @@
   app:startDestination="@id/landlord_home_layout">
 
   <fragment
-    android:id="@+id/landlord_home_layout"
-    android:name="com.example.tenantcore.ui.landlord.home.LandlordHomeFragment"
-    android:label="@string/landlord_home_fragment_label"
-    tools:layout="@layout/fragment_landlord_home"/>
+    android:id="@+id/HomeFragment"
+    android:name="com.example.tenantcore.ui.home.HomeFragment"
+    android:label="Home"
+    tools:layout="@layout/fragment_home">
+
+    <action
+      android:id="@+id/action_HomeFragment_to_TenantHomeFragment"
+      app:destination="@id/TenantHomeFragment" />
+    <action
+      android:id="@+id/action_HomeFragment_to_LandlordHomeFragment"
+      app:destination="@id/LandlordHomeFragment" />
+  </fragment>
+  <fragment
+    android:id="@+id/TenantHomeFragment"
+    android:name="com.example.tenantcore.ui.tenanthome.TenantHomeFragment"
+    android:label="Tenant Home"
+    tools:layout="@layout/fragment_tenant_home"/>
+  <fragment
+    android:id="@+id/LandlordHomeFragment"
+    android:name="com.example.tenantcore.ui.landlordhome.LandlordHomeFragment"
+    android:label="Landlord Home"
+    tools:layout="@layout/fragment_landlord_home" />
 </navigation>
