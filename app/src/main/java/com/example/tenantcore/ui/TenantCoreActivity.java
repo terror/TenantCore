@@ -9,7 +9,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-
 import com.example.tenantcore.R;
 import com.example.tenantcore.databinding.ActivityTenantCoreBinding;
 import com.google.android.material.snackbar.Snackbar;

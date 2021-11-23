@@ -6,6 +6,7 @@
   app:startDestination="@id/HomeFragment">
 
   <fragment
+<<<<<<< HEAD
     android:id="@+id/HomeFragment"
     android:name="com.example.tenantcore.ui.home.HomeFragment"
     android:label="Home"
@@ -14,6 +15,23 @@
     <action
       android:id="@+id/action_HomeFragment_to_TenantHomeFragment"
       app:destination="@id/TenantHomeFragment" />
+=======
+    android:id="@+id/FirstFragment"
+    android:name="com.example.tenantcore.ui.FirstFragment"
+    android:label="@string/first_fragment_label"
+    tools:layout="@layout/fragment_first">
+
+    <action
+      android:id="@+id/action_FirstFragment_to_SecondFragment"
+      app:destination="@id/SecondFragment" />
+  </fragment>
+  <fragment
+    android:id="@+id/SecondFragment"
+    android:name="com.example.tenantcore.ui.SecondFragment"
+    android:label="@string/second_fragment_label"
+    tools:layout="@layout/fragment_second">
+
+>>>>>>> master
     <action
       android:id="@+id/action_HomeFragment_to_LandlordHomeFragment"
       app:destination="@id/LandlordHomeFragment" />
