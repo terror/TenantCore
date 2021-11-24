@@ -3,6 +3,7 @@
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/nav_graph"
+  android:label="@string/app_name"
   app:startDestination="@id/HomeFragment">
 
   <fragment
@@ -10,7 +11,6 @@
     android:name="com.example.tenantcore.ui.home.HomeFragment"
     android:label="Home"
     tools:layout="@layout/fragment_home">
-
     <action
       android:id="@+id/action_HomeFragment_to_TenantHomeFragment"
       app:destination="@id/TenantHomeFragment" />
@@ -18,14 +18,15 @@
       android:id="@+id/action_HomeFragment_to_LandlordHomeFragment"
       app:destination="@id/LandlordHomeFragment" />
   </fragment>
+
   <fragment
     android:id="@+id/TenantHomeFragment"
-    android:name="com.example.tenantcore.ui.tenanthome.TenantHomeFragment"
-    android:label="Tenant Home"
-    tools:layout="@layout/fragment_tenant_home"/>
+    android:name="com.example.tenantcore.ui.tenant.home.TenantHomeFragment"
+    android:label="Tenant Home" />
+
   <fragment
     android:id="@+id/LandlordHomeFragment"
-    android:name="com.example.tenantcore.ui.landlordhome.LandlordHomeFragment"
+    android:name="com.example.tenantcore.ui.landlord.home.LandlordHomeFragment"
     android:label="Landlord Home"
     tools:layout="@layout/fragment_landlord_home" />
 </navigation>
