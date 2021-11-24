@@ -1,4 +1,4 @@
-package com.example.tenantcore.ui.tenanthome;
+package com.example.tenantcore.ui.tenant.home;
 
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.tenantcore.R;
 import com.example.tenantcore.databinding.FragmentTenantHomeBinding;
 
 public class TenantHomeFragment extends Fragment {
