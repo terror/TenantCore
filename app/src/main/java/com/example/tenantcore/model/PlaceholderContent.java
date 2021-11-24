@@ -1,9 +1,14 @@
 package com.example.tenantcore.model;
 
+import androidx.compose.ui.tooling.preview.datasource.LoremIpsum;
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class PlaceholderContent {
   public static final List<PlaceholderItem> ITEMS = new ArrayList<>();
@@ -11,9 +16,53 @@ public class PlaceholderContent {
   private static final int COUNT = 25;
 
   static {
+    // For all random values
+    Random random = new Random();
+
+    // Number of requests info
+    int maxRequests = 25;
+    int requestNum = 0;
+
+    // Max/Min request description words
+    int minRequestDesc = 10;
+    int maxRequestDesc = 25;
+
+    // Max/Min request due date
+    long minRequestDate = 1639526400000L;
+    long maxRequestDate = 1671062400000L;
+
+    // The request to add
+    Request newRequest;
+
     // Add some sample items.
     for (int i = 1; i <= COUNT; i++) {
-      addItem(createPlaceholderItem(i));
+      List<Request> requestList = new ArrayList<>();
+      requestNum = random.nextInt(maxRequests);
+
+      // Adding random numbers of requests for each Tenant (for now it's called PlaceHolderItem)
+      for(; requestNum > 0; requestNum--){
+
+        // Adding random values for the new request
+        LoremIpsum loremIpsum = new LoremIpsum(random.nextInt(maxRequestDesc-minRequestDesc)+minRequestDesc);
+        newRequest = new Request("Request "+requestNum, loremIpsum.toString(), new Date(ThreadLocalRandom.current().nextLong(minRequestDate, maxRequestDate)));
+        switch (random.nextInt(Priority.HIGH.ordinal() + 1)){
+          case 0:
+            newRequest.setPriority(Priority.LOW);
+            break;
+          case 1:
+            newRequest.setPriority(Priority.MEDIUM);
+            break;
+          case 2:
+            newRequest.setPriority(Priority.HIGH);
+            break;
+        }
+
+        // Adding each request of PlaceHolderItem to list
+        requestList.add(newRequest);
+      }
+
+      addItem(createPlaceholderItem(i, requestList));
+
     }
   }
 
@@ -22,8 +71,8 @@ public class PlaceholderContent {
     ITEM_MAP.put(item.id, item);
   }
 
-  private static PlaceholderItem createPlaceholderItem(int position) {
-    return new PlaceholderItem(position, "Item " + position, makeDetails(position));
+  private static PlaceholderItem createPlaceholderItem(int position, List<Request> requests) {
+    return new PlaceholderItem(position, "Item " + position, makeDetails(position), requests);
   }
 
   private static String makeDetails(int position) {
@@ -39,15 +88,21 @@ public class PlaceholderContent {
     private final int id;
     private final String content;
     private final String details;
+    private final List<Request> requests;
 
-    public PlaceholderItem(int id, String content, String details) {
+    public PlaceholderItem(int id, String content, String details, List<Request> requests) {
       this.id = id;
       this.content = content;
       this.details = details;
+      this.requests = requests;
     }
 
     public int getId() {
       return id;
+    }
+
+    public List<Request> getRequests() {
+      return requests;
     }
 
     public String getContent() {
