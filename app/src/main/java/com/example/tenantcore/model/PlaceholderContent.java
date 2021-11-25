@@ -45,17 +45,7 @@ public class PlaceholderContent {
         // Adding random values for the new request
         LoremIpsum loremIpsum = new LoremIpsum(random.nextInt(maxRequestDesc-minRequestDesc)+minRequestDesc);
         newRequest = new Request("Request "+requestNum, loremIpsum.toString(), new Date(ThreadLocalRandom.current().nextLong(minRequestDate, maxRequestDate)));
-        switch (random.nextInt(Priority.HIGH.ordinal() + 1)){
-          case 0:
-            newRequest.setPriority(Priority.LOW);
-            break;
-          case 1:
-            newRequest.setPriority(Priority.MEDIUM);
-            break;
-          case 2:
-            newRequest.setPriority(Priority.HIGH);
-            break;
-        }
+newRequest.setPriority(Priority.values()[random.nextInt(Priority.HIGH.ordinal()]);
 
         // Adding each request of PlaceHolderItem to list
         requestList.add(newRequest);
