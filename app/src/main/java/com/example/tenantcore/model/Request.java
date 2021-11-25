@@ -7,15 +7,6 @@ import java.util.Date;
  */
 public class Request {
 
-  /**
-   * static Task Color class containing hex color codes for different task aspects.
-   */
-  public static class Color{
-    public static final String HIGH_PRIORITY_TASK = "#e75480"; // Dark pink
-    public static final String MEDIUM_PRIORITY_TASK = "#F28500"; // Tangerine
-    public static final String LOW_PRIORITY_TASK = "#90EE90"; // Light green
-  }
-
   private String title;
   private String description;
   private Date dueDate;
@@ -24,11 +15,12 @@ public class Request {
 
   /**
    * Creates a new request
-   * @param title The title of the request
+   *
+   * @param title       The title of the request
    * @param description The description of the request
-   * @param dueDate The due date of the request
+   * @param dueDate     The due date of the request
    */
-  public Request(String title, String description, Date dueDate){
+  public Request(String title, String description, Date dueDate) {
     this.title = title;
     this.description = description;
     this.dueDate = dueDate;
@@ -38,6 +30,7 @@ public class Request {
 
   /**
    * Gets request status
+   *
    * @return Status of request
    */
   public Status getStatus() {
@@ -46,6 +39,7 @@ public class Request {
 
   /**
    * Sets request status
+   *
    * @param status Status to set for the request
    */
   public void setStatus(Status status) {
@@ -54,6 +48,7 @@ public class Request {
 
   /**
    * Gets request priority
+   *
    * @return the request priority
    */
   public Priority getPriority() {
@@ -62,6 +57,7 @@ public class Request {
 
   /**
    * Sets the request priority
+   *
    * @param priority Priority to set for the request
    */
   public void setPriority(Priority priority) {
@@ -70,6 +66,7 @@ public class Request {
 
   /**
    * Gets the request title
+   *
    * @return the request title
    */
   public String getTitle() {
@@ -78,6 +75,7 @@ public class Request {
 
   /**
    * Sets the title of the request
+   *
    * @param title the title to set for the request
    */
   public void setTitle(String title) {
@@ -86,6 +84,7 @@ public class Request {
 
   /**
    * Gets the request description
+   *
    * @return thw request description
    */
   public String getDescription() {
@@ -94,6 +93,7 @@ public class Request {
 
   /**
    * Sets the description of the request
+   *
    * @param description the description to set for the request
    */
   public void setDescription(String description) {
@@ -102,6 +102,7 @@ public class Request {
 
   /**
    * Gets the request due date
+   *
    * @return the due date of the request
    */
   public Date getDueDate() {
@@ -110,9 +111,19 @@ public class Request {
 
   /**
    * Sets the due date of the request
+   *
    * @param dueDate the due date to set for the request
    */
   public void setDueDate(Date dueDate) {
     this.dueDate = dueDate;
+  }
+
+  /**
+   * static Task Color class containing hex color codes for different task aspects.
+   */
+  public static class Color {
+    public static final String HIGH_PRIORITY_TASK = "#e75480"; // Dark pink
+    public static final String MEDIUM_PRIORITY_TASK = "#F28500"; // Tangerine
+    public static final String LOW_PRIORITY_TASK = "#90EE90"; // Light green
   }
 }

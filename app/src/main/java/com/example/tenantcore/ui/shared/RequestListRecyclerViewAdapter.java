@@ -15,14 +15,13 @@ import com.example.tenantcore.ui.TenantCoreActivity;
 
 import java.util.List;
 
-
 public class RequestListRecyclerViewAdapter extends RecyclerView.Adapter<RequestListRecyclerViewAdapter.ViewHolder> {
 
-  private PlaceholderContent.PlaceholderItem tenant;
   private final RequestListFragment requestListFragment;
+  private PlaceholderContent.PlaceholderItem tenant;
   private List<Request> tenantRequests;
 
-  public RequestListRecyclerViewAdapter(RequestListFragment listFragment){
+  public RequestListRecyclerViewAdapter(RequestListFragment listFragment) {
     this.requestListFragment = listFragment;
     TenantCoreActivity activity = (TenantCoreActivity) this.requestListFragment.getActivity();
     this.tenant = activity.getTaskViewModel().getTenant();
@@ -49,6 +48,7 @@ public class RequestListRecyclerViewAdapter extends RecyclerView.Adapter<Request
 
     private ListItemRequestBinding binding;
     private Request request;
+
     public ViewHolder(ListItemRequestBinding binding) {
       super(binding.getRoot());
       this.binding = binding;
@@ -68,18 +68,17 @@ public class RequestListRecyclerViewAdapter extends RecyclerView.Adapter<Request
 
       // Set the request background color
       this.binding.requestItemConstraintLayout.setBackgroundColor(Color.parseColor(getRequestBackgroundColor()));
-
     }
 
     /**
      * Gets the request background color depending on its priority level.
+     *
      * @return String containing the Hex color code indicating the background color of the task
      */
-    private String getRequestBackgroundColor(){
+    private String getRequestBackgroundColor() {
       return request.getPriority().equals(Priority.HIGH) ? Request.Color.HIGH_PRIORITY_TASK : request.getPriority().equals(Priority.MEDIUM) ? Request.Color.MEDIUM_PRIORITY_TASK : Request.Color.LOW_PRIORITY_TASK;
     }
   }
-
 }
 
 

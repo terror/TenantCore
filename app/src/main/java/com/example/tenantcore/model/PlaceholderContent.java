@@ -40,12 +40,12 @@ public class PlaceholderContent {
       requestNum = random.nextInt(maxRequests);
 
       // Adding random numbers of requests for each Tenant (for now it's called PlaceHolderItem)
-      for(; requestNum > 0; requestNum--){
+      for (; requestNum > 0; requestNum--) {
 
         // Adding random values for the new request
-        LoremIpsum loremIpsum = new LoremIpsum(random.nextInt(maxRequestDesc-minRequestDesc)+minRequestDesc);
-        newRequest = new Request("Request "+requestNum, loremIpsum.toString(), new Date(ThreadLocalRandom.current().nextLong(minRequestDate, maxRequestDate)));
-newRequest.setPriority(Priority.values()[random.nextInt(Priority.HIGH.ordinal()]);
+        LoremIpsum loremIpsum = new LoremIpsum(random.nextInt(maxRequestDesc - minRequestDesc) + minRequestDesc);
+        newRequest = new Request("Request " + requestNum, loremIpsum.toString(), new Date(ThreadLocalRandom.current().nextLong(minRequestDate, maxRequestDate)));
+        newRequest.setPriority(Priority.values()[random.nextInt(Priority.HIGH.ordinal()]);
 
         // Adding each request of PlaceHolderItem to list
         requestList.add(newRequest);

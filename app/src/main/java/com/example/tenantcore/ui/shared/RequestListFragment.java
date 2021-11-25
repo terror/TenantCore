@@ -14,12 +14,12 @@ import com.example.tenantcore.R;
 import com.example.tenantcore.databinding.FragmentRequestListBinding;
 
 public class RequestListFragment extends Fragment {
-
   private static final String ARG_COLUMN_COUNT = "column-count";
   private int mColumnCount = 1;
   private FragmentRequestListBinding binding;
 
-  public RequestListFragment(){}
+  public RequestListFragment() {
+  }
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -32,7 +32,6 @@ public class RequestListFragment extends Fragment {
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
     binding = FragmentRequestListBinding.inflate(inflater, container, false);
     RecyclerView recyclerView = binding.getRoot().findViewById(R.id.requestList_RecyclerView);
 
@@ -46,6 +45,5 @@ public class RequestListFragment extends Fragment {
     recyclerView.setAdapter(new RequestListRecyclerViewAdapter(this));
 
     return binding.getRoot();
-
   }
 }

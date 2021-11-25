@@ -28,7 +28,7 @@
     android:id="@+id/LandlordHomeFragment"
     android:name="com.example.tenantcore.ui.landlord.home.LandlordHomeFragment"
     android:label="Landlord Home"
-    tools:layout="@layout/fragment_landlord_home" >
+    tools:layout="@layout/fragment_landlord_home">
     <action
       android:id="@+id/action_LandlordHomeFragment_to_RequestListFragment"
       app:destination="@id/RequestListFragment" />

@@ -9,7 +9,7 @@ public class Tenant {
   private String lastName;
   private List<Request> requests;
 
-  public Tenant(String firstName, String lastName){
+  public Tenant(String firstName, String lastName) {
     this.firstName = firstName;
     this.lastName = lastName;
     this.requests = new ArrayList<Request>();

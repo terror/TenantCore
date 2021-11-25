@@ -4,12 +4,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.tenantcore.R;
 import com.example.tenantcore.databinding.FragmentLandlordHomeBinding;
 import com.example.tenantcore.model.PlaceholderContent;
@@ -19,7 +21,8 @@ public class LandlordHomeFragment extends Fragment {
   private int mColumnCount = 1;
   private FragmentLandlordHomeBinding binding;
 
-  public LandlordHomeFragment() {}
+  public LandlordHomeFragment() {
+  }
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
