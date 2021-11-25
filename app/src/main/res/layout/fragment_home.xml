@@ -7,32 +7,141 @@
   tools:context=".ui.home.HomeFragment">
 
   <TextView
-    android:id="@+id/textview_first"
+    android:id="@+id/homeTitle_TextView"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="-16dp"
-    android:text="Home Fragment"
-    app:layout_constraintBottom_toTopOf="@+id/button_temp_to_tenant_home"
+    android:layout_marginTop="64dp"
+    android:text="Welcome to TenantCore!"
+    android:textColor="@android:color/secondary_text_light"
+    android:textSize="32sp"
+    android:textStyle="bold"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent" />
 
-  <Button
-    android:id="@+id/button_temp_to_tenant_home"
+  <LinearLayout
+    android:id="@+id/homeIdentity_LinearLayout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:text="Tenant Home"
+    android:gravity="center"
+    android:orientation="vertical"
+    app:layout_constraintBottom_toTopOf="@+id/homeLogin_LinearLayout"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/homeTitle_TextView">
+
+    <TextView
+      android:id="@+id/homeIdentity_TextView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="I am a..."
+      android:textSize="20sp" />
+
+    <RadioGroup
+      android:id="@+id/homeIdentity_RadioGroup"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:orientation="horizontal">
+
+      <RadioButton
+        android:id="@+id/homeIdentityTenant_RadioButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:checked="true"
+        android:gravity="center"
+        android:text="Tenant" />
+
+      <RadioButton
+        android:id="@+id/homeIdentityLandlord_RadioButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Landlord" />
+    </RadioGroup>
+  </LinearLayout>
+
+  <LinearLayout
+    android:id="@+id/homeLogin_LinearLayout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="96dp"
+    android:gravity="center"
+    android:orientation="vertical"
+    app:layout_constraintBottom_toTopOf="@+id/homeCreate_LinearLayout"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent">
+
+    <TextView
+      android:id="@+id/homeLogin_TextView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="Already got an account?"
+      android:textSize="16sp" />
+
+    <EditText
+      android:id="@+id/homeLogin_EditText"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:ems="10"
+      android:hint="Username"
+      android:inputType="textPersonName"
+      android:textSize="16sp" />
+
+    <Button
+      android:id="@+id/homeLogin_Button"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:text="LOG IN" />
+  </LinearLayout>
+
+  <TextView
+    android:id="@+id/homeOr_TextView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="OR"
+    android:textSize="20sp"
+    app:layout_constraintBottom_toTopOf="@+id/homeCreate_LinearLayout"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/homeLogin_LinearLayout" />
+
+  <LinearLayout
+    android:id="@+id/homeCreate_LinearLayout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="64dp"
+    android:gravity="center"
+    android:orientation="vertical"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/textview_first" />
+    app:layout_constraintStart_toStartOf="parent">
 
-  <Button
-    android:id="@+id/button_temp_to_landlord_home"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="Landlord Home"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/button_temp_to_tenant_home" />
+    <TextView
+      android:id="@+id/homeCreate_TextView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="Don't have an account? Make one!"
+      android:textSize="16sp" />
+
+    <EditText
+      android:id="@+id/homeCreate_EditText"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:ems="10"
+      android:hint="Invite Code"
+      android:inputType="textPersonName"
+      android:textSize="16sp" />
+
+    <Button
+      android:id="@+id/homeCreate_Button"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:text="CREATE ACCOUNT" />
+  </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
