@@ -5,8 +5,7 @@
   android:id="@+id/landlord_home_layout"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  tools:context=".ui.landlord.home.LandlordHomeFragment"
-  >
+  tools:context=".ui.landlord.home.LandlordHomeFragment">
 
   <TextView
     android:id="@+id/landlord_home_header"

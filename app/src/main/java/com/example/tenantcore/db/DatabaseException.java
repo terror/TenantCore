@@ -10,11 +10,11 @@ package com.example.tenantcore.sqlite;
  * @author Ian Clement (ian.clement@johnabbott.qc.ca)
  */
 public class DatabaseException extends Exception {
-    public DatabaseException(String s) {
-        super(s);
-    }
+  public DatabaseException(String s) {
+    super(s);
+  }
 
-    public DatabaseException(Exception e) {
-        super(e);
-    }
+  public DatabaseException(Exception e) {
+    super(e);
+  }
 }
