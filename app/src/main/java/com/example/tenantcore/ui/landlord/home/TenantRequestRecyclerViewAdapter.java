@@ -1,17 +1,27 @@
 package com.example.tenantcore.ui.landlord.home;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.tenantcore.R;
 import com.example.tenantcore.databinding.ListItemTenantRequestBinding;
 import com.example.tenantcore.model.PlaceholderContent.PlaceholderItem;
+import com.example.tenantcore.ui.TenantCoreActivity;
+
 import java.util.List;
 
 public class TenantRequestRecyclerViewAdapter extends RecyclerView.Adapter<TenantRequestRecyclerViewAdapter.ViewHolder> {
-  private final List<PlaceholderItem> requests;
+  private final List<PlaceholderItem> tenants;
+  private final LandlordHomeFragment landlordHomeFragment;
 
-  public TenantRequestRecyclerViewAdapter(List<PlaceholderItem> requests) {
-    this.requests = requests;
+  public TenantRequestRecyclerViewAdapter(List<PlaceholderItem> tenants, LandlordHomeFragment landlordHomeFragment) {
+    this.tenants = tenants;
+    this.landlordHomeFragment = landlordHomeFragment;
     setHasStableIds(true);
   }
 
@@ -23,41 +33,57 @@ public class TenantRequestRecyclerViewAdapter extends RecyclerView.Adapter<Tenan
 
   @Override
   public void onBindViewHolder(final ViewHolder holder, int position) {
-    holder.bind(requests.get(position));
+    holder.bind(tenants.get(position));
+
   }
 
   @Override
   public int getItemViewType(int position) {
-    return requests.get(position).getId();
+    return tenants.get(position).getId();
   }
 
   @Override
   public long getItemId(int position) {
-    return requests.get(position).getId();
+    return tenants.get(position).getId();
   }
 
   @Override
   public int getItemCount() {
-    return requests.size();
+    return tenants.size();
   }
 
   public class ViewHolder extends RecyclerView.ViewHolder {
     private ListItemTenantRequestBinding binding;
-    private PlaceholderItem request;
+    private PlaceholderItem tenant;
 
     public ViewHolder(ListItemTenantRequestBinding binding) {
       super(binding.getRoot());
       this.binding = binding;
+
+      binding.listRequestItemLayout.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+
+          // Store the tenant clicked on in the viewmodel
+          TenantCoreActivity activity = (TenantCoreActivity) landlordHomeFragment.getActivity();
+          activity.getTaskViewModel().setTenant(tenants.get(getLayoutPosition()));
+
+          // Navigate to RequestListFragment
+          NavController controller = Navigation.findNavController(activity, R.id.nav_host_fragment_content_main);
+          controller.navigate(R.id.action_LandlordHomeFragment_to_RequestListFragment);
+
+        }
+      });
     }
 
-    public void bind(PlaceholderItem request) {
-      this.request = request;
+    public void bind(PlaceholderItem tenant) {
+      this.tenant = tenant;
 
-      // set the request tenant name
-      binding.requestTenantName.setText(request.getContent());
+      // set the tenant name
+      binding.requestTenantName.setText(tenant.getContent());
 
-      // set the request description
-      binding.requestDescription.setText(request.getDetails());
+      // set the tenant description
+      binding.requestDescription.setText(tenant.getDetails());
     }
   }
 }
