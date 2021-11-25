@@ -3,15 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/ishpa/Documents/JAC/Semester 5/App_Dev_II/TenantCore/app/src/main/res/layout/bottom_sheet_request_info.xml" value="0.36666666666666664" />
-        <entry key="..\:/ishpa/Documents/JAC/Semester 5/App_Dev_II/TenantCore/app/src/main/res/layout/fragment_request_list.xml" value="0.36666666666666664" />
-        <entry key="..\:/ishpa/Documents/JAC/Semester 5/App_Dev_II/TenantCore/app/src/main/res/layout/fragment_tenant_request_list.xml" value="0.36666666666666664" />
-        <entry key="..\:/ishpa/Documents/JAC/Semester 5/App_Dev_II/TenantCore/app/src/main/res/layout/list_item_request.xml" value="0.36666666666666664" />
-        <entry key="..\:/ishpa/Documents/JAC/Semester 5/App_Dev_II/TenantCore/app/src/main/res/layout/list_item_tenant_request.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Administrator/Documents/GitHub/TenantCore/app/src/main/res/layout/fragment_tenant_home.xml" value="0.36666666666666664" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.17962962962962964" />
         <entry key="app/src/main/res/layout/activity_tenant_core.xml" value="0.2671875" />
         <entry key="app/src/main/res/layout/activity_tenantcore.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/bottom_sheet_request_info.xml" value="0.30364583333333334" />
         <entry key="app/src/main/res/layout/content_main.xml" value="0.17962962962962964" />
         <entry key="app/src/main/res/layout/fragment_first.xml" value="0.17962962962962964" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.24427083333333333" />
@@ -19,12 +14,12 @@
         <entry key="app/src/main/res/layout/fragment_second.xml" value="0.17962962962962964" />
         <entry key="app/src/main/res/layout/fragment_tenant_home.xml" value="0.2151268115942029" />
         <entry key="app/src/main/res/layout/fragment_tenant_request_list.xml" value="0.4901041666666667" />
-        <entry key="app/src/main/res/layout/list_item_request.xml" value="0.30364583333333334" />
         <entry key="app/src/main/res/layout/list_item_tenant_request.xml" value="0.4901041666666667" />
         <entry key="app/src/main/res/layout/recycler_view_item.xml" value="0.4901041666666667" />
       </map>
     </option>
   </component>
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>

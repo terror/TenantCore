@@ -22,7 +22,11 @@
   <fragment
     android:id="@+id/TenantHomeFragment"
     android:name="com.example.tenantcore.ui.tenant.home.TenantHomeFragment"
-    android:label="Tenant Home" />
+    android:label="Tenant Home" >
+    <action
+      android:id="@+id/action_TenantHomeFragment_to_RequestListFragment"
+      app:destination="@id/RequestListFragment" />
+  </fragment>
 
   <fragment
     android:id="@+id/LandlordHomeFragment"
