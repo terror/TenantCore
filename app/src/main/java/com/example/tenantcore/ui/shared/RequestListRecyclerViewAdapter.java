@@ -2,7 +2,6 @@ package com.example.tenantcore.ui.shared;
 
 import android.graphics.Color;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -13,7 +12,6 @@ import com.example.tenantcore.model.PlaceholderContent;
 import com.example.tenantcore.model.Priority;
 import com.example.tenantcore.model.Request;
 import com.example.tenantcore.ui.TenantCoreActivity;
-import com.example.tenantcore.ui.landlord.home.TenantRequestRecyclerViewAdapter;
 
 import java.util.List;
 
@@ -71,7 +69,6 @@ public class RequestListRecyclerViewAdapter extends RecyclerView.Adapter<Request
       // Set the request background color
       this.binding.requestItemConstraintLayout.setBackgroundColor(Color.parseColor(getRequestBackgroundColor()));
 
-
     }
 
     /**
@@ -82,8 +79,6 @@ public class RequestListRecyclerViewAdapter extends RecyclerView.Adapter<Request
       return request.getPriority().equals(Priority.HIGH) ? Request.Color.HIGH_PRIORITY_TASK : request.getPriority().equals(Priority.MEDIUM) ? Request.Color.MEDIUM_PRIORITY_TASK : Request.Color.LOW_PRIORITY_TASK;
     }
   }
-
-
 
 }
 
