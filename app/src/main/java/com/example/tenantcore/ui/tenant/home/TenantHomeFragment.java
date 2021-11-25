@@ -13,7 +13,6 @@ import com.example.tenantcore.R;
 import com.example.tenantcore.databinding.FragmentTenantHomeBinding;
 import com.example.tenantcore.model.PlaceholderContent;
 import com.example.tenantcore.ui.TenantCoreActivity;
-import com.example.tenantcore.viewmodel.TenantCoreViewModel;
 
 public class TenantHomeFragment extends Fragment {
   private FragmentTenantHomeBinding binding;

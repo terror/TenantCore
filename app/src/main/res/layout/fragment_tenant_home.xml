@@ -69,7 +69,7 @@
   </LinearLayout>
 
   <EditText
-    android:id="@+id/maintenanceTitle_editText"
+    android:id="@+id/requestTitle_editText"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_marginStart="16dp"
@@ -84,7 +84,7 @@
     app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
   <EditText
-    android:id="@+id/maintenanceDesc_editText"
+    android:id="@+id/requestDesc_editText"
     android:layout_width="0dp"
     android:layout_height="0dp"
     android:layout_marginStart="16dp"
@@ -96,7 +96,7 @@
     app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/maintenanceTitle_editText" />
+    app:layout_constraintTop_toBottomOf="@+id/requestTitle_editText" />
 
   <View
     android:id="@+id/divider"
@@ -105,7 +105,7 @@
     android:background="?android:attr/listDivider"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/maintenanceDesc_editText" />
+    app:layout_constraintTop_toBottomOf="@+id/requestDesc_editText" />
 
   <LinearLayout
     android:id="@+id/linearLayout2"
@@ -127,7 +127,7 @@
       android:tint="@android:color/secondary_text_light" />
 
     <Button
-      android:id="@+id/maintenanceDueDate_btn"
+      android:id="@+id/requestDate_btn"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_weight="1"
@@ -186,7 +186,7 @@
       android:orientation="horizontal">
 
       <RadioButton
-        android:id="@+id/maintenanceUrgencyLow_radioBtn"
+        android:id="@+id/urgencyLow_radioBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -197,7 +197,7 @@
         android:textSize="18sp" />
 
       <RadioButton
-        android:id="@+id/maintenanceUrgencyMed_radioBtn"
+        android:id="@+id/urgencyMed_radioBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -208,7 +208,7 @@
         android:textSize="18sp" />
 
       <RadioButton
-        android:id="@+id/maintenanceUrgencyHigh_radioBtn"
+        android:id="@+id/urgencyHigh_radioBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
