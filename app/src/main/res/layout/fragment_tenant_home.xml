@@ -136,7 +136,6 @@
       android:gravity="start|center_vertical"
       android:paddingLeft="16dp"
       android:singleLine="true"
-      android:text="Monday, August 30"
       android:textAllCaps="false"
       android:textColor="@android:color/secondary_text_light"
       android:textSize="18sp" />
@@ -193,7 +192,7 @@
         android:layout_weight="1"
         android:buttonTint="@android:color/secondary_text_light"
         android:singleLine="true"
-        android:text="low"
+        android:text="Low"
         android:textColor="@android:color/secondary_text_light"
         android:textSize="18sp" />
 
@@ -204,7 +203,7 @@
         android:layout_weight="1"
         android:buttonTint="@android:color/secondary_text_light"
         android:singleLine="true"
-        android:text="medium"
+        android:text="Medium"
         android:textColor="@android:color/secondary_text_light"
         android:textSize="18sp" />
 
@@ -216,7 +215,7 @@
         android:buttonTint="@android:color/secondary_text_light"
         android:elegantTextHeight="true"
         android:singleLine="true"
-        android:text="high"
+        android:text="High"
         android:textColor="@android:color/secondary_text_light"
         android:textSize="18sp" />
     </RadioGroup>

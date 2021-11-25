@@ -7,8 +7,13 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
+import com.example.tenantcore.R;
 import com.example.tenantcore.databinding.FragmentTenantHomeBinding;
+import com.example.tenantcore.model.PlaceholderContent;
+import com.example.tenantcore.ui.TenantCoreActivity;
+import com.example.tenantcore.viewmodel.TenantCoreViewModel;
 
 public class TenantHomeFragment extends Fragment {
   private FragmentTenantHomeBinding binding;
@@ -16,6 +21,19 @@ public class TenantHomeFragment extends Fragment {
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     binding = FragmentTenantHomeBinding.inflate(inflater, container, false);
+
+    binding.viewRequestsBtn.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        // get place holder tenant and set it in the view-model
+        PlaceholderContent.PlaceholderItem tenant = PlaceholderContent.ITEMS.get(0);
+        ((TenantCoreActivity)getActivity()).getTaskViewModel().setTenant(tenant);
+
+        NavHostFragment.findNavController(TenantHomeFragment.this)
+          .navigate(R.id.action_TenantHomeFragment_to_RequestListFragment);
+      }
+    });
+
     return binding.getRoot();
   }
 
