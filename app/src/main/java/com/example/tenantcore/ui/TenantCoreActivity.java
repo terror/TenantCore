@@ -20,7 +20,11 @@ public class TenantCoreActivity extends AppCompatActivity {
   private TenantCoreViewModel tenantCoreViewModel;
 
   public TenantCoreActivity() {
-    this.tenantCoreViewModel = new TenantCoreViewModel();
+    try {
+      this.tenantCoreViewModel = new TenantCoreViewModel(this);
+    } catch (Exception e) {
+      System.err.println("Error loading view model.");
+    }
   }
 
   public TenantCoreViewModel getTaskViewModel() {

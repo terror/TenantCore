@@ -1,4 +1,4 @@
-package com.example.tenantcore.sqlite;
+package com.example.tenantcore.db;
 /*
  * Copyright (c) 2020 Ian Clement. All rights reserved.
  */

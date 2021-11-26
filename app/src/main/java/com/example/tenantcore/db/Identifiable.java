@@ -2,7 +2,7 @@
  * Copyright (c) 2020 Ian Clement. All rights reserved.
  */
 
-package com.example.tenantcore.sqlite;
+package com.example.tenantcore.db;
 
 /**
  * Indicated model classes that have an ID field.
