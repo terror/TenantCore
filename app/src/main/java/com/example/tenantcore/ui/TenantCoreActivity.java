@@ -1,5 +1,6 @@
 package com.example.tenantcore.ui;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,14 +21,20 @@ public class TenantCoreActivity extends AppCompatActivity {
   private TenantCoreViewModel tenantCoreViewModel;
 
   public TenantCoreActivity() {
+    tenantCoreViewModel = new TenantCoreViewModel();
+  }
+
+  // Note: The database cannot be created unless the context has a generated fragment.
+  // This is why this method is called from the Home Fragment.
+  public void initializeViewModel(TenantCoreActivity context) {
     try {
-      this.tenantCoreViewModel = new TenantCoreViewModel(this);
+      tenantCoreViewModel.initializeDatabase(context);
     } catch (Exception e) {
       System.err.println("Error loading view model.");
     }
   }
 
-  public TenantCoreViewModel getTaskViewModel() {
+  public TenantCoreViewModel getTenantViewModel() {
     return this.tenantCoreViewModel;
   }
 
@@ -67,5 +74,15 @@ public class TenantCoreActivity extends AppCompatActivity {
     NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
     return NavigationUI.navigateUp(navController, appBarConfiguration)
       || super.onSupportNavigateUp();
+  }
+
+  public void displayErrorMessage(String title, String msg) {
+    new AlertDialog.Builder(this)
+      .setIcon(R.drawable.ic_baseline_warning_24)
+      .setTitle(title)
+      .setMessage(msg)
+      .setPositiveButton("OK", null)
+      .create()
+      .show();
   }
 }

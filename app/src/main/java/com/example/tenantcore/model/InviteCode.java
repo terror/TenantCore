@@ -7,6 +7,7 @@ import java.util.Date;
 public class InviteCode implements Identifiable<Long> {
 
   private Long id;
+  private Long landlordId;
   private int code;
   private Date expiry;
 
@@ -18,6 +19,15 @@ public class InviteCode implements Identifiable<Long> {
   @Override
   public InviteCode setId(Long id) {
     this.id = id;
+    return this;
+  }
+
+  public Long getLandlordId() {
+    return landlordId;
+  }
+
+  public InviteCode setLandlordId(Long landlordId) {
+    this.landlordId = landlordId;
     return this;
   }
 

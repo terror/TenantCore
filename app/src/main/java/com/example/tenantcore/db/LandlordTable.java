@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.tenantcore.model.Landlord;
-import com.example.tenantcore.model.User;
 
 public class LandlordTable extends Table<Landlord> {
 
@@ -32,10 +31,10 @@ public class LandlordTable extends Table<Landlord> {
 
   @Override
   protected Landlord fromCursor(Cursor cursor) throws DatabaseException {
-    return (Landlord)(new User()
+    return new Landlord()
       .setId(cursor.getLong(0))
       .setUsername(cursor.getString(1))
       .setName(cursor.getString(2))
-      .setLastLogin(Table.stringAsDate(cursor.getString(3))));
+      .setLastLogin(Table.stringAsDate(cursor.getString(3)));
   }
 }

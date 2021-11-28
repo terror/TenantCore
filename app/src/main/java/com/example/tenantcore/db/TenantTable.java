@@ -4,9 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.example.tenantcore.model.InviteCode;
 import com.example.tenantcore.model.Tenant;
-import com.example.tenantcore.model.User;
 
 public class TenantTable extends Table<Tenant> {
 
@@ -36,12 +34,11 @@ public class TenantTable extends Table<Tenant> {
 
   @Override
   protected Tenant fromCursor(Cursor cursor) throws DatabaseException {
-    Tenant tenant = (Tenant)(new User()
+    return new Tenant()
       .setId(cursor.getLong(0))
       .setUsername(cursor.getString(1))
       .setName(cursor.getString(2))
-      .setLastLogin(Table.stringAsDate(cursor.getString(3))));
-
-    return tenant.setLandlordId(cursor.getLong(4));
+      .setLastLogin(Table.stringAsDate(cursor.getString(3)))
+      .setLandlordId(cursor.getLong(4));
   }
 }
