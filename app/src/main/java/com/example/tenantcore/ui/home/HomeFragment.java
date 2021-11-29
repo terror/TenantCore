@@ -68,9 +68,7 @@ public class HomeFragment extends Fragment {
 
         } else {
 
-          // TODO: Login validation for landlords
-          // For now, a user can simply log in by writing any text in the EditText view.
-          if (binding.homeLoginUsernameEditText.getText().toString().isEmpty()) {
+          if (viewmodel.findLandlord(binding.homeLoginUsernameEditText.getText().toString()) == null) {
 
             // Failure
             activity.displayErrorMessage("Invalid landlord login.", "Please enter a valid username.");

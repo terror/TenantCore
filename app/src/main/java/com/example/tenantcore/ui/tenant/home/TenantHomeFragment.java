@@ -25,12 +25,18 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class TenantHomeFragment extends Fragment {
+
+  public static String TAG_NAME = "tenant_home";
+
   private FragmentTenantHomeBinding binding;
   private Calendar requestDate;
   private SimpleDateFormat formatter;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    if (getActivity().getSupportFragmentManager().findFragmentByTag(TAG_NAME) == null)
+      getActivity().getSupportFragmentManager().beginTransaction().add(this, TAG_NAME).commit();
+
     binding = FragmentTenantHomeBinding.inflate(inflater, container, false);
     formatter = new SimpleDateFormat("EEEE, MMMM d");
     setListeners();
