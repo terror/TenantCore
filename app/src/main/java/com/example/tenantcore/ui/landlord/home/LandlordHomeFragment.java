@@ -17,6 +17,7 @@ import com.example.tenantcore.databinding.FragmentLandlordHomeBinding;
 import com.example.tenantcore.model.PlaceholderContent;
 
 public class LandlordHomeFragment extends Fragment {
+  public static String TAG_NAME = "landlord_home";
   private static final String ARG_COLUMN_COUNT = "column-count";
   private int mColumnCount = 1;
   private FragmentLandlordHomeBinding binding;
@@ -35,6 +36,9 @@ public class LandlordHomeFragment extends Fragment {
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    if (getActivity().getSupportFragmentManager().findFragmentByTag(TAG_NAME) == null)
+      getActivity().getSupportFragmentManager().beginTransaction().add(this, TAG_NAME).commit();
+
     binding = FragmentLandlordHomeBinding.inflate(inflater, container, false);
 
     // Grab the recycler view from layout

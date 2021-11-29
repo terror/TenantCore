@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -15,6 +16,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.tenantcore.R;
 import com.example.tenantcore.databinding.ActivityTenantCoreBinding;
+import com.example.tenantcore.ui.landlord.home.LandlordHomeFragment;
 import com.example.tenantcore.ui.tenant.home.TenantHomeFragment;
 import com.example.tenantcore.viewmodel.TenantCoreViewModel;
 
@@ -92,8 +94,10 @@ public class TenantCoreActivity extends AppCompatActivity {
 
   @Override
   public void onBackPressed() {
-    // Display a logout warning if the currently displayed fragment is the tenant home fragment.
-    if (getSupportFragmentManager().findFragmentByTag(TenantHomeFragment.TAG_NAME) == null || getSupportFragmentManager().findFragmentByTag(TenantHomeFragment.TAG_NAME).getView() == null)
+    // Display a logout warning if the currently displayed fragment is the tenant home fragment or the landlord home fragment
+    Fragment tenantHomeFragment = getSupportFragmentManager().findFragmentByTag(TenantHomeFragment.TAG_NAME);
+    Fragment landlordHomeFragment = getSupportFragmentManager().findFragmentByTag(LandlordHomeFragment.TAG_NAME);
+    if ( (tenantHomeFragment == null || tenantHomeFragment.getView() == null) && (landlordHomeFragment == null || landlordHomeFragment.getView() == null))
       super.onBackPressed();
     else
       displayLogoutWarning();

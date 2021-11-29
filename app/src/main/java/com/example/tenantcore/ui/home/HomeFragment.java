@@ -40,48 +40,46 @@ public class HomeFragment extends Fragment {
     viewmodel = activity.getTenantViewModel();
 
     // Logging in
-    binding.homeLoginButton.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View view) {
-        String usernameEntered = binding.homeLoginUsernameEditText.getText().toString();
-        if (binding.homeIdentityTenantRadioButton.isChecked()) {
+    binding.homeLoginButton.setOnClickListener(view1 -> {
+      String usernameEntered = binding.homeLoginUsernameEditText.getText().toString();
+      if (binding.homeIdentityTenantRadioButton.isChecked()) {
 
-          // For now, a user can simply log in by writing any text in the EditText view.
-          if (usernameEntered.isEmpty()) {
-            // Failure
-            activity.displayErrorMessage("Invalid tenant login.", "Please enter a valid username.");
+        // For now, a user can simply log in by writing any text in the EditText view.
+        if (usernameEntered.isEmpty()) {
+          // Failure
+          activity.displayErrorMessage("Invalid tenant login.", "Please enter a valid username.");
 
-          } else if(viewmodel.findTenant(usernameEntered) != null){
-            // Success
-            viewmodel.setSignedInUser(usernameEntered);
-            NavHostFragment.findNavController(HomeFragment.this)
-              .navigate(R.id.action_HomeFragment_to_TenantHomeFragment);
+        } else if(viewmodel.findTenant(usernameEntered) != null){
+          // Success
+          viewmodel.setSignedInUser(usernameEntered);
+          NavHostFragment.findNavController(HomeFragment.this)
+            .navigate(R.id.action_HomeFragment_to_TenantHomeFragment);
 
-          }
-          else{
-            activity.displayErrorMessage("Invalid tenant username", "Please enter a valid username");
-          }
+        }
+        else{
+          activity.displayErrorMessage("Invalid tenant username", "Please enter a valid username");
+        }
+
+      } else {
+
+        if (viewmodel.findLandlord(binding.homeLoginUsernameEditText.getText().toString()) == null) {
+          // Failure
+          activity.displayErrorMessage("Invalid landlord login.", "Please enter a valid username.");
 
         } else {
-
-          if (viewmodel.findLandlord(binding.homeLoginUsernameEditText.getText().toString()) == null) {
-            // Failure
-            activity.displayErrorMessage("Invalid landlord login.", "Please enter a valid username.");
-
+          if (binding.homeLoginUsernameEditText.getText().toString().isEmpty()) {
+          // Failure
+          activity.displayErrorMessage("Invalid landlord login.", "Please enter a valid username.");
           } else {
-            if (binding.homeLoginUsernameEditText.getText().toString().isEmpty()) {
-            // Failure
-            activity.displayErrorMessage("Invalid landlord login.", "Please enter a valid username.");
-            } else {
-              // Check for a landlord matching the entered in username
-              if (viewmodel.findLandlord(binding.homeLoginUsernameEditText.getText().toString()) != null)
-                // Success
-                viewmodel.setSignedInUser(usernameEntered);
-                NavHostFragment.findNavController(HomeFragment.this)
-                  .navigate(R.id.action_HomeFragment_to_LandlordHomeFragment);
-              else
-                activity.displayErrorMessage("Invalid landlord login.", "Not a valid username.");
+            // Check for a landlord matching the entered in username
+            if (viewmodel.findLandlord(binding.homeLoginUsernameEditText.getText().toString()) != null){
+              // Success
+              viewmodel.setSignedInUser(usernameEntered);
+              NavHostFragment.findNavController(HomeFragment.this)
+                .navigate(R.id.action_HomeFragment_to_LandlordHomeFragment);
             }
+            else
+              activity.displayErrorMessage("Invalid landlord login.", "Not a valid username.");
           }
         }
       }
