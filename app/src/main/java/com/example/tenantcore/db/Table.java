@@ -2,7 +2,7 @@
  * Copyright (c) 2020 Ian Clement. All rights reserved.
  */
 
-package com.example.tenantcore.sqlite;
+package com.example.tenantcore.db;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -10,8 +10,10 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -261,6 +263,18 @@ public abstract class Table<T extends Identifiable<Long>> implements CRUDReposit
     if (rows > 1)
       throw new DatabaseException("More than 1 row deleted when deleting note.. possible database corruption.");
     return rows == 1;
+  }
+
+  public static String dateAsString(Date date) {
+    return date == null ? null : DATE_FORMAT.format(date);
+  }
+
+  public static Date stringAsDate(String string) {
+    try {
+      return string == null ? null : DATE_FORMAT.parse(string);
+    } catch (ParseException e) {
+      return null;
+    }
   }
 
 }

@@ -1,17 +1,23 @@
 package com.example.tenantcore.model;
 
+import com.example.tenantcore.db.Identifiable;
+
 import java.util.Date;
 
 /**
  * Represents a request made by someone or something.
  */
-public class Request {
+public class Request implements Identifiable<Long> {
 
+  private Long id;
+  private Long tenantId;
   private String title;
   private String description;
   private Date dueDate;
   private Status status;
   private Priority priority;
+
+  public Request() {}
 
   /**
    * Creates a new request
@@ -42,8 +48,9 @@ public class Request {
    *
    * @param status Status to set for the request
    */
-  public void setStatus(Status status) {
+  public Request setStatus(Status status) {
     this.status = status;
+    return this;
   }
 
   /**
@@ -60,8 +67,9 @@ public class Request {
    *
    * @param priority Priority to set for the request
    */
-  public void setPriority(Priority priority) {
+  public Request setPriority(Priority priority) {
     this.priority = priority;
+    return this;
   }
 
   /**
@@ -78,8 +86,9 @@ public class Request {
    *
    * @param title the title to set for the request
    */
-  public void setTitle(String title) {
+  public Request setTitle(String title) {
     this.title = title;
+    return this;
   }
 
   /**
@@ -96,8 +105,9 @@ public class Request {
    *
    * @param description the description to set for the request
    */
-  public void setDescription(String description) {
+  public Request setDescription(String description) {
     this.description = description;
+    return this;
   }
 
   /**
@@ -114,8 +124,29 @@ public class Request {
    *
    * @param dueDate the due date to set for the request
    */
-  public void setDueDate(Date dueDate) {
+  public Request setDueDate(Date dueDate) {
     this.dueDate = dueDate;
+    return this;
+  }
+
+  @Override
+  public Long getId() {
+    return this.id;
+  }
+
+  @Override
+  public Request setId(Long id) {
+    this.id = id;
+    return this;
+  }
+
+  public Long getTenantId() {
+    return tenantId;
+  }
+
+  public Request setTenantId(Long tenantId) {
+    this.tenantId = tenantId;
+    return this;
   }
 
   /**
