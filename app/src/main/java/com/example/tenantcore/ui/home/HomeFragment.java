@@ -48,19 +48,17 @@ public class HomeFragment extends Fragment {
     binding.homeLoginButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-
+        String usernameEntered = binding.homeLoginUsernameEditText.getText().toString();
         if (binding.homeIdentityTenantRadioButton.isChecked()) {
-          String usernameEntered = binding.homeLoginUsernameEditText.getText().toString();
-          // TODO: Login validation for tenants
+
           // For now, a user can simply log in by writing any text in the EditText view.
           if (usernameEntered.isEmpty()) {
-
             // Failure
             activity.displayErrorMessage("Invalid tenant login.", "Please enter a valid username.");
 
           } else if(viewmodel.findTenant(usernameEntered) != null){
-            viewmodel.setSignedInUser(usernameEntered);
             // Success
+            viewmodel.setSignedInUser(usernameEntered);
             NavHostFragment.findNavController(HomeFragment.this)
               .navigate(R.id.action_HomeFragment_to_TenantHomeFragment);
 
@@ -72,18 +70,15 @@ public class HomeFragment extends Fragment {
         } else {
 
           if (viewmodel.findLandlord(binding.homeLoginUsernameEditText.getText().toString()) == null) {
-
             // Failure
             activity.displayErrorMessage("Invalid landlord login.", "Please enter a valid username.");
 
           } else {
-
             // Success
+            viewmodel.setSignedInUser(usernameEntered);
             NavHostFragment.findNavController(HomeFragment.this)
               .navigate(R.id.action_HomeFragment_to_LandlordHomeFragment);
-
           }
-
         }
       }
     });
