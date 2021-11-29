@@ -14,7 +14,7 @@ import java.util.List;
 public class TenantCoreViewModel extends ObservableModel<TenantCoreViewModel> {
 
   private TenantCoreDatabaseHandler dbHandler;
-
+  private String signedInUser;
 //  private final List<Tenant> tenants;
 //  private final List<Landlord> landlords;
 //  private final List<Request> requests;
@@ -29,6 +29,7 @@ public class TenantCoreViewModel extends ObservableModel<TenantCoreViewModel> {
 
   public TenantCoreViewModel() {
     this.tenant = null;
+    this.signedInUser = null;
   }
 
   public void initializeDatabase(Context context) throws DatabaseException {
@@ -37,6 +38,14 @@ public class TenantCoreViewModel extends ObservableModel<TenantCoreViewModel> {
 //    this.landlords = dbHandler.getLandlordTable().readAll();
 //    this.requests = dbHandler.getRequestTable().readAll();
 //    this.inviteCodes = dbHandler.getInviteCodeTable().readAll();
+  }
+
+  public void setSignedInUser(String username){
+    this.signedInUser = username;
+  }
+
+  public String getSignedInUser(){
+    return this.signedInUser;
   }
 
   public PlaceholderContent.PlaceholderItem getTenant() {
