@@ -175,7 +175,7 @@ public class HomeFragment extends Fragment {
                 .setLastLogin(new Date()));
 
               NavHostFragment.findNavController(HomeFragment.this)
-                .navigate(R.id.action_HomeFragment_to_TenantHomeFragment);
+                .navigate(R.id.action_HomeFragment_to_LandlordHomeFragment);
 
               dialog.dismiss();
             } catch (DatabaseException e) {
