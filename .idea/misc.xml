@@ -3,6 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Administrator/Documents/GitHub/TenantCore/app/src/main/res/layout/fragment_tenant_home.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/maxen/Documents/School/Cegep2021F/AppDev/TenantCore/app/src/main/res/layout/dialog_account_creation.xml" value="0.264" />
+        <entry key="..\:/Users/maxen/Documents/School/Cegep2021F/AppDev/TenantCore/app/src/main/res/layout/fragment_home.xml" value="0.2" />
+        <entry key="..\:/Users/maxen/Documents/School/Cegep2021F/AppDev/TenantCore/app/src/main/res/layout/fragment_landlord_home.xml" value="0.17760416666666667" />
+        <entry key="..\:/Users/maxen/Documents/School/Cegep2021F/AppDev/TenantCore/app/src/main/res/layout/fragment_tenant_home.xml" value="0.325" />
+        <entry key="..\:/Users/maxen/Documents/School/Cegep2021F/AppDev/TenantCore/app/src/main/res/layout/list_item_request.xml" value="0.17760416666666667" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.17962962962962964" />
         <entry key="app/src/main/res/layout/activity_tenant_core.xml" value="0.2671875" />
         <entry key="app/src/main/res/layout/activity_tenantcore.xml" value="0.25" />
@@ -18,7 +24,8 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="JDK" project-jdk-type="JavaSDK">
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

@@ -22,11 +22,23 @@
   <fragment
     android:id="@+id/TenantHomeFragment"
     android:name="com.example.tenantcore.ui.tenant.home.TenantHomeFragment"
-    android:label="Tenant Home" />
+    android:label="Tenant Home" >
+    <action
+      android:id="@+id/action_TenantHomeFragment_to_RequestListFragment"
+      app:destination="@id/RequestListFragment" />
+  </fragment>
 
   <fragment
     android:id="@+id/LandlordHomeFragment"
     android:name="com.example.tenantcore.ui.landlord.home.LandlordHomeFragment"
     android:label="Landlord Home"
-    tools:layout="@layout/fragment_landlord_home" />
+    tools:layout="@layout/fragment_landlord_home">
+    <action
+      android:id="@+id/action_LandlordHomeFragment_to_RequestListFragment"
+      app:destination="@id/RequestListFragment" />
+  </fragment>
+  <fragment
+    android:id="@+id/RequestListFragment"
+    android:name="com.example.tenantcore.ui.shared.RequestListFragment"
+    android:label="Requests" />
 </navigation>

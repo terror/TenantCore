@@ -2,7 +2,7 @@
  * Copyright (c) 2020 Ian Clement. All rights reserved.
  */
 
-package com.example.tenantcore.sqlite;
+package com.example.tenantcore.db;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -10,8 +10,10 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,235 +25,256 @@ import java.util.List;
  */
 public abstract class Table<T extends Identifiable<Long>> implements CRUDRepository<Long, T> {
 
-    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+  public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
-    private final SQLiteOpenHelper dbh;
+  private final SQLiteOpenHelper dbh;
 
-    private final String name;
-    private final List<Column> columns;
+  private final String name;
+  private final List<Column> columns;
 
-    /**
-     * Create a database table
-     * @param dbh the handler that connects to the sqlite database.
-     * @param name the table name.
-     */
-    public Table(SQLiteOpenHelper dbh, String name) {
-        this.name = name;
-        this.dbh = dbh;
-        columns = new LinkedList<>();
-        columns.add(new Column("_id", Column.Type.INTEGER).primaryKey().autoincrement());
+  /**
+   * Create a database table
+   *
+   * @param dbh  the handler that connects to the sqlite database.
+   * @param name the table name.
+   */
+  public Table(SQLiteOpenHelper dbh, String name) {
+    this.name = name;
+    this.dbh = dbh;
+    columns = new LinkedList<>();
+    columns.add(new Column("_id", Column.Type.INTEGER).primaryKey().autoincrement());
+  }
+
+  /**
+   * Get the DB handler for this table.
+   *
+   * @return The DB handler.
+   */
+  public SQLiteOpenHelper getDatabaseHandler() {
+    return dbh;
+  }
+
+  /**
+   * Get the table name.
+   *
+   * @return The table name.
+   */
+  public String getName() {
+    return name;
+  }
+
+  /**
+   * Add a column to the table.
+   *
+   * @param column column to add to the table.
+   */
+  public void addColumn(Column column) {
+    columns.add(column);
+  }
+
+  /*
+   * Get the SQL CREATE TABLE statement for this table.
+   */
+  private String getCreateTableStatement() {
+    StringBuilder sb = new StringBuilder();
+
+    sb.append(String.format("CREATE TABLE %s (", name));
+
+    boolean first = false;
+    for (Column column : columns) {
+      if (!first)
+        first = true;
+      else
+        sb.append(", ");
+      sb.append(column.toString());
+    }
+    sb.append(");");
+    return sb.toString();
+  }
+
+  /*
+   * Get the SQL DROP TABLE statement for this table.
+   */
+  private String getDropTableStatement() {
+    return String.format("DROP TABLE IF EXISTS %s;", name);
+  }
+
+  /**
+   * Get an array of column names to produce a SELECT * FROM ...
+   *
+   * @return The array of column names.
+   */
+  public String[] getSelectAll() {
+    String[] selection = new String[columns.size()];
+    for (int i = 0; i < selection.length; i++)
+      selection[i] = columns.get(i).getName();
+    return selection;
+  }
+
+  /**
+   * Check that the table has initial data.
+   *
+   * @return
+   */
+  public boolean hasInitialData() {
+    return false;
+  }
+
+  /**
+   * Populate table with initial data.
+   * Precondition: table has been created.
+   * Note: this method is called during the handler's onCreate method where a writable database is open
+   * trying to get a second writable database will throw an error, hence the parameter.
+   *
+   * @param database
+   */
+  public void initialize(SQLiteDatabase database) throws DatabaseException {
+  }
+
+  /**
+   * Create a ContentValues object from an element
+   *
+   * @param element
+   * @return
+   */
+  protected abstract ContentValues toContentValues(T element) throws DatabaseException;
+
+  /**
+   * Create an element from a query Cursor
+   * Precondition: the cursor is at the correct location in the dataset.
+   *
+   * @param cursor
+   * @return
+   * @throws DatabaseException
+   */
+  protected abstract T fromCursor(Cursor cursor) throws DatabaseException;
+
+  /* DB Operations */
+
+  /**
+   * Create the table in the sqlite database.
+   *
+   * @param database
+   */
+  public void createTable(SQLiteDatabase database) throws DatabaseException {
+    database.execSQL(getCreateTableStatement());
+    if (hasInitialData())
+      initialize(database);
+  }
+
+  /**
+   * Drop the table in the sqlite database.
+   *
+   * @param database
+   */
+  public void dropTable(SQLiteDatabase database) {
+    database.execSQL(getDropTableStatement());
+  }
+
+  /* CRUD Operations */
+
+  @Override
+  public Long create(T element) throws DatabaseException {
+
+    SQLiteDatabase database = dbh.getWritableDatabase();
+
+    // Id of inserted element, -1 if error(?).
+    long insertId = -1;
+
+    // insert into DB
+    try {
+      ContentValues values = toContentValues(element);
+      insertId = database.insertOrThrow(name, null, values);
+    } catch (SQLException e) {
+      throw new DatabaseException(e);
+    } finally {
+      database.close();
     }
 
-    /**
-     * Get the DB handler for this table.
-     * @return The DB handler.
-     */
-    public SQLiteOpenHelper getDatabaseHandler() {
-        return dbh;
-    }
+    element.setId(insertId);
 
-    /**
-     * Get the table name.
-     * @return The table name.
-     */
-    public String getName() {
-        return name;
-    }
+    return insertId;
+  }
 
-    /**
-     * Add a column to the table.
-     * @param column column to add to the table.
-     */
-    public void addColumn(Column column) {
-        columns.add(column);
-    }
+  @Override
+  public T read(Long id) throws DatabaseException {
 
-    /*
-     * Get the SQL CREATE TABLE statement for this table.
-     */
-    private String getCreateTableStatement() {
-        StringBuilder sb = new StringBuilder();
+    SQLiteDatabase database = dbh.getReadableDatabase();
 
-        sb.append(String.format("CREATE TABLE %s (", name));
+    // query database
+    String[] projection = getSelectAll();
+    Cursor cursor = database.query(name, projection, "_id =?", new String[]{String.valueOf(id)}, null, null, null, null);
 
-        boolean first = false;
-        for(Column column : columns) {
-            if(!first)
-                first = true;
-            else
-                sb.append(", ");
-            sb.append(column.toString());
-        }
-        sb.append(");");
-        return sb.toString();
-    }
+    // check for result
+    if (cursor == null)
+      throw new DatabaseException("Operation read(" + id + "): no element with that id");
 
-    /*
-     * Get the SQL DROP TABLE statement for this table.
-     */
-    private String getDropTableStatement() {
-        return String.format("DROP TABLE IF EXISTS %s;", name);
-    }
+    // check that only a single row is returned.
+    cursor.moveToFirst();
+    if (!cursor.isLast())
+      throw new DatabaseException("Operation read(" + id + "): more than one row matches. Aborting.");
 
-    /**
-     * Get an array of column names to produce a SELECT * FROM ...
-     * @return The array of column names.
-     */
-    public String[] getSelectAll() {
-        String[] selection = new String[columns.size()];
-        for(int i = 0; i < selection.length; i++)
-            selection[i] = columns.get(i).getName();
-        return selection;
-    }
+    T element = fromCursor(cursor);
+    element.setId(id);
+    return element;
+  }
 
-    /**
-     * Check that the table has initial data.
-     * @return
-     */
-    public boolean hasInitialData() {
-        return false;
-    }
+  @Override
+  public List<T> readAll() throws DatabaseException {
+    SQLiteDatabase database = dbh.getReadableDatabase();
 
-    /**
-     * Populate table with initial data.
-     * Precondition: table has been created.
-     * Note: this method is called during the handler's onCreate method where a writable database is open
-     *       trying to get a second writable database will throw an error, hence the parameter.
-     * @param database
-     */
-    public void initialize(SQLiteDatabase database) throws DatabaseException {
-    }
+    List<T> elements = new ArrayList<>();
 
-    /**
-     * Create a ContentValues object from an element
-     * @param element
-     * @return
-     */
-    protected abstract ContentValues toContentValues(T element) throws DatabaseException;
-
-    /**
-     * Create an element from a query Cursor
-     * Precondition: the cursor is at the correct location in the dataset.
-     * @param cursor
-     * @return
-     * @throws DatabaseException
-     */
-    protected abstract T fromCursor(Cursor cursor) throws DatabaseException;
-
-    /* DB Operations */
-
-    /**
-     * Create the table in the sqlite database.
-     * @param database
-     */
-    public void createTable(SQLiteDatabase database) throws DatabaseException {
-        database.execSQL(getCreateTableStatement());
-        if(hasInitialData())
-            initialize(database);
-    }
-
-    /**
-     * Drop the table in the sqlite database.
-     * @param database
-     */
-    public void dropTable(SQLiteDatabase database) {
-        database.execSQL(getDropTableStatement());
-    }
-
-    /* CRUD Operations */
-
-    @Override
-    public Long create(T element) throws DatabaseException  {
-
-        SQLiteDatabase database = dbh.getWritableDatabase();
-
-        // Id of inserted element, -1 if error(?).
-        long insertId = -1;
-
-        // insert into DB
-        try {
-            ContentValues values = toContentValues(element);
-            insertId = database.insertOrThrow(name, null, values);
-        }
-        catch (SQLException e) {
-            throw new DatabaseException(e);
-        }
-        finally {
-            database.close();
-        }
-
-        element.setId(insertId);
-
-        return insertId;
-    }
-
-    @Override
-    public T read(Long id) throws DatabaseException {
-
-        SQLiteDatabase database = dbh.getReadableDatabase();
-
-        // query database
-        String[] projection = getSelectAll();
-        Cursor cursor = database.query(name, projection, "_id =?", new String[] { String.valueOf(id) }, null, null, null, null);
-
-        // check for result
-        if(cursor == null)
-            throw new DatabaseException("Operation read(" + id + "): no element with that id");
-
-        // check that only a single row is returned.
-        cursor.moveToFirst();
-        if(!cursor.isLast())
-            throw new DatabaseException("Operation read(" + id + "): more than one row matches. Aborting.");
-
+    String[] selection = getSelectAll();
+    Cursor cursor = database.query(name, selection, null, null, null, null, null);
+    if (cursor != null) {
+      cursor.moveToFirst();
+      while (!cursor.isAfterLast()) {
         T element = fromCursor(cursor);
-        element.setId(id);
-        return element;
+        element.setId(cursor.getLong(0));
+        elements.add(element);
+        cursor.moveToNext();
+      }
+      // makeFactory sure to close the cursor
+      cursor.close();
     }
+    return elements;
+  }
 
-    @Override
-    public List<T> readAll() throws DatabaseException {
-        SQLiteDatabase database = dbh.getReadableDatabase();
+  @Override
+  public boolean update(T element) throws DatabaseException {
 
-        List<T> elements = new ArrayList<>();
+    SQLiteDatabase database = dbh.getWritableDatabase();
 
-        String[] selection = getSelectAll();
-        Cursor cursor = database.query(name, selection, null, null, null, null, null);
-        if(cursor != null) {
-            cursor.moveToFirst();
-            while (!cursor.isAfterLast()) {
-                T element = fromCursor(cursor);
-                element.setId(cursor.getLong(0));
-                elements.add(element);
-                cursor.moveToNext();
-            }
-            // makeFactory sure to close the cursor
-            cursor.close();
-        }
-        return elements;
+    ContentValues values = toContentValues(element);
+    String idStr = String.valueOf(element.getId());
+    int rows = database.update(name, values, "_id = ?", new String[]{idStr});
+    database.close();
+
+    return rows == 1;
+  }
+
+  @Override
+  public boolean delete(T element) throws DatabaseException {
+    SQLiteDatabase database = dbh.getWritableDatabase();
+    String idStr = String.valueOf(element.getId());
+    int rows = database.delete(name, "_id = ?", new String[]{idStr});
+    database.close();
+    if (rows > 1)
+      throw new DatabaseException("More than 1 row deleted when deleting note.. possible database corruption.");
+    return rows == 1;
+  }
+
+  public static String dateAsString(Date date) {
+    return date == null ? null : DATE_FORMAT.format(date);
+  }
+
+  public static Date stringAsDate(String string) {
+    try {
+      return string == null ? null : DATE_FORMAT.parse(string);
+    } catch (ParseException e) {
+      return null;
     }
-
-    @Override
-    public boolean update(T element) throws DatabaseException {
-
-        SQLiteDatabase database = dbh.getWritableDatabase();
-
-        ContentValues values = toContentValues(element);
-        String idStr = String.valueOf(element.getId());
-        int rows = database.update(name, values, "_id = ?", new String[]{idStr});
-        database.close();
-
-        return rows == 1;
-    }
-
-    @Override
-    public boolean delete(T element) throws DatabaseException {
-        SQLiteDatabase database = dbh.getWritableDatabase();
-        String idStr = String.valueOf(element.getId());
-        int rows = database.delete(name, "_id = ?", new String[]{idStr});
-        database.close();
-        if(rows > 1)
-            throw new DatabaseException("More than 1 row deleted when deleting note.. possible database corruption.");
-        return rows == 1;
-    }
+  }
 
 }

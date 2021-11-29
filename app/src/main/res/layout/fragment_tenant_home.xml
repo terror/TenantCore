@@ -1,19 +1,255 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-tools:context=".ui.tenant.home.TenantHomeFragment">
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  tools:context=".ui.tenant.home.TenantHomeFragment">
 
-<TextView
-  android:id="@+id/textViewTenant"
-  android:layout_width="wrap_content"
-  android:layout_height="wrap_content"
-  android:text="Tenant Home"
-  app:layout_constraintBottom_toBottomOf="parent"
-  app:layout_constraintEnd_toEndOf="parent"
-  app:layout_constraintStart_toStartOf="parent"
-  app:layout_constraintTop_toTopOf="parent" />
+  <TextView
+    android:id="@+id/formTitle_txtView"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    android:layout_marginTop="16dp"
+    android:layout_marginEnd="16dp"
+    android:text="Create New Request"
+    android:textAlignment="center"
+    android:textColor="@android:color/secondary_text_light"
+    android:textSize="28sp"
+    android:textStyle="bold"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
 
+  <LinearLayout
+    android:id="@+id/linearLayout"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="16dp"
+    android:orientation="horizontal"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/formTitle_txtView">
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:gravity="start"
+      android:orientation="horizontal">
+
+      <Button
+        android:id="@+id/formReset_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#00FFFFFF"
+        android:text="RESET"
+        android:textColor="@android:color/secondary_text_light"
+        android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:gravity="end"
+      android:orientation="horizontal">
+
+      <Button
+        android:id="@+id/formSubmit_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#00FFFFFF"
+        android:text="SUMBIT"
+        android:textColor="@android:color/secondary_text_light"
+        android:textStyle="bold" />
+    </LinearLayout>
+
+  </LinearLayout>
+
+  <EditText
+    android:id="@+id/requestTitle_editText"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginEnd="16dp"
+    android:ems="10"
+    android:hint="Title"
+    android:inputType="textPersonName"
+    android:textSize="20sp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+  <EditText
+    android:id="@+id/requestDesc_editText"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:ems="10"
+    android:gravity="start|top"
+    android:hint="Description"
+    android:inputType="textMultiLine"
+    app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/requestTitle_editText" />
+
+  <View
+    android:id="@+id/divider"
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:background="?android:attr/listDivider"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/requestDesc_editText" />
+
+  <LinearLayout
+    android:id="@+id/linearLayout2"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    app:layout_constraintBottom_toTopOf="@+id/divider2"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent">
+
+    <ImageView
+      android:id="@+id/formCalendar_imgView"
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:paddingLeft="8dp"
+      android:paddingRight="8dp"
+      android:src="@drawable/ic_baseline_calendar_today_24"
+      android:tint="@android:color/secondary_text_light" />
+
+    <Button
+      android:id="@+id/requestDate_btn"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:background="#00FFFFFF"
+      android:elegantTextHeight="true"
+      android:gravity="start|center_vertical"
+      android:paddingLeft="16dp"
+      android:singleLine="true"
+      android:textAllCaps="false"
+      android:textColor="@android:color/secondary_text_light"
+      android:textSize="18sp" />
+
+    <ImageButton
+      android:id="@+id/dueDateClear_btn"
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:backgroundTint="#00FFFFFF"
+      android:src="@drawable/ic_baseline_clear_24"
+      app:tint="@android:color/secondary_text_light" />
+  </LinearLayout>
+
+  <View
+    android:id="@+id/divider2"
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:background="?android:attr/listDivider"
+    app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent" />
+
+  <LinearLayout
+    android:id="@+id/linearLayout3"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    app:layout_constraintBottom_toTopOf="@+id/divider3"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent">
+
+    <ImageView
+      android:id="@+id/formUrgency_imgView"
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:paddingLeft="8dp"
+      android:paddingRight="8dp"
+      android:src="@drawable/ic_baseline_priority_high_24"
+      app:tint="@android:color/secondary_text_light" />
+
+    <RadioGroup
+      android:id="@+id/maintenanceFormUrgency_RadioGrp"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="10dp"
+      android:layout_weight="1"
+      android:orientation="horizontal">
+
+      <RadioButton
+        android:id="@+id/urgencyLow_radioBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:buttonTint="@android:color/secondary_text_light"
+        android:singleLine="true"
+        android:text="Low"
+        android:textColor="@android:color/secondary_text_light"
+        android:textSize="18sp" />
+
+      <RadioButton
+        android:id="@+id/urgencyMed_radioBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:buttonTint="@android:color/secondary_text_light"
+        android:singleLine="true"
+        android:text="Medium"
+        android:textColor="@android:color/secondary_text_light"
+        android:textSize="18sp" />
+
+      <RadioButton
+        android:id="@+id/urgencyHigh_radioBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:buttonTint="@android:color/secondary_text_light"
+        android:elegantTextHeight="true"
+        android:singleLine="true"
+        android:text="High"
+        android:textColor="@android:color/secondary_text_light"
+        android:textSize="18sp" />
+    </RadioGroup>
+
+    <ImageButton
+      android:id="@+id/urgencyClear_btn"
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:backgroundTint="#00FFFFFF"
+      android:src="@drawable/ic_baseline_clear_24"
+      app:tint="@android:color/secondary_text_light" />
+
+  </LinearLayout>
+
+  <View
+    android:id="@+id/divider3"
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:layout_marginBottom="16dp"
+    android:background="?android:attr/listDivider"
+    app:layout_constraintBottom_toTopOf="@+id/viewRequests_btn"
+    tools:layout_editor_absoluteX="0dp" />
+
+  <Button
+    android:id="@+id/viewRequests_btn"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginBottom="16dp"
+    android:paddingTop="18dp"
+    android:paddingBottom="18dp"
+    android:text="VIEW ALL REQUESTS"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

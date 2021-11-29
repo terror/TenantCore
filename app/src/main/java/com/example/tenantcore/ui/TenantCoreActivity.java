@@ -1,19 +1,42 @@
 package com.example.tenantcore.ui;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+
 import com.example.tenantcore.R;
 import com.example.tenantcore.databinding.ActivityTenantCoreBinding;
+import com.example.tenantcore.viewmodel.TenantCoreViewModel;
 
 public class TenantCoreActivity extends AppCompatActivity {
   private AppBarConfiguration appBarConfiguration;
   private ActivityTenantCoreBinding binding;
+  private TenantCoreViewModel tenantCoreViewModel;
+
+  public TenantCoreActivity() {
+    tenantCoreViewModel = new TenantCoreViewModel();
+  }
+
+  // Note: The database cannot be created unless the context has a generated fragment.
+  // This is why this method is called from the Home Fragment.
+  public void initializeViewModel(TenantCoreActivity context) {
+    try {
+      tenantCoreViewModel.initializeDatabase(context);
+    } catch (Exception e) {
+      System.err.println("Error loading view model.");
+    }
+  }
+
+  public TenantCoreViewModel getTenantViewModel() {
+    return this.tenantCoreViewModel;
+  }
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -51,5 +74,15 @@ public class TenantCoreActivity extends AppCompatActivity {
     NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
     return NavigationUI.navigateUp(navController, appBarConfiguration)
       || super.onSupportNavigateUp();
+  }
+
+  public void displayErrorMessage(String title, String msg) {
+    new AlertDialog.Builder(this)
+      .setIcon(R.drawable.ic_baseline_warning_24)
+      .setTitle(title)
+      .setMessage(msg)
+      .setPositiveButton("OK", null)
+      .create()
+      .show();
   }
 }
