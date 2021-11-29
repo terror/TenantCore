@@ -10,7 +10,7 @@
     android:id="@+id/homeTitle_TextView"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginTop="64dp"
+    android:layout_marginTop="56dp"
     android:text="Welcome to TenantCore!"
     android:textColor="@android:color/secondary_text_light"
     android:textSize="32sp"
@@ -23,9 +23,9 @@
     android:id="@+id/homeIdentity_LinearLayout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_marginTop="56dp"
     android:gravity="center"
     android:orientation="vertical"
-    app:layout_constraintBottom_toTopOf="@+id/homeLogin_LinearLayout"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@+id/homeTitle_TextView">
@@ -65,12 +65,12 @@
     android:id="@+id/homeLogin_LinearLayout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="96dp"
+    android:layout_marginTop="56dp"
     android:gravity="center"
     android:orientation="vertical"
-    app:layout_constraintBottom_toTopOf="@+id/homeCreate_LinearLayout"
     app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent">
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/homeIdentity_LinearLayout">
 
     <TextView
       android:id="@+id/homeLogin_TextView"
@@ -80,7 +80,7 @@
       android:textSize="16sp" />
 
     <EditText
-      android:id="@+id/homeLogin_EditText"
+      android:id="@+id/homeLoginUsername_EditText"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginTop="8dp"
@@ -101,33 +101,33 @@
     android:id="@+id/homeOr_TextView"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_marginTop="24dp"
     android:text="OR"
     android:textSize="20sp"
-    app:layout_constraintBottom_toTopOf="@+id/homeCreate_LinearLayout"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@+id/homeLogin_LinearLayout" />
 
   <LinearLayout
-    android:id="@+id/homeCreate_LinearLayout"
+    android:id="@+id/homeSignUp_LinearLayout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="64dp"
+    android:layout_marginTop="24dp"
     android:gravity="center"
     android:orientation="vertical"
-    app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent">
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/homeOr_TextView">
 
     <TextView
-      android:id="@+id/homeCreate_TextView"
+      android:id="@+id/homeSignUp_TextView"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:text="Don't have an account? Make one!"
       android:textSize="16sp" />
 
     <EditText
-      android:id="@+id/homeCreate_EditText"
+      android:id="@+id/homeSignUpInvite_EditText"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginTop="8dp"
@@ -137,11 +137,11 @@
       android:textSize="16sp" />
 
     <Button
-      android:id="@+id/homeCreate_Button"
+      android:id="@+id/homeSignUp_Button"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginTop="8dp"
-      android:text="CREATE ACCOUNT" />
+      android:text="SIGN UP" />
   </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

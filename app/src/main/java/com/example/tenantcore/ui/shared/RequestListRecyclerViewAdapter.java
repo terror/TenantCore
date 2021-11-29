@@ -24,7 +24,7 @@ public class RequestListRecyclerViewAdapter extends RecyclerView.Adapter<Request
   public RequestListRecyclerViewAdapter(RequestListFragment listFragment) {
     this.requestListFragment = listFragment;
     TenantCoreActivity activity = (TenantCoreActivity) this.requestListFragment.getActivity();
-    this.tenant = activity.getTaskViewModel().getTenant();
+    this.tenant = activity.getTenantViewModel().getTenant();
     this.tenantRequests = tenant.getRequests();
   }
 
