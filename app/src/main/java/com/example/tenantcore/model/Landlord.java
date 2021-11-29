@@ -3,29 +3,20 @@ package com.example.tenantcore.model;
 import com.example.tenantcore.db.Identifiable;
 
 import java.util.Date;
+import java.util.Locale;
 
-public class Tenant implements Identifiable<Long> {
+public class Landlord implements Identifiable<Long> {
 
   private Long id;
   private String username;
   private String name;
   private Date lastLogin;
-  private Long landlordId;
-
-  public Long getLandlordId() {
-    return landlordId;
-  }
-
-  public Tenant setLandlordId(Long landlordId) {
-    this.landlordId = landlordId;
-    return this;
-  }
 
   public String getUsername() {
     return username;
   }
 
-  public Tenant setUsername(String username) {
+  public Landlord setUsername(String username) {
     this.username = username.toLowerCase();
     return this;
   }
@@ -34,7 +25,7 @@ public class Tenant implements Identifiable<Long> {
     return name;
   }
 
-  public Tenant setName(String name) {
+  public Landlord setName(String name) {
     this.name = name;
     return this;
   }
@@ -43,7 +34,7 @@ public class Tenant implements Identifiable<Long> {
     return lastLogin;
   }
 
-  public Tenant setLastLogin(Date lastLogin) {
+  public Landlord setLastLogin(Date lastLogin) {
     this.lastLogin = lastLogin;
     return this;
   }
@@ -54,7 +45,7 @@ public class Tenant implements Identifiable<Long> {
   }
 
   @Override
-  public Tenant setId(Long id) {
+  public Landlord setId(Long id) {
     this.id = id;
     return this;
   }
