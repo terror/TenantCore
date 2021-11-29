@@ -93,7 +93,7 @@ public class TenantCoreActivity extends AppCompatActivity {
   @Override
   public void onBackPressed() {
     // Display a logout warning if the currently displayed fragment is the tenant home fragment.
-    if (getSupportFragmentManager().findFragmentByTag(TenantHomeFragment.TAG_NAME).getView() == null)
+    if (getSupportFragmentManager().findFragmentByTag(TenantHomeFragment.TAG_NAME) == null || getSupportFragmentManager().findFragmentByTag(TenantHomeFragment.TAG_NAME).getView() == null)
       super.onBackPressed();
     else
       displayLogoutWarning();
