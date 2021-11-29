@@ -40,30 +40,47 @@ public class HomeFragment extends Fragment {
     viewmodel = activity.getTenantViewModel();
 
     // Logging in
-    binding.homeLoginButton.setOnClickListener(_view -> {
+    binding.homeLoginButton.setOnClickListener(view1 -> {
+      String usernameEntered = binding.homeLoginUsernameEditText.getText().toString();
       if (binding.homeIdentityTenantRadioButton.isChecked()) {
-        // TODO: Login validation for tenants
+
         // For now, a user can simply log in by writing any text in the EditText view.
-        if (binding.homeLoginUsernameEditText.getText().toString().isEmpty()) {
+        if (usernameEntered.isEmpty()) {
           // Failure
           activity.displayErrorMessage("Invalid tenant login.", "Please enter a valid username.");
-        } else {
+
+        } else if(viewmodel.findTenant(usernameEntered) != null){
           // Success
+          viewmodel.setSignedInUser(usernameEntered);
           NavHostFragment.findNavController(HomeFragment.this)
             .navigate(R.id.action_HomeFragment_to_TenantHomeFragment);
+
         }
+        else{
+          activity.displayErrorMessage("Invalid tenant username", "Please enter a valid username");
+        }
+
       } else {
-        if (binding.homeLoginUsernameEditText.getText().toString().isEmpty()) {
+
+        if (viewmodel.findLandlord(binding.homeLoginUsernameEditText.getText().toString()) == null) {
           // Failure
           activity.displayErrorMessage("Invalid landlord login.", "Please enter a valid username.");
+
         } else {
-          // Check for a landlord matching the entered in username
-          if (viewmodel.findLandlord(binding.homeLoginUsernameEditText.getText().toString()) != null)
-            // Success
-            NavHostFragment.findNavController(HomeFragment.this)
-              .navigate(R.id.action_HomeFragment_to_LandlordHomeFragment);
-          else
-            activity.displayErrorMessage("Invalid landlord login.", "Not a valid username.");
+          if (binding.homeLoginUsernameEditText.getText().toString().isEmpty()) {
+          // Failure
+          activity.displayErrorMessage("Invalid landlord login.", "Please enter a valid username.");
+          } else {
+            // Check for a landlord matching the entered in username
+            if (viewmodel.findLandlord(binding.homeLoginUsernameEditText.getText().toString()) != null){
+              // Success
+              viewmodel.setSignedInUser(usernameEntered);
+              NavHostFragment.findNavController(HomeFragment.this)
+                .navigate(R.id.action_HomeFragment_to_LandlordHomeFragment);
+            }
+            else
+              activity.displayErrorMessage("Invalid landlord login.", "Not a valid username.");
+          }
         }
       }
     });
