@@ -1,7 +1,9 @@
 package com.example.tenantcore.ui.shared;
 
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -12,6 +14,7 @@ import com.example.tenantcore.model.PlaceholderContent;
 import com.example.tenantcore.model.Priority;
 import com.example.tenantcore.model.Request;
 import com.example.tenantcore.ui.TenantCoreActivity;
+import com.example.tenantcore.viewmodel.TenantCoreViewModel;
 
 import java.util.List;
 
@@ -52,6 +55,25 @@ public class RequestListRecyclerViewAdapter extends RecyclerView.Adapter<Request
     public ViewHolder(ListItemRequestBinding binding) {
       super(binding.getRoot());
       this.binding = binding;
+
+      this.binding.requestItemConstraintLayout.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+          TenantCoreViewModel viewModel = ((TenantCoreActivity) requestListFragment.getActivity()).getTenantViewModel();
+          boolean isLandlord = viewModel.findLandlord(viewModel.getSignedInUser()) != null;
+          RequestListBottomSheet requestInfoDialog = new RequestListBottomSheet(view.getContext(), tenantRequests.get(getLayoutPosition()), isLandlord);
+          requestInfoDialog.show();
+
+          if(isLandlord){
+            requestInfoDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+              @Override
+              public void onDismiss(DialogInterface dialogInterface) {
+                // TODO: Logic for updating status of requests in case of approved/refused by landlord
+              }
+            });
+          }
+        }
+      });
     }
 
     public void bind(Request request) {
@@ -76,7 +98,7 @@ public class RequestListRecyclerViewAdapter extends RecyclerView.Adapter<Request
      * @return String containing the Hex color code indicating the background color of the task
      */
     private String getRequestBackgroundColor() {
-      return request.getPriority().equals(Priority.HIGH) ? Request.Color.HIGH_PRIORITY_TASK : request.getPriority().equals(Priority.MEDIUM) ? Request.Color.MEDIUM_PRIORITY_TASK : Request.Color.LOW_PRIORITY_TASK;
+      return request.getPriority().equals(Priority.HIGH) ? Request.Color.HIGH_PRIORITY_REQUEST : request.getPriority().equals(Priority.MEDIUM) ? Request.Color.MEDIUM_PRIORITY_REQUEST : Request.Color.LOW_PRIORITY_REQUEST;
     }
   }
 }
