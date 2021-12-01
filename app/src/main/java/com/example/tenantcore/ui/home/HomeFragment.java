@@ -149,6 +149,8 @@ public class HomeFragment extends Fragment {
                 .setName(name)
                 .setLastLogin(new Date()));
 
+              viewmodel.setSignedInUser(username);
+
               NavHostFragment.findNavController(HomeFragment.this)
                 .navigate(R.id.action_HomeFragment_to_TenantHomeFragment);
 
@@ -190,6 +192,8 @@ public class HomeFragment extends Fragment {
                 .setUsername(username)
                 .setName(name)
                 .setLastLogin(new Date()));
+
+              viewmodel.setSignedInUser(username);
 
               NavHostFragment.findNavController(HomeFragment.this)
                 .navigate(R.id.action_HomeFragment_to_LandlordHomeFragment);
