@@ -156,6 +156,7 @@ public class Request implements Identifiable<Long> {
     public static final String HIGH_PRIORITY_REQUEST = "#e75480"; // Dark pink
     public static final String MEDIUM_PRIORITY_REQUEST = "#F28500"; // Tangerine
     public static final String LOW_PRIORITY_REQUEST = "#90EE90"; // Light green
+    public static final String PENDING_REQUEST_DARK = "#696969"; // Dim gray
     public static final String PENDING_REQUEST = "#a9a9a9"; // Gray
     public static final String APPROVED_REQUEST = "#6aa84f"; // Green
     public static final String REFUSED_REQUEST = "#FF0000"; // Red

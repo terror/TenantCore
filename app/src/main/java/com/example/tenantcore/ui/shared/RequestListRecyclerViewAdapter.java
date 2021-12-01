@@ -13,6 +13,7 @@ import com.example.tenantcore.databinding.ListItemRequestBinding;
 import com.example.tenantcore.model.PlaceholderContent;
 import com.example.tenantcore.model.Priority;
 import com.example.tenantcore.model.Request;
+import com.example.tenantcore.model.Status;
 import com.example.tenantcore.ui.TenantCoreActivity;
 import com.example.tenantcore.viewmodel.TenantCoreViewModel;
 
@@ -88,6 +89,9 @@ public class RequestListRecyclerViewAdapter extends RecyclerView.Adapter<Request
       // Set the request title
       this.binding.requestTitleTextView.setText(request.getTitle());
 
+      // Set the request status color
+      this.binding.requestSatusTextView.setTextColor(Color.parseColor(getStatusColor(request.getStatus())));
+
       // Set the request background color
       this.binding.requestItemConstraintLayout.setBackgroundColor(Color.parseColor(getRequestBackgroundColor()));
     }
@@ -99,6 +103,14 @@ public class RequestListRecyclerViewAdapter extends RecyclerView.Adapter<Request
      */
     private String getRequestBackgroundColor() {
       return request.getPriority().equals(Priority.HIGH) ? Request.Color.HIGH_PRIORITY_REQUEST : request.getPriority().equals(Priority.MEDIUM) ? Request.Color.MEDIUM_PRIORITY_REQUEST : Request.Color.LOW_PRIORITY_REQUEST;
+    }
+
+    private String getStatusColor(Status status){
+      switch (status){
+        case REFUSED: return Request.Color.REFUSED_REQUEST;
+        case ACCEPTED: return Request.Color.APPROVED_REQUEST;
+        default: return Request.Color.PENDING_REQUEST_DARK;
+      }
     }
   }
 }
