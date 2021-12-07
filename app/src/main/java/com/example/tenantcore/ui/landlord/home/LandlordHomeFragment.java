@@ -1,5 +1,6 @@
 package com.example.tenantcore.ui.landlord.home;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,15 +15,24 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tenantcore.R;
 import com.example.tenantcore.databinding.FragmentLandlordHomeBinding;
-import com.example.tenantcore.model.PlaceholderContent;
+import com.example.tenantcore.ui.TenantCoreActivity;
 
 public class LandlordHomeFragment extends Fragment {
   public static String TAG_NAME = "landlord_home";
   private static final String ARG_COLUMN_COUNT = "column-count";
   private int mColumnCount = 1;
   private FragmentLandlordHomeBinding binding;
+  private TenantCoreActivity tenantCoreActivity;
 
   public LandlordHomeFragment() {
+  }
+
+  @Override
+  public void onAttach(@NonNull Context context) {
+    super.onAttach(context);
+
+    // set the activity
+    tenantCoreActivity = (TenantCoreActivity) context;
   }
 
   @Override
@@ -51,7 +61,12 @@ public class LandlordHomeFragment extends Fragment {
       recyclerView.setLayoutManager(new GridLayoutManager(getContext(), mColumnCount));
 
     // Set the adapter
-    recyclerView.setAdapter(new TenantRequestRecyclerViewAdapter(PlaceholderContent.ITEMS, this));
+    recyclerView.setAdapter(
+      new TenantRequestRecyclerViewAdapter(
+        tenantCoreActivity.getTenantViewModel().getTenants(),
+        this
+      )
+    );
 
     return binding.getRoot();
   }

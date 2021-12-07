@@ -7,27 +7,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
-
 import com.example.tenantcore.R;
 import com.example.tenantcore.databinding.FragmentTenantHomeBinding;
-import com.example.tenantcore.model.PlaceholderContent;
 import com.example.tenantcore.model.Priority;
 import com.example.tenantcore.model.Request;
 import com.example.tenantcore.ui.TenantCoreActivity;
 import com.example.tenantcore.ui.util.DatePickerDialogFragment;
-
+import com.example.tenantcore.viewmodel.TenantCoreViewModel;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
 public class TenantHomeFragment extends Fragment {
-
   public static String TAG_NAME = "tenant_home";
-
   private FragmentTenantHomeBinding binding;
   private Calendar requestDate;
   private SimpleDateFormat formatter;
@@ -206,8 +201,8 @@ public class TenantHomeFragment extends Fragment {
       @Override
       public void onClick(View v) {
         // Get a place holder tenant and set it in the view-model.
-        PlaceholderContent.PlaceholderItem tenant = PlaceholderContent.ITEMS.get(0);
-        ((TenantCoreActivity)getActivity()).getTenantViewModel().setTenant(tenant);
+        TenantCoreViewModel viewModel = ((TenantCoreActivity)getActivity()).getTenantViewModel();
+        viewModel.setTenant(viewModel.getTenants().get(0));
 
         NavHostFragment.findNavController(TenantHomeFragment.this)
           .navigate(R.id.action_TenantHomeFragment_to_RequestListFragment);
