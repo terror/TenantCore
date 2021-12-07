@@ -1,26 +1,23 @@
 package com.example.tenantcore.viewmodel;
 
 import android.content.Context;
-
 import com.example.tenantcore.db.DatabaseException;
 import com.example.tenantcore.db.TenantCoreDatabaseHandler;
 import com.example.tenantcore.model.InviteCode;
 import com.example.tenantcore.model.Landlord;
-import com.example.tenantcore.model.PlaceholderContent;
+import com.example.tenantcore.model.Request;
 import com.example.tenantcore.model.Tenant;
-
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TenantCoreViewModel extends ObservableModel<TenantCoreViewModel> {
-
   private TenantCoreDatabaseHandler dbHandler;
   private String signedInUser;
-//  private final List<Tenant> tenants;
-//  private final List<Landlord> landlords;
-//  private final List<Request> requests;
-//  private final List<InviteCode> inviteCodes;
-
-  private PlaceholderContent.PlaceholderItem tenant;
+  private List<Tenant> tenants;
+  private List<Landlord> landlords;
+  private List<Request> requests;
+  private List<InviteCode> inviteCodes;
+  private Tenant tenant;
 
   @Override
   protected TenantCoreViewModel get() {
@@ -34,10 +31,10 @@ public class TenantCoreViewModel extends ObservableModel<TenantCoreViewModel> {
 
   public void initializeDatabase(Context context) throws DatabaseException {
     this.dbHandler = new TenantCoreDatabaseHandler(context);
-//    this.tenants = dbHandler.getTenantTable().readAll();
-//    this.landlords = dbHandler.getLandlordTable().readAll();
-//    this.requests = dbHandler.getRequestTable().readAll();
-//    this.inviteCodes = dbHandler.getInviteCodeTable().readAll();
+    this.tenants = dbHandler.getTenantTable().readAll();
+    this.landlords = dbHandler.getLandlordTable().readAll();
+    this.requests = dbHandler.getRequestTable().readAll();
+    this.inviteCodes = dbHandler.getInviteCodeTable().readAll();
   }
 
   public void setSignedInUser(String username){
@@ -48,12 +45,16 @@ public class TenantCoreViewModel extends ObservableModel<TenantCoreViewModel> {
     return this.signedInUser;
   }
 
-  public PlaceholderContent.PlaceholderItem getTenant() {
+  public Tenant getTenant() {
     return tenant;
   }
 
-  public void setTenant(PlaceholderContent.PlaceholderItem tenant) {
+  public void setTenant(Tenant tenant) {
     this.tenant = tenant;
+  }
+
+  public List<Tenant> getTenants() {
+    return this.tenants;
   }
 
   // Returns whether or not an invite code exists with the provided code.
@@ -109,9 +110,14 @@ public class TenantCoreViewModel extends ObservableModel<TenantCoreViewModel> {
     dbHandler.getLandlordTable().create(landlord);
   }
 
+  public List<Request> getRequestsByTenant(Tenant tenant) {
+    return this.requests
+      .stream()
+      .filter((request) -> request.getTenantId() == tenant.getId())
+      .collect(Collectors.toList());
+  }
+
   public void removeInviteCode(InviteCode inviteCode) throws DatabaseException {
     dbHandler.getInviteCodeTable().delete(inviteCode);
   }
-
-
 }
