@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tenantcore.R;
 import com.example.tenantcore.databinding.FragmentLandlordHomeBinding;
+import com.example.tenantcore.db.DatabaseException;
 import com.example.tenantcore.ui.TenantCoreActivity;
 
 public class LandlordHomeFragment extends Fragment {
@@ -60,13 +61,19 @@ public class LandlordHomeFragment extends Fragment {
     else
       recyclerView.setLayoutManager(new GridLayoutManager(getContext(), mColumnCount));
 
+    String signedInLandlord = tenantCoreActivity.getTenantViewModel().getSignedInUser();
+
     // Set the adapter
-    recyclerView.setAdapter(
-      new TenantRequestRecyclerViewAdapter(
-        tenantCoreActivity.getTenantViewModel().getTenants(),
-        this
-      )
-    );
+    try {
+      recyclerView.setAdapter(
+        new TenantRecyclerViewAdapter(
+          tenantCoreActivity.getTenantViewModel().getTenantsByLandlord(tenantCoreActivity.getTenantViewModel().findLandlord(signedInLandlord)),
+          this
+        )
+      );
+    } catch (DatabaseException e) {
+      e.printStackTrace();
+    }
 
     return binding.getRoot();
   }
