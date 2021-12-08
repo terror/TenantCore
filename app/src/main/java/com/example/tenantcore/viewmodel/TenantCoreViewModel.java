@@ -1,12 +1,18 @@
 package com.example.tenantcore.viewmodel;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+
 import com.example.tenantcore.db.DatabaseException;
 import com.example.tenantcore.db.TenantCoreDatabaseHandler;
+import com.example.tenantcore.db.TenantTable;
 import com.example.tenantcore.model.InviteCode;
 import com.example.tenantcore.model.Landlord;
 import com.example.tenantcore.model.Request;
 import com.example.tenantcore.model.Tenant;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,6 +61,15 @@ public class TenantCoreViewModel extends ObservableModel<TenantCoreViewModel> {
 
   public List<Tenant> getTenants() {
     return this.tenants;
+  }
+
+  public List<Tenant> getTenants(Landlord landlord) throws DatabaseException {
+    List<Tenant> allTenants = dbHandler.getTenantTable().readAll();
+
+    return allTenants
+      .stream()
+      .filter((tenant) -> tenant.getLandlordId().equals(landlord.getId()))
+      .collect(Collectors.toList());
   }
 
   // Returns whether or not an invite code exists with the provided code.
@@ -110,10 +125,12 @@ public class TenantCoreViewModel extends ObservableModel<TenantCoreViewModel> {
     dbHandler.getLandlordTable().create(landlord);
   }
 
-  public List<Request> getRequestsByTenant(Tenant tenant) {
-    return this.requests
+  public List<Request> getRequestsByTenant(Tenant tenant) throws DatabaseException {
+    List<Request> allRequests = dbHandler.getRequestTable().readAll();
+
+    return allRequests
       .stream()
-      .filter((request) -> request.getTenantId() == tenant.getId())
+      .filter((request) -> request.getTenantId().equals(tenant.getId()))
       .collect(Collectors.toList());
   }
 

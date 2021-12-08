@@ -12,6 +12,15 @@ public class Tenant implements Identifiable<Long> {
   private Date lastLogin;
   private Long landlordId;
 
+  public Tenant(){}
+
+  public Tenant(String username, String name, long landlordId){
+    this.username = username;
+    this.name = name;
+    this.landlordId = landlordId;
+    lastLogin = null;
+  }
+
   public Long getLandlordId() {
     return landlordId;
   }

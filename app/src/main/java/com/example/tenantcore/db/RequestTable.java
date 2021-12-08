@@ -2,12 +2,17 @@ package com.example.tenantcore.db;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.example.tenantcore.model.InviteCode;
 import com.example.tenantcore.model.Priority;
 import com.example.tenantcore.model.Request;
 import com.example.tenantcore.model.Status;
+import com.example.tenantcore.model.Tenant;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RequestTable extends Table<Request> {
 
@@ -52,4 +57,42 @@ public class RequestTable extends Table<Request> {
       .setStatus(Status.values()[cursor.getInt(5)])
       .setPriority(Priority.values()[cursor.getInt(6)]);
   }
+
+  @Override
+  public boolean hasInitialData() {
+    return true;
+  }
+
+  @Override
+  public void initialize(SQLiteDatabase database) throws DatabaseException {
+    // Loop depending on the number of default tenants
+    for (int i = 0; i < TenantCorePlaceholders.NUM_DEFAULT_TENANTS; i++) {
+
+      for(Request request : getRequests(i+1)){
+        // Id of inserted element, -1 if error(?).
+        long insertId = -1;
+
+        // insert into DB
+        try {
+          ContentValues values = toContentValues(request);
+          insertId = database.insertOrThrow(super.getName(), null, values);
+        }
+        catch (SQLException e) {
+          throw new DatabaseException(e.getMessage());
+        }
+
+        request.setId(insertId);
+      }
+    }
+  }
+
+  private List<Request> getRequests(int tenantId){
+    List<Request> requests = TenantCorePlaceholders.getTenantRequests().get(tenantId-1 % TenantCorePlaceholders.NUM_DEFAULT_TENANTS);
+    for(Request request : requests){
+      request.setTenantId((long) tenantId);
+    }
+
+    return requests;
+  }
+
 }
