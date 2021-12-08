@@ -1,35 +1,29 @@
 package com.example.tenantcore.ui.shared;
 
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.tenantcore.databinding.ListItemRequestBinding;
-import com.example.tenantcore.model.PlaceholderContent;
 import com.example.tenantcore.model.Priority;
 import com.example.tenantcore.model.Request;
 import com.example.tenantcore.model.Status;
+import com.example.tenantcore.model.Tenant;
 import com.example.tenantcore.ui.TenantCoreActivity;
 import com.example.tenantcore.viewmodel.TenantCoreViewModel;
-
 import java.util.List;
 
 public class RequestListRecyclerViewAdapter extends RecyclerView.Adapter<RequestListRecyclerViewAdapter.ViewHolder> {
-
   private final RequestListFragment requestListFragment;
-  private PlaceholderContent.PlaceholderItem tenant;
+  private Tenant tenant;
   private List<Request> tenantRequests;
 
   public RequestListRecyclerViewAdapter(RequestListFragment listFragment) {
     this.requestListFragment = listFragment;
     TenantCoreActivity activity = (TenantCoreActivity) this.requestListFragment.getActivity();
     this.tenant = activity.getTenantViewModel().getTenant();
-    this.tenantRequests = tenant.getRequests();
+    this.tenantRequests = activity.getTenantViewModel().getRequestsByTenant(this.tenant);
   }
 
   @Override
@@ -57,22 +51,18 @@ public class RequestListRecyclerViewAdapter extends RecyclerView.Adapter<Request
       super(binding.getRoot());
       this.binding = binding;
 
-      this.binding.requestItemConstraintLayout.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-          TenantCoreViewModel viewModel = ((TenantCoreActivity) requestListFragment.getActivity()).getTenantViewModel();
-          boolean isLandlord = viewModel.findLandlord(viewModel.getSignedInUser()) != null;
-          RequestListBottomSheet requestInfoDialog = new RequestListBottomSheet(view.getContext(), tenantRequests.get(getLayoutPosition()), isLandlord);
-          requestInfoDialog.show();
+      this.binding.requestItemConstraintLayout.setOnClickListener(view -> {
+        TenantCoreViewModel viewModel = ((TenantCoreActivity) requestListFragment.getActivity()).getTenantViewModel();
 
-          if(isLandlord){
-            requestInfoDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-              @Override
-              public void onDismiss(DialogInterface dialogInterface) {
-                // TODO: Logic for updating status of requests in case of approved/refused by landlord
-              }
-            });
-          }
+        boolean isLandlord = viewModel.findLandlord(viewModel.getSignedInUser()) != null;
+
+        RequestListBottomSheet requestInfoDialog = new RequestListBottomSheet(view.getContext(), tenantRequests.get(getLayoutPosition()), isLandlord);
+        requestInfoDialog.show();
+
+        if (isLandlord) {
+          requestInfoDialog.setOnDismissListener(dialogInterface -> {
+            // TODO: Logic for updating status of requests in case of approved/refused by landlord
+          });
         }
       });
     }
@@ -105,11 +95,14 @@ public class RequestListRecyclerViewAdapter extends RecyclerView.Adapter<Request
       return request.getPriority().equals(Priority.HIGH) ? Request.Color.HIGH_PRIORITY_REQUEST : request.getPriority().equals(Priority.MEDIUM) ? Request.Color.MEDIUM_PRIORITY_REQUEST : Request.Color.LOW_PRIORITY_REQUEST;
     }
 
-    private String getStatusColor(Status status){
-      switch (status){
-        case REFUSED: return Request.Color.REFUSED_REQUEST;
-        case ACCEPTED: return Request.Color.APPROVED_REQUEST;
-        default: return Request.Color.PENDING_REQUEST_DARK;
+    private String getStatusColor(Status status) {
+      switch (status) {
+        case REFUSED:
+          return Request.Color.REFUSED_REQUEST;
+        case ACCEPTED:
+          return Request.Color.APPROVED_REQUEST;
+        default:
+          return Request.Color.PENDING_REQUEST_DARK;
       }
     }
   }

@@ -7,8 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioGroup;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
@@ -37,7 +35,7 @@ public class HomeFragment extends Fragment {
     super.onViewCreated(view, savedInstanceState);
 
     // Initialize database
-    activity = (TenantCoreActivity)this.getContext();
+    activity = (TenantCoreActivity) this.getContext();
     activity.initializeViewModel(activity);
     viewmodel = activity.getTenantViewModel();
 
@@ -51,14 +49,13 @@ public class HomeFragment extends Fragment {
           // Failure
           activity.displayErrorMessage("Invalid tenant login.", "Please enter a valid username.");
 
-        } else if(viewmodel.findTenant(usernameEntered) != null){
+        } else if (viewmodel.findTenant(usernameEntered) != null) {
           // Success
           viewmodel.setSignedInUser(usernameEntered);
           NavHostFragment.findNavController(HomeFragment.this)
             .navigate(R.id.action_HomeFragment_to_TenantHomeFragment);
 
-        }
-        else{
+        } else {
           activity.displayErrorMessage("Invalid tenant username", "Please enter a valid username");
         }
 
@@ -70,17 +67,16 @@ public class HomeFragment extends Fragment {
 
         } else {
           if (binding.homeLoginUsernameEditText.getText().toString().isEmpty()) {
-          // Failure
-          activity.displayErrorMessage("Invalid landlord login.", "Please enter a valid username.");
+            // Failure
+            activity.displayErrorMessage("Invalid landlord login.", "Please enter a valid username.");
           } else {
             // Check for a landlord matching the entered in username
-            if (viewmodel.findLandlord(binding.homeLoginUsernameEditText.getText().toString()) != null){
+            if (viewmodel.findLandlord(binding.homeLoginUsernameEditText.getText().toString()) != null) {
               // Success
               viewmodel.setSignedInUser(usernameEntered);
               NavHostFragment.findNavController(HomeFragment.this)
                 .navigate(R.id.action_HomeFragment_to_LandlordHomeFragment);
-            }
-            else
+            } else
               activity.displayErrorMessage("Invalid landlord login.", "Not a valid username.");
           }
         }
@@ -216,9 +212,9 @@ public class HomeFragment extends Fragment {
 
     // Radio button change
     binding.homeIdentityRadioGroup.setOnCheckedChangeListener((radioGroup, i) -> {
-      if(binding.homeIdentityTenantRadioButton.isChecked())
+      if (binding.homeIdentityTenantRadioButton.isChecked())
         binding.homeSignUpInviteEditText.setVisibility(View.VISIBLE);
-      else if(binding.homeIdentityLandlordRadioButton.isChecked())
+      else if (binding.homeIdentityLandlordRadioButton.isChecked())
         binding.homeSignUpInviteEditText.setVisibility(View.GONE);
     });
   }
