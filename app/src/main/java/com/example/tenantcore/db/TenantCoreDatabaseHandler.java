@@ -32,6 +32,7 @@ public class TenantCoreDatabaseHandler extends SQLiteOpenHelper {
   @Override
   public void onCreate(SQLiteDatabase database) {
     try {
+      TenantCorePlaceholders.loadLandLord();
       TenantCorePlaceholders.loadTenantRequests();
 
       inviteCodeTable.createTable(database);

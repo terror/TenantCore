@@ -1,6 +1,7 @@
 package com.example.tenantcore.db;
 
 import com.example.tenantcore.model.InviteCode;
+import com.example.tenantcore.model.Landlord;
 import com.example.tenantcore.model.Priority;
 import com.example.tenantcore.model.Request;
 
@@ -14,13 +15,15 @@ public class TenantCorePlaceholders {
 
   private static List<InviteCode> inviteCodes;
   private static List<List<Request>> tenantRequests;
+  private static List<Landlord> landlords;
   public static final int NUM_DEFAULT_TENANTS = 3;
   public static final int NUM_DEFAULT_REQUESTS = 3;
+  public static final long DEFAULT_LANDLORD_ID = 1;
 
   private static void loadInviteCodes() {
     inviteCodes = new ArrayList<>();
 
-    inviteCodes.add(new InviteCode().setLandlordId(1L).setCode(12345));
+    inviteCodes.add(new InviteCode().setLandlordId(DEFAULT_LANDLORD_ID).setCode(12345));
   }
 
   public static List<InviteCode> getInviteCodes() {
@@ -32,6 +35,15 @@ public class TenantCorePlaceholders {
       }
     }
     return inviteCodes;
+  }
+
+  public static void loadLandLord(){
+    landlords = new ArrayList<>();
+    landlords.add(new Landlord().setUsername("robert-w").setName("Robert William").setId(DEFAULT_LANDLORD_ID));
+  }
+
+  public static List<Landlord> getLandlords(){
+    return landlords;
   }
 
   public static void loadTenantRequests(){
