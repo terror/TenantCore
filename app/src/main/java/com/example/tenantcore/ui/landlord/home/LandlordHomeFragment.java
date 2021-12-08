@@ -66,7 +66,7 @@ public class LandlordHomeFragment extends Fragment {
     // Set the adapter
     try {
       recyclerView.setAdapter(
-        new TenantRequestRecyclerViewAdapter(
+        new TenantRecyclerViewAdapter(
           tenantCoreActivity.getTenantViewModel().getTenantsByLandlord(tenantCoreActivity.getTenantViewModel().findLandlord(signedInLandlord)),
           this
         )

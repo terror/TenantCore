@@ -61,14 +61,11 @@ public class RequestListRecyclerViewAdapter extends RecyclerView.Adapter<Request
       if (activity != null) {
 
         // Update listener for view model
-        activity.getTenantViewModel().addOnUpdateListener(new ObservableModel.OnUpdateListener<TenantCoreViewModel>() {
-          @Override
-          public void onUpdate(TenantCoreViewModel item) {
-            try {
-              tenantRequests = item.getRequestsByTenant(tenant);
-            } catch (DatabaseException e) {
-              e.printStackTrace();
-            }
+        activity.getTenantViewModel().addOnUpdateListener(item -> {
+          try {
+            tenantRequests = item.getRequestsByTenant(tenant);
+          } catch (DatabaseException e) {
+            e.printStackTrace();
           }
         });
       }

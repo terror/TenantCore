@@ -11,11 +11,11 @@ import com.example.tenantcore.model.Tenant;
 import com.example.tenantcore.ui.TenantCoreActivity;
 import java.util.List;
 
-public class TenantRequestRecyclerViewAdapter extends RecyclerView.Adapter<TenantRequestRecyclerViewAdapter.ViewHolder> {
+public class TenantRecyclerViewAdapter extends RecyclerView.Adapter<TenantRecyclerViewAdapter.ViewHolder> {
   private final List<Tenant> tenants;
   private final LandlordHomeFragment landlordHomeFragment;
 
-  public TenantRequestRecyclerViewAdapter(List<Tenant> tenants, LandlordHomeFragment landlordHomeFragment) {
+  public TenantRecyclerViewAdapter(List<Tenant> tenants, LandlordHomeFragment landlordHomeFragment) {
     this.tenants = tenants;
     this.landlordHomeFragment = landlordHomeFragment;
     setHasStableIds(true);

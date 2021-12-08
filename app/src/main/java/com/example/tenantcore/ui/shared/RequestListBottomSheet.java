@@ -66,24 +66,18 @@ public class RequestListBottomSheet extends BottomSheetDialog {
         Clicking the "APPROVE" btn changes request status to ACCEPTED.
         It also updates the request in the db and dismisses the bottom sheet
        */
-      binding.requestSheetApproveBtnImageButton.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-          request.setStatus(Status.ACCEPTED);
-          onStatusUpdate();
-        }
+      binding.requestSheetApproveBtnImageButton.setOnClickListener(view -> {
+        request.setStatus(Status.ACCEPTED);
+        onStatusUpdate();
       });
 
       /*
         Clicking the "REFUSE" btn changes request status to REFUSED.
         It also updates the request in the db and dismisses the bottom sheet
        */
-      binding.requestSheetRefuseBtnImageButton.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-          request.setStatus(Status.REFUSED);
-          onStatusUpdate();
-        }
+      binding.requestSheetRefuseBtnImageButton.setOnClickListener(view -> {
+        request.setStatus(Status.REFUSED);
+        onStatusUpdate();
       });
     }
 
