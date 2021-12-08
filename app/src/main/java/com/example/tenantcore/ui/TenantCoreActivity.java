@@ -1,11 +1,14 @@
 package com.example.tenantcore.ui;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -13,11 +16,14 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.tenantcore.R;
 import com.example.tenantcore.databinding.ActivityTenantCoreBinding;
+import com.example.tenantcore.ui.landlord.home.LandlordHomeFragment;
+import com.example.tenantcore.ui.tenant.home.TenantHomeFragment;
 import com.example.tenantcore.viewmodel.TenantCoreViewModel;
 
 public class TenantCoreActivity extends AppCompatActivity {
   private AppBarConfiguration appBarConfiguration;
   private ActivityTenantCoreBinding binding;
+  private TenantCoreActivity context;
   private TenantCoreViewModel tenantCoreViewModel;
 
   public TenantCoreActivity() {
@@ -38,9 +44,11 @@ public class TenantCoreActivity extends AppCompatActivity {
     return this.tenantCoreViewModel;
   }
 
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    context = this;
 
     binding = ActivityTenantCoreBinding.inflate(getLayoutInflater());
     setContentView(binding.getRoot());
@@ -56,6 +64,14 @@ public class TenantCoreActivity extends AppCompatActivity {
   public boolean onCreateOptionsMenu(Menu menu) {
     // Inflate the menu; this adds items to the action bar if it is present.
     getMenuInflater().inflate(R.menu.menu_main, menu);
+
+    binding.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        context.onBackPressed();
+      }
+    });
+
     return true;
   }
 
@@ -76,12 +92,44 @@ public class TenantCoreActivity extends AppCompatActivity {
       || super.onSupportNavigateUp();
   }
 
+  @Override
+  public void onBackPressed() {
+    // Display a logout warning if the currently displayed fragment is the tenant home fragment or the landlord home fragment
+    Fragment tenantHomeFragment = getSupportFragmentManager().findFragmentByTag(TenantHomeFragment.TAG_NAME);
+    Fragment landlordHomeFragment = getSupportFragmentManager().findFragmentByTag(LandlordHomeFragment.TAG_NAME);
+    if ( (tenantHomeFragment == null || tenantHomeFragment.getView() == null) && (landlordHomeFragment == null || landlordHomeFragment.getView() == null))
+      super.onBackPressed();
+    else
+      displayLogoutWarning();
+  }
+
   public void displayErrorMessage(String title, String msg) {
     new AlertDialog.Builder(this)
       .setIcon(R.drawable.ic_baseline_warning_24)
       .setTitle(title)
       .setMessage(msg)
       .setPositiveButton("OK", null)
+      .create()
+      .show();
+  }
+
+  public void displayLogoutWarning() {
+    new AlertDialog.Builder(this)
+      .setIcon(R.drawable.ic_baseline_warning_24)
+      .setTitle("Logout")
+      .setMessage("A new key will be required to access your account.\nWould you like to proceed?")
+      .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+          TenantCoreActivity.super.onBackPressed();
+        }
+      })
+      .setNegativeButton("No", new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+          dialog.cancel();
+        }
+      })
       .create()
       .show();
   }

@@ -153,8 +153,13 @@ public class Request implements Identifiable<Long> {
    * static Task Color class containing hex color codes for different task aspects.
    */
   public static class Color {
-    public static final String HIGH_PRIORITY_TASK = "#e75480"; // Dark pink
-    public static final String MEDIUM_PRIORITY_TASK = "#F28500"; // Tangerine
-    public static final String LOW_PRIORITY_TASK = "#90EE90"; // Light green
+    public static final String HIGH_PRIORITY_REQUEST = "#e75480"; // Dark pink
+    public static final String MEDIUM_PRIORITY_REQUEST = "#F28500"; // Tangerine
+    public static final String LOW_PRIORITY_REQUEST = "#90EE90"; // Light green
+    public static final String PENDING_REQUEST_DARK = "#696969"; // Dim gray
+    public static final String PENDING_REQUEST = "#a9a9a9"; // Gray
+    public static final String APPROVED_REQUEST = "#6aa84f"; // Green
+    public static final String REFUSED_REQUEST = "#FF0000"; // Red
+    public static final String TEXT_LOW_PRIORITY_REQUEST = "#6aa84f"; // Green
   }
 }
