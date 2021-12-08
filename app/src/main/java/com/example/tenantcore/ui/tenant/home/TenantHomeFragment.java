@@ -202,7 +202,7 @@ public class TenantHomeFragment extends Fragment {
       public void onClick(View v) {
         // Get a place holder tenant and set it in the view-model.
         TenantCoreViewModel viewModel = ((TenantCoreActivity)getActivity()).getTenantViewModel();
-        viewModel.setTenant(viewModel.getTenants().get(0));
+        viewModel.setTenant(viewModel.findTenant(viewModel.getSignedInUser()));
 
         NavHostFragment.findNavController(TenantHomeFragment.this)
           .navigate(R.id.action_TenantHomeFragment_to_RequestListFragment);

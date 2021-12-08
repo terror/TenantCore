@@ -59,19 +59,6 @@ public class TenantCoreViewModel extends ObservableModel<TenantCoreViewModel> {
     this.tenant = tenant;
   }
 
-  public List<Tenant> getTenants() {
-    return this.tenants;
-  }
-
-  public List<Tenant> getTenants(Landlord landlord) throws DatabaseException {
-    List<Tenant> allTenants = dbHandler.getTenantTable().readAll();
-
-    return allTenants
-      .stream()
-      .filter((tenant) -> tenant.getLandlordId().equals(landlord.getId()))
-      .collect(Collectors.toList());
-  }
-
   // Returns whether or not an invite code exists with the provided code.
   public InviteCode findInviteCode(String code) {
     List<InviteCode> inviteCodes;
@@ -125,6 +112,10 @@ public class TenantCoreViewModel extends ObservableModel<TenantCoreViewModel> {
     dbHandler.getLandlordTable().create(landlord);
   }
 
+  public boolean updateTenantRequest(Request request) throws DatabaseException {
+    return dbHandler.getRequestTable().update(request);
+  }
+
   public List<Request> getRequestsByTenant(Tenant tenant) throws DatabaseException {
     List<Request> allRequests = dbHandler.getRequestTable().readAll();
 
@@ -134,6 +125,14 @@ public class TenantCoreViewModel extends ObservableModel<TenantCoreViewModel> {
       .collect(Collectors.toList());
   }
 
+  public List<Tenant> getTenantsByLandlord(Landlord landlord) throws DatabaseException {
+    List<Tenant> allTenants = dbHandler.getTenantTable().readAll();
+
+    return allTenants
+      .stream()
+      .filter((tenant) -> tenant.getLandlordId().equals(landlord.getId()))
+      .collect(Collectors.toList());
+  }
   public void removeInviteCode(InviteCode inviteCode) throws DatabaseException {
     dbHandler.getInviteCodeTable().delete(inviteCode);
   }
