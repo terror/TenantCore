@@ -2,8 +2,11 @@ package com.example.tenantcore.db;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.example.tenantcore.model.InviteCode;
 import com.example.tenantcore.model.Landlord;
 
 public class LandlordTable extends Table<Landlord> {
@@ -36,5 +39,30 @@ public class LandlordTable extends Table<Landlord> {
       .setUsername(cursor.getString(1))
       .setName(cursor.getString(2))
       .setLastLogin(Table.stringAsDate(cursor.getString(3)));
+  }
+
+  @Override
+  public boolean hasInitialData() {
+    return true;
+  }
+
+  @Override
+  public void initialize(SQLiteDatabase database) throws DatabaseException {
+    for (Landlord element : TenantCorePlaceholders.getLandlords()) {
+
+      // Id of inserted element, -1 if error(?).
+      long insertId = -1;
+
+      // insert into DB
+      try {
+        ContentValues values = toContentValues(element);
+        insertId = database.insertOrThrow(super.getName(), null, values);
+      }
+      catch (SQLException e) {
+        throw new DatabaseException(e);
+      }
+
+      element.setId(insertId);
+    }
   }
 }
