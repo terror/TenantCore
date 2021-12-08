@@ -41,6 +41,13 @@ public class TenantHomeFragment extends Fragment {
     formatter = new SimpleDateFormat("EEEE, MMMM d");
     setListeners();
 
+    binding.speechImgBtn.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        // TODO detect speech
+      }
+    });
+
     return binding.getRoot();
   }
 

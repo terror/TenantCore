@@ -26,7 +26,9 @@
     android:id="@+id/linearLayout"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
+    android:layout_marginStart="8dp"
     android:layout_marginTop="16dp"
+    android:layout_marginEnd="8dp"
     android:orientation="horizontal"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
@@ -39,10 +41,16 @@
       android:gravity="start"
       android:orientation="horizontal">
 
+      <ImageButton
+        android:id="@+id/speech_imgBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_baseline_mic_24" />
+
       <Button
         android:id="@+id/formReset_btn"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="#00FFFFFF"
         android:text="RESET"
         android:textColor="@android:color/secondary_text_light"
@@ -59,7 +67,7 @@
       <Button
         android:id="@+id/formSubmit_btn"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="#00FFFFFF"
         android:text="SUMBIT"
         android:textColor="@android:color/secondary_text_light"
@@ -124,7 +132,7 @@
       android:paddingLeft="8dp"
       android:paddingRight="8dp"
       android:src="@drawable/ic_baseline_calendar_today_24"
-      android:tint="@android:color/secondary_text_light" />
+      app:tint="@android:color/secondary_text_light" />
 
     <Button
       android:id="@+id/requestDate_btn"
