@@ -12,6 +12,7 @@ import com.example.tenantcore.model.Request;
 import com.example.tenantcore.model.Status;
 import com.example.tenantcore.model.Tenant;
 import com.example.tenantcore.ui.TenantCoreActivity;
+import com.example.tenantcore.viewmodel.ObservableModel;
 import com.example.tenantcore.viewmodel.TenantCoreViewModel;
 import java.util.List;
 
@@ -56,20 +57,40 @@ public class RequestListRecyclerViewAdapter extends RecyclerView.Adapter<Request
       super(binding.getRoot());
       this.binding = binding;
 
+      TenantCoreActivity activity = (TenantCoreActivity) requestListFragment.getActivity();
+      if (activity != null) {
+
+        // Update listener for view model
+        activity.getTenantViewModel().addOnUpdateListener(new ObservableModel.OnUpdateListener<TenantCoreViewModel>() {
+          @Override
+          public void onUpdate(TenantCoreViewModel item) {
+            try {
+              tenantRequests = item.getRequestsByTenant(tenant);
+            } catch (DatabaseException e) {
+              e.printStackTrace();
+            }
+          }
+        });
+      }
+
+      // clicking on a request item in the recycler view
       this.binding.requestItemConstraintLayout.setOnClickListener(view -> {
         TenantCoreViewModel viewModel = ((TenantCoreActivity) requestListFragment.getActivity()).getTenantViewModel();
 
         boolean isLandlord = viewModel.findLandlord(viewModel.getSignedInUser()) != null;
-
-        RequestListBottomSheet requestInfoDialog = new RequestListBottomSheet(view.getContext(), tenantRequests.get(getLayoutPosition()), isLandlord);
+        int layoutPosition = getLayoutPosition();
+        RequestListBottomSheet requestInfoDialog = new RequestListBottomSheet((TenantCoreActivity) requestListFragment.getActivity(), tenantRequests.get(layoutPosition), isLandlord);
         requestInfoDialog.show();
 
         if (isLandlord) {
           requestInfoDialog.setOnDismissListener(dialogInterface -> {
-            // TODO: Logic for updating status of requests in case of approved/refused by landlord
+            viewModel.notifyChange();
+            notifyItemChanged(layoutPosition);
           });
         }
       });
+
+
     }
 
     public void bind(Request request) {
