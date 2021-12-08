@@ -14,11 +14,11 @@ import java.util.List;
 
 public class TenantTable extends Table<Tenant> {
 
-  private static final String TABLE_NAME = "Tenant";
-  private static final String COLUMN_LANDLORD_ID = "landlord_id";
-  private static final String COLUMN_USERNAME = "username";
-  private static final String COLUMN_NAME = "name";
-  private static final String COLUMN_LAST_LOGIN = "last_login";
+  public static final String TABLE_NAME = "Tenant";
+  public static final String COLUMN_LANDLORD_ID = "landlord_id";
+  public static final String COLUMN_USERNAME = "username";
+  public static final String COLUMN_NAME = "name";
+  public static final String COLUMN_LAST_LOGIN = "last_login";
 
   public TenantTable(SQLiteOpenHelper dbh) {
     super(dbh, TABLE_NAME);

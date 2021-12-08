@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.tenantcore.databinding.ListItemRequestBinding;
+import com.example.tenantcore.db.DatabaseException;
 import com.example.tenantcore.model.Priority;
 import com.example.tenantcore.model.Request;
 import com.example.tenantcore.model.Status;
@@ -23,7 +24,11 @@ public class RequestListRecyclerViewAdapter extends RecyclerView.Adapter<Request
     this.requestListFragment = listFragment;
     TenantCoreActivity activity = (TenantCoreActivity) this.requestListFragment.getActivity();
     this.tenant = activity.getTenantViewModel().getTenant();
-    this.tenantRequests = activity.getTenantViewModel().getRequestsByTenant(this.tenant);
+    try {
+      this.tenantRequests = activity.getTenantViewModel().getRequestsByTenant(this.tenant);
+    } catch (DatabaseException e) {
+      e.printStackTrace();
+    }
   }
 
   @Override
