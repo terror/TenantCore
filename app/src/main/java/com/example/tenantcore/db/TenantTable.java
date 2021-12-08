@@ -77,9 +77,8 @@ public class TenantTable extends Table<Tenant> {
     // 3 tenants will be seeded to the database with this landlord id
     long defaultLandlordId = TenantCorePlaceholders.getInviteCodes().get(0).getLandlordId();
 
-    final int NUM_DEFAULT_TENANTS = 3;
     // The 3 tenants to seed
-    List<Tenant> tenants = new ArrayList<>(NUM_DEFAULT_TENANTS);
+    List<Tenant> tenants = new ArrayList<>(TenantCorePlaceholders.NUM_DEFAULT_TENANTS);
     tenants.add(new Tenant("joe.doug", "Joe Doug", defaultLandlordId));
     tenants.add(new Tenant("walter-white62", "Walter White", defaultLandlordId));
     tenants.add(new Tenant("bobthebuilder", "Bob Builder", defaultLandlordId));
