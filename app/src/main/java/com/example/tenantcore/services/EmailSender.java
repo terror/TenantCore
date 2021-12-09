@@ -32,6 +32,7 @@ public class EmailSender extends AsyncTask {
 
   @Override
   protected Object doInBackground(Object[] objects) {
+    // Set up the mail properties
     Properties properties = new Properties();
     properties.put("mail.smtp.host", "smtp.gmail.com");
     properties.put("mail.smtp.socketFactory.port", "465");
@@ -39,14 +40,15 @@ public class EmailSender extends AsyncTask {
     properties.put("mail.smtp.auth", "true");
     properties.put("mail.smtp.port", "465");
 
+    // Create the session
     session = Session.getDefaultInstance(properties, new javax.mail.Authenticator() {
       protected PasswordAuthentication getPasswordAuthentication() {
         return new PasswordAuthentication(BuildConfig.JAVAMAIL_API_EMAIL, BuildConfig.JAVAMAIL_API_PASSWORD);
       }
     });
 
+    // Create and send the email
     MimeMessage mimeMessage = new MimeMessage(session);
-
     try {
       mimeMessage.setFrom(new InternetAddress(BuildConfig.JAVAMAIL_API_EMAIL));
       mimeMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
