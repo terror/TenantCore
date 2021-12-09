@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.tenantcore.R;
 import com.example.tenantcore.databinding.FragmentLandlordHomeBinding;
 import com.example.tenantcore.db.DatabaseException;
+import com.example.tenantcore.services.EmailSender;
 import com.example.tenantcore.ui.TenantCoreActivity;
 
 public class LandlordHomeFragment extends Fragment {
@@ -75,11 +76,34 @@ public class LandlordHomeFragment extends Fragment {
       e.printStackTrace();
     }
 
+    binding.inviteTenantButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        sendInvitationEmail();
+      }
+    });
+
     return binding.getRoot();
   }
 
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+  }
+
+  private void sendInvitationEmail() {
+    String user = ((TenantCoreActivity)getActivity()).getTenantViewModel().getSignedInUser();
+
+    // Send invitation email to entered email address
+    EmailSender emailSender = new EmailSender(
+      getContext(),
+      binding.inviteTenantEditText.getText().toString(),
+      "Invitation code",
+      String.format("%s just invited you to their building!\nYour invitation code is: %2d", user, 12345)
+    );
+
+    emailSender.execute();
+
+    binding.inviteTenantEditText.getText().clear();
   }
 }
