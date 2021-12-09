@@ -45,7 +45,7 @@
         android:id="@+id/speech_imgBtn"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:src="@drawable/ic_baseline_mic_24" />
+        android:src="@drawable/ic_baseline_mic_off_24" />
 
       <Button
         android:id="@+id/formReset_btn"
