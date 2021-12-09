@@ -20,15 +20,13 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
-
 import com.example.tenantcore.R;
 import com.example.tenantcore.databinding.FragmentTenantHomeBinding;
-import com.example.tenantcore.model.PlaceholderContent;
 import com.example.tenantcore.model.Priority;
 import com.example.tenantcore.model.Request;
 import com.example.tenantcore.ui.TenantCoreActivity;
 import com.example.tenantcore.ui.util.DatePickerDialogFragment;
-
+import com.example.tenantcore.viewmodel.TenantCoreViewModel;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -60,21 +58,6 @@ public class TenantHomeFragment extends Fragment {
     binding = FragmentTenantHomeBinding.inflate(inflater, container, false);
     formatter = new SimpleDateFormat("EEEE, MMMM d");
     setListeners();
-
-    binding.speechImgBtn.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        if (!speechRecognitionAvailable) {
-          speechRecognitionAvailable = checkSpeechRecognitionAvailability();
-          if (!speechRecognitionAvailable)
-            return;
-        }
-        if (speechEditTexts == null)
-          setupMicrophone();
-
-        activity.getSpeechRecognizer().startListening(speechRecognizerIntent);
-      }
-    });
 
     return binding.getRoot();
   }
@@ -338,8 +321,8 @@ public class TenantHomeFragment extends Fragment {
       @Override
       public void onClick(View v) {
         // Get a place holder tenant and set it in the view-model.
-        PlaceholderContent.PlaceholderItem tenant = PlaceholderContent.ITEMS.get(0);
-        ((TenantCoreActivity)getActivity()).getTenantViewModel().setTenant(tenant);
+        TenantCoreViewModel viewModel = activity.getTenantViewModel();
+        viewModel.setTenant(viewModel.findTenant(viewModel.getSignedInUser()));
 
         NavHostFragment.findNavController(TenantHomeFragment.this)
           .navigate(R.id.action_TenantHomeFragment_to_RequestListFragment);
@@ -383,6 +366,22 @@ public class TenantHomeFragment extends Fragment {
       @Override
       public void onClick(View v) {
         submitRequest();
+      }
+    });
+
+    // Initialize speech recognition
+    binding.speechImgBtn.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        if (!speechRecognitionAvailable) {
+          speechRecognitionAvailable = checkSpeechRecognitionAvailability();
+          if (!speechRecognitionAvailable)
+            return;
+        }
+        if (speechEditTexts == null)
+          setupMicrophone();
+
+        activity.getSpeechRecognizer().startListening(speechRecognizerIntent);
       }
     });
   }
