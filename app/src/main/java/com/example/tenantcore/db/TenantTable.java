@@ -2,9 +2,15 @@ package com.example.tenantcore.db;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.example.tenantcore.model.InviteCode;
 import com.example.tenantcore.model.Tenant;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TenantTable extends Table<Tenant> {
 
@@ -40,5 +46,40 @@ public class TenantTable extends Table<Tenant> {
       .setName(cursor.getString(2))
       .setLastLogin(Table.stringAsDate(cursor.getString(3)))
       .setLandlordId(cursor.getLong(4));
+  }
+
+  @Override
+  public boolean hasInitialData() {
+    return true;
+  }
+
+  @Override
+  public void initialize(SQLiteDatabase database) throws DatabaseException {
+    for (Tenant tenant : getInitialTenants()) {
+
+      // Id of inserted element, -1 if error(?).
+      long insertId = -1;
+
+      // insert into DB
+      try {
+        ContentValues values = toContentValues(tenant);
+        insertId = database.insertOrThrow(super.getName(), null, values);
+      }
+      catch (SQLException e) {
+        throw new DatabaseException(e.getMessage());
+      }
+
+      tenant.setId(insertId);
+    }
+  }
+
+  private List<Tenant> getInitialTenants(){
+    // The 3 tenants to seed
+    List<Tenant> tenants = new ArrayList<>(TenantCorePlaceholders.NUM_DEFAULT_TENANTS);
+    tenants.add(new Tenant("joe.doug", "Joe Doug", TenantCorePlaceholders.DEFAULT_LANDLORD_ID));
+    tenants.add(new Tenant("walter-white62", "Walter White", TenantCorePlaceholders.DEFAULT_LANDLORD_ID));
+    tenants.add(new Tenant("bobthebuilder", "Bob Builder", TenantCorePlaceholders.DEFAULT_LANDLORD_ID));
+
+    return tenants;
   }
 }
