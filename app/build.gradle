@@ -14,7 +14,7 @@ android {
 
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-    buildConfigField("String", "JAVAMAIL_API_EMAIL", "\"tenantcoreinvites@gmail.com\"")
+    buildConfigField("String", "JAVAMAIL_API_EMAIL", "\"tenantcore@gmail.com\"")
     buildConfigField("String", "JAVAMAIL_API_PASSWORD", "\"tenantCore123#\"")
   }
 
