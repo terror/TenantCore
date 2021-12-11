@@ -12,6 +12,7 @@ import com.example.tenantcore.model.Request;
 import com.example.tenantcore.model.Status;
 import com.example.tenantcore.model.Tenant;
 import com.example.tenantcore.ui.TenantCoreActivity;
+import com.example.tenantcore.viewmodel.ObservableModel;
 import com.example.tenantcore.viewmodel.TenantCoreViewModel;
 import java.util.List;
 
@@ -85,6 +86,8 @@ public class RequestListRecyclerViewAdapter extends RecyclerView.Adapter<Request
           });
         }
       });
+
+
     }
 
     public void bind(Request request) {

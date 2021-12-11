@@ -3,6 +3,7 @@ package com.example.tenantcore.viewmodel;
 import android.content.Context;
 import com.example.tenantcore.db.DatabaseException;
 import com.example.tenantcore.db.TenantCoreDatabaseHandler;
+import com.example.tenantcore.db.TenantTable;
 import com.example.tenantcore.model.InviteCode;
 import com.example.tenantcore.model.Landlord;
 import com.example.tenantcore.model.Request;
