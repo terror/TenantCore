@@ -12,7 +12,6 @@ import com.example.tenantcore.model.Request;
 import com.example.tenantcore.model.Status;
 import com.example.tenantcore.model.Tenant;
 import com.example.tenantcore.ui.TenantCoreActivity;
-import com.example.tenantcore.viewmodel.ObservableModel;
 import com.example.tenantcore.viewmodel.TenantCoreViewModel;
 import java.util.List;
 
@@ -86,27 +85,26 @@ public class RequestListRecyclerViewAdapter extends RecyclerView.Adapter<Request
           });
         }
       });
-
-
     }
 
     public void bind(Request request) {
       this.request = request;
 
-      // Set the request due date
-      this.binding.requestDueDateTextView.setText(request.getDueDate().toString());
-
-      // Set the request status
-      this.binding.requestSatusTextView.setText(request.getStatus().name());
-
       // Set the request title
       this.binding.requestTitleTextView.setText(request.getTitle());
 
-      // Set the request status color
-      this.binding.requestSatusTextView.setTextColor(Color.parseColor(getStatusColor(request.getStatus())));
-
       // Set the request background color
       this.binding.requestItemConstraintLayout.setBackgroundColor(Color.parseColor(getRequestBackgroundColor()));
+
+      // Set the request due date
+      if (request.getDueDate() != null)
+        this.binding.requestDueDateTextView.setText(request.getDueDate().toString());
+
+      // Set the request status and color
+      if (request.getStatus() != null) {
+        this.binding.requestSatusTextView.setText(request.getStatus().name());
+        this.binding.requestSatusTextView.setTextColor(Color.parseColor(getStatusColor(request.getStatus())));
+      }
     }
 
     /**

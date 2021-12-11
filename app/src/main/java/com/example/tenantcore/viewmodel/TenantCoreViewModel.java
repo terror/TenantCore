@@ -1,18 +1,12 @@
 package com.example.tenantcore.viewmodel;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-
 import com.example.tenantcore.db.DatabaseException;
 import com.example.tenantcore.db.TenantCoreDatabaseHandler;
-import com.example.tenantcore.db.TenantTable;
 import com.example.tenantcore.model.InviteCode;
 import com.example.tenantcore.model.Landlord;
 import com.example.tenantcore.model.Request;
 import com.example.tenantcore.model.Tenant;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -112,6 +106,14 @@ public class TenantCoreViewModel extends ObservableModel<TenantCoreViewModel> {
     dbHandler.getLandlordTable().create(landlord);
   }
 
+  public void addRequest(Request request) {
+    try {
+      dbHandler.getRequestTable().create(request);
+    } catch (DatabaseException e) {
+      e.printStackTrace();
+    }
+  }
+
   public boolean updateTenantRequest(Request request) throws DatabaseException {
     return dbHandler.getRequestTable().update(request);
   }
@@ -133,6 +135,7 @@ public class TenantCoreViewModel extends ObservableModel<TenantCoreViewModel> {
       .filter((tenant) -> tenant.getLandlordId().equals(landlord.getId()))
       .collect(Collectors.toList());
   }
+
   public void removeInviteCode(InviteCode inviteCode) throws DatabaseException {
     dbHandler.getInviteCodeTable().delete(inviteCode);
   }

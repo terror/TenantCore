@@ -14,6 +14,7 @@ import com.example.tenantcore.R;
 import com.example.tenantcore.databinding.FragmentTenantHomeBinding;
 import com.example.tenantcore.model.Priority;
 import com.example.tenantcore.model.Request;
+import com.example.tenantcore.model.Tenant;
 import com.example.tenantcore.ui.TenantCoreActivity;
 import com.example.tenantcore.ui.util.DatePickerDialogFragment;
 import com.example.tenantcore.viewmodel.TenantCoreViewModel;
@@ -154,8 +155,18 @@ public class TenantHomeFragment extends Fragment {
     else if (binding.urgencyHighRadioBtn.isChecked())
       request.setPriority(Priority.HIGH);
 
-    //TODO: Add the request to the database
+    // Grab the view model
+    TenantCoreActivity activity = (TenantCoreActivity) getActivity();
+    TenantCoreViewModel viewModel = activity.getTenantViewModel();
 
+    // Set the tenant id
+    Tenant tenant = viewModel.findTenant(viewModel.getSignedInUser());
+    request.setTenantId(tenant.getId());
+
+    // Add the request to the database
+    activity.getTenantViewModel().addRequest(request);
+
+    // Reset the form
     resetForm();
   }
 
