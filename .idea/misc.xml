@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Administrator/Documents/GitHub/TenantCore/app/src/main/res/layout/activity_tenant_core.xml" value="0.1" />
+        <entry key="..\:/Users/Administrator/Documents/GitHub/TenantCore/app/src/main/res/layout/fragment_landlord_home.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Administrator/Documents/GitHub/TenantCore/app/src/main/res/layout/fragment_tenant_home.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/maxen/Documents/School/Cegep2021F/AppDev/TenantCore/app/src/main/res/layout/dialog_account_creation.xml" value="0.264" />
         <entry key="..\:/Users/maxen/Documents/School/Cegep2021F/AppDev/TenantCore/app/src/main/res/layout/fragment_home.xml" value="0.2" />

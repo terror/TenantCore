@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -19,6 +20,7 @@ import com.example.tenantcore.databinding.ActivityTenantCoreBinding;
 import com.example.tenantcore.ui.landlord.home.LandlordHomeFragment;
 import com.example.tenantcore.ui.tenant.home.TenantHomeFragment;
 import com.example.tenantcore.viewmodel.TenantCoreViewModel;
+import com.google.android.material.snackbar.Snackbar;
 
 public class TenantCoreActivity extends AppCompatActivity {
   private AppBarConfiguration appBarConfiguration;
@@ -101,6 +103,11 @@ public class TenantCoreActivity extends AppCompatActivity {
       super.onBackPressed();
     else
       displayLogoutWarning();
+  }
+
+  public void displaySnackbar(String message) {
+    Snackbar.make(findViewById(R.id.coordinatorLayout), message, Snackbar.LENGTH_LONG)
+      .show();
   }
 
   public void displayErrorMessage(String title, String msg) {

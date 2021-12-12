@@ -112,6 +112,10 @@ public class TenantCoreViewModel extends ObservableModel<TenantCoreViewModel> {
     dbHandler.getLandlordTable().create(landlord);
   }
 
+  public void addInviteCode(InviteCode inviteCode) throws DatabaseException {
+    dbHandler.getInviteCodeTable().create(inviteCode);
+  }
+
   public boolean updateTenantRequest(Request request) throws DatabaseException {
     return dbHandler.getRequestTable().update(request);
   }
