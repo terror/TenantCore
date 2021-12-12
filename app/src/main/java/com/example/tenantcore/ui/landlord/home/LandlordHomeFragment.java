@@ -23,6 +23,7 @@ import com.example.tenantcore.services.EmailSender;
 import com.example.tenantcore.ui.TenantCoreActivity;
 import com.example.tenantcore.viewmodel.TenantCoreViewModel;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -116,8 +117,9 @@ public class LandlordHomeFragment extends Fragment {
       return;
     }
 
-    // Generate the invite code and send the invitation email
+    // Generate the invite code, add it to the database, and send the invitation email
     InviteCode inviteCode = generateInviteCode();
+    viewModel.addInviteCode(inviteCode);
     sendInvitationEmail(email, inviteCode);
 
     // Clear the entered email and display a confirmation pop-up

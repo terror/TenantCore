@@ -114,6 +114,11 @@ public class HomeFragment extends Fragment {
               "To create an account, ask your landlord to send you an invite code.");
             return;
           }
+          else if (inviteCode.getExpiry().before(new Date())) {
+            activity.displayErrorMessage("Expired invite code.",
+              "To create an account, ask your landlord to send you a new invite code.");
+            return;
+          }
 
           createButton.setOnClickListener(_view -> {
             // Empty username validation
@@ -139,9 +144,7 @@ public class HomeFragment extends Fragment {
 
             // Delete the invite code, make the new tenant account, and navigate to the tenant home
             try {
-              // TODO: Uncomment once Invite Codes can be generated manually
-              // For now the placeholder invite codes do not get deleted after being used
-              // viewmodel.removeInvite(inviteCode);
+              viewmodel.removeInviteCode(inviteCode);
 
               viewmodel.addTenant(new Tenant()
                 .setLandlordId(inviteCode.getLandlordId())
