@@ -14,20 +14,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+
 import com.example.tenantcore.R;
 import com.example.tenantcore.databinding.ActivityTenantCoreBinding;
 import com.example.tenantcore.ui.landlord.home.LandlordHomeFragment;
 import com.example.tenantcore.ui.tenant.home.TenantHomeFragment;
 import com.example.tenantcore.viewmodel.TenantCoreViewModel;
-import com.google.android.material.snackbar.Snackbar;
 
 public class TenantCoreActivity extends AppCompatActivity {
   public static final String REQUESTS_NOTIFICATION_CHANNEL = "requests-notification-channel";

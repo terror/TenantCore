@@ -7,11 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
+
 import com.example.tenantcore.R;
 import com.example.tenantcore.databinding.FragmentHomeBinding;
 import com.example.tenantcore.db.DatabaseException;
@@ -20,6 +20,7 @@ import com.example.tenantcore.model.Landlord;
 import com.example.tenantcore.model.Tenant;
 import com.example.tenantcore.ui.TenantCoreActivity;
 import com.example.tenantcore.viewmodel.TenantCoreViewModel;
+
 import java.util.Date;
 
 public class HomeFragment extends Fragment {
