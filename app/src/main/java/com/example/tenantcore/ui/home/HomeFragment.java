@@ -107,7 +107,7 @@ public class HomeFragment extends Fragment {
             return;
           }
 
-          // Invite code validation
+          // Non-existent and expired invite code validation
           InviteCode inviteCode = viewmodel.findInviteCode(inviteCodeText);
           if (inviteCode == null) {
             activity.displayErrorMessage("Invalid invite code.",
