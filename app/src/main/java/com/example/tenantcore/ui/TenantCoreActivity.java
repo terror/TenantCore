@@ -2,11 +2,15 @@ package com.example.tenantcore.ui;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.speech.SpeechRecognizer;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
@@ -25,6 +29,10 @@ public class TenantCoreActivity extends AppCompatActivity {
   private ActivityTenantCoreBinding binding;
   private TenantCoreActivity context;
   private TenantCoreViewModel tenantCoreViewModel;
+
+  // Microphone settings
+  public static final Integer RecordAudioRequestCode = 1;
+  private SpeechRecognizer speechRecognizer;
 
   public TenantCoreActivity() {
     tenantCoreViewModel = new TenantCoreViewModel();
@@ -132,5 +140,28 @@ public class TenantCoreActivity extends AppCompatActivity {
       })
       .create()
       .show();
+  }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    speechRecognizer.destroy();
+  }
+
+  @Override
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    if (requestCode == RecordAudioRequestCode && grantResults.length > 0 ){
+      if(grantResults[0] == PackageManager.PERMISSION_GRANTED)
+        Toast.makeText(this,"Permission Granted", Toast.LENGTH_SHORT).show();
+    }
+  }
+
+  public void setSpeechRecognizer(SpeechRecognizer speechRecognizer) {
+    this.speechRecognizer = speechRecognizer;
+  }
+
+  public SpeechRecognizer getSpeechRecognizer() {
+    return this.speechRecognizer;
   }
 }

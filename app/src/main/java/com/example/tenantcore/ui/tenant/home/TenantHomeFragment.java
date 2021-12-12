@@ -1,13 +1,23 @@
 package com.example.tenantcore.ui.tenant.home;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.speech.RecognitionListener;
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
+import android.widget.EditText;
+
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import com.example.tenantcore.R;
@@ -20,17 +30,30 @@ import com.example.tenantcore.viewmodel.TenantCoreViewModel;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class TenantHomeFragment extends Fragment {
+
   public static String TAG_NAME = "tenant_home";
+
   private FragmentTenantHomeBinding binding;
+  private TenantCoreActivity activity;
   private Calendar requestDate;
   private SimpleDateFormat formatter;
 
+  private boolean speechRecognitionAvailable = false;
+  private Intent speechRecognizerIntent;
+  private EditText[] speechEditTexts;
+  private String[] speechEditTextHints;
+  private int currentSpeechIndex = 0;
+  private boolean isStartingSpeech = true;
+
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    if (getActivity().getSupportFragmentManager().findFragmentByTag(TAG_NAME) == null)
-      getActivity().getSupportFragmentManager().beginTransaction().add(this, TAG_NAME).commit();
+    activity = (TenantCoreActivity)getActivity();
+
+    if (activity.getSupportFragmentManager().findFragmentByTag(TAG_NAME) == null)
+      activity.getSupportFragmentManager().beginTransaction().add(this, TAG_NAME).commit();
 
     binding = FragmentTenantHomeBinding.inflate(inflater, container, false);
     formatter = new SimpleDateFormat("EEEE, MMMM d");
@@ -47,6 +70,103 @@ public class TenantHomeFragment extends Fragment {
   public void onDestroyView() {
     super.onDestroyView();
     binding = null;
+  }
+
+  private void setupMicrophone() {
+    // Insert EditText that will be modified
+    speechEditTexts = new EditText[] {
+      binding.requestTitleEditText,
+      binding.requestDescEditText
+    };
+    speechEditTextHints = new String[] {
+      binding.requestTitleEditText.getText().toString(),
+      binding.requestDescEditText.getText().toString(),
+    };
+
+    activity.setSpeechRecognizer(SpeechRecognizer.createSpeechRecognizer(activity));
+    speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+    speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+    speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+
+    activity.getSpeechRecognizer().setRecognitionListener(new RecognitionListener() {
+      @Override
+      public void onReadyForSpeech(Bundle bundle) {
+        binding.speechImgBtn.setImageResource(R.drawable.ic_baseline_mic_on_24);
+        speechEditTexts[currentSpeechIndex].setText("");
+        speechEditTexts[currentSpeechIndex].setHint("Ready");
+        isStartingSpeech = false;
+      }
+
+      @Override
+      public void onBeginningOfSpeech() {
+        speechEditTexts[currentSpeechIndex].setHint("Listening...");
+      }
+
+      @Override
+      public void onRmsChanged(float v) { }
+
+      @Override
+      public void onBufferReceived(byte[] bytes) { }
+
+      @Override
+      public void onEndOfSpeech() { }
+
+      @Override
+      public void onError(int i) {
+        if (isStartingSpeech)
+          return;
+
+        speechEditTexts[currentSpeechIndex].setText(R.string.speech_error);
+        stopSpeechRecognition();
+      }
+
+      @Override
+      public void onResults(Bundle bundle) {
+        processSpeechRecognitionResult(bundle);
+        stopSpeechRecognition();
+        if (++currentSpeechIndex >= speechEditTexts.length) {
+          currentSpeechIndex = 0;
+        }
+      }
+
+      @Override
+      public void onPartialResults(Bundle bundle) {
+        processSpeechRecognitionResult(bundle);
+      }
+
+      @Override
+      public void onEvent(int i, Bundle bundle) { }
+    });
+  }
+
+  private boolean checkSpeechRecognitionAvailability() {
+    // Check if the device supports speech recognition
+    if (!SpeechRecognizer.isRecognitionAvailable(activity)) {
+      activity.displayErrorMessage("Speech Recognition not supported",
+        "Your device does not support speech recognition." +
+          "Consider downloading the Google app on the Google Play store.");
+      return false;
+    }
+
+    // Request permission for speech recognition
+    if (ContextCompat.checkSelfPermission(activity, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+      ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.RECORD_AUDIO}, TenantCoreActivity.RecordAudioRequestCode);
+      return ContextCompat.checkSelfPermission(activity, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED;
+    }
+    return true;
+  }
+
+  private void processSpeechRecognitionResult(Bundle bundle) {
+    String text = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION).get(0);
+    String capitalizedText = text.substring(0, 1).toUpperCase() + text.substring(1);
+    speechEditTexts[currentSpeechIndex].setText(capitalizedText);
+  }
+
+  private void stopSpeechRecognition() {
+    activity.getSpeechRecognizer().stopListening();
+    speechEditTexts[currentSpeechIndex].setHint(speechEditTextHints[currentSpeechIndex]);
+    binding.speechImgBtn.setImageResource(R.drawable.ic_baseline_mic_off_24);
+    isStartingSpeech = true;
   }
 
   /**
@@ -201,7 +321,7 @@ public class TenantHomeFragment extends Fragment {
       @Override
       public void onClick(View v) {
         // Get a place holder tenant and set it in the view-model.
-        TenantCoreViewModel viewModel = ((TenantCoreActivity)getActivity()).getTenantViewModel();
+        TenantCoreViewModel viewModel = activity.getTenantViewModel();
         viewModel.setTenant(viewModel.findTenant(viewModel.getSignedInUser()));
 
         NavHostFragment.findNavController(TenantHomeFragment.this)
@@ -246,6 +366,22 @@ public class TenantHomeFragment extends Fragment {
       @Override
       public void onClick(View v) {
         submitRequest();
+      }
+    });
+
+    // Initialize speech recognition
+    binding.speechImgBtn.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        if (!speechRecognitionAvailable) {
+          speechRecognitionAvailable = checkSpeechRecognitionAvailability();
+          if (!speechRecognitionAvailable)
+            return;
+        }
+        if (speechEditTexts == null)
+          setupMicrophone();
+
+        activity.getSpeechRecognizer().startListening(speechRecognizerIntent);
       }
     });
   }
