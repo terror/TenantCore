@@ -3,6 +3,7 @@ package com.example.tenantcore.ui;
 import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -11,6 +12,7 @@ import android.speech.SpeechRecognizer;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -129,11 +131,6 @@ public class TenantCoreActivity extends AppCompatActivity {
       displayLogoutWarning();
   }
 
-  public void displaySnackbar(String message) {
-    Snackbar.make(findViewById(R.id.coordinatorLayout), message, Snackbar.LENGTH_LONG)
-      .show();
-  }
-
   public void displayErrorMessage(String title, String msg) {
     new AlertDialog.Builder(this)
       .setIcon(R.drawable.ic_baseline_warning_24)
@@ -200,5 +197,15 @@ public class TenantCoreActivity extends AppCompatActivity {
 
   public SpeechRecognizer getSpeechRecognizer() {
     return this.speechRecognizer;
+  }
+
+  public void hideKeyboard() {
+    View view = this.getCurrentFocus();
+
+    // If there is currently a view in focus, hide the keyboard
+    if (view != null) {
+      InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+      imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
   }
 }

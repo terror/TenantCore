@@ -1,11 +1,11 @@
 package com.example.tenantcore.ui.landlord.home;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,9 +23,6 @@ import com.example.tenantcore.services.EmailSender;
 import com.example.tenantcore.ui.TenantCoreActivity;
 import com.example.tenantcore.viewmodel.TenantCoreViewModel;
 
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class LandlordHomeFragment extends Fragment {
@@ -33,7 +30,7 @@ public class LandlordHomeFragment extends Fragment {
   private static final String ARG_COLUMN_COUNT = "column-count";
   private int mColumnCount = 1;
   private FragmentLandlordHomeBinding binding;
-  private TenantCoreActivity tenantCoreActivity;
+  private TenantCoreActivity activity;
   private TenantCoreViewModel viewModel;
   private Landlord user;
 
@@ -45,8 +42,8 @@ public class LandlordHomeFragment extends Fragment {
     super.onAttach(context);
 
     // set the activity, view-model, and landlord user
-    tenantCoreActivity = (TenantCoreActivity) context;
-    viewModel = tenantCoreActivity.getTenantViewModel();
+    activity = (TenantCoreActivity) context;
+    viewModel = activity.getTenantViewModel();
     user = viewModel.findLandlord(viewModel.getSignedInUser());
   }
 
@@ -75,13 +72,11 @@ public class LandlordHomeFragment extends Fragment {
     else
       recyclerView.setLayoutManager(new GridLayoutManager(getContext(), mColumnCount));
 
-    String signedInLandlord = tenantCoreActivity.getTenantViewModel().getSignedInUser();
-
     // Set the adapter
     try {
       recyclerView.setAdapter(
         new TenantRecyclerViewAdapter(
-          tenantCoreActivity.getTenantViewModel().getTenantsByLandlord(tenantCoreActivity.getTenantViewModel().findLandlord(signedInLandlord)),
+          activity.getTenantViewModel().getTenantsByLandlord(activity.getTenantViewModel().findLandlord(user.getUsername())),
           this
         )
       );
@@ -113,7 +108,7 @@ public class LandlordHomeFragment extends Fragment {
 
     // Validate the entered email, if the email is found to be invalid display an error message and return
     if (!validateEmail(email)) {
-      tenantCoreActivity.displayErrorMessage("Invalid Email", "Please enter a valid email address.");
+      activity.displayErrorMessage("Invalid Email", "Please enter a valid email address.");
       return;
     }
 
@@ -122,9 +117,10 @@ public class LandlordHomeFragment extends Fragment {
     viewModel.addInviteCode(inviteCode);
     sendInvitationEmail(email, inviteCode);
 
-    // Clear the entered email and display a confirmation pop-up
+    // Clear the entered email, hide the keyboard, and display a confirmation pop-up
     binding.inviteTenantEditText.getText().clear();
-    tenantCoreActivity.displaySnackbar("Invitation sent.");
+    activity.hideKeyboard();
+    Toast.makeText(activity,"Invitation sent", Toast.LENGTH_SHORT).show();
   }
 
   private boolean validateEmail(String email) {
