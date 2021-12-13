@@ -1,39 +1,76 @@
 package com.example.tenantcore.ui.tenant.home;
 
-import android.app.AlertDialog;
+import android.Manifest;
 import android.app.DatePickerDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.speech.RecognitionListener;
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
+
 import com.example.tenantcore.R;
 import com.example.tenantcore.databinding.FragmentTenantHomeBinding;
 import com.example.tenantcore.model.Priority;
 import com.example.tenantcore.model.Request;
+import com.example.tenantcore.model.Tenant;
 import com.example.tenantcore.ui.TenantCoreActivity;
 import com.example.tenantcore.ui.util.DatePickerDialogFragment;
 import com.example.tenantcore.viewmodel.TenantCoreViewModel;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class TenantHomeFragment extends Fragment {
+
   public static String TAG_NAME = "tenant_home";
+
   private FragmentTenantHomeBinding binding;
+  private TenantCoreActivity activity;
+  private TenantCoreViewModel viewModel;
+  private Tenant user;
   private Calendar requestDate;
   private SimpleDateFormat formatter;
 
+  private boolean speechRecognitionAvailable = false;
+  private Intent speechRecognizerIntent;
+  private EditText[] speechEditTexts;
+  private String[] speechEditTextHints;
+  private int currentSpeechIndex = 0;
+  private boolean isStartingSpeech = true;
+
+  @Override
+  public void onAttach(@NonNull Context context) {
+    super.onAttach(context);
+
+    // set the activity, view-model, and tenant user
+    activity = (TenantCoreActivity) context;
+    viewModel = activity.getTenantViewModel();
+    user = viewModel.findTenant(viewModel.getSignedInUser());
+    formatter = new SimpleDateFormat("EEEE, MMMM d");
+  }
+
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    if (getActivity().getSupportFragmentManager().findFragmentByTag(TAG_NAME) == null)
-      getActivity().getSupportFragmentManager().beginTransaction().add(this, TAG_NAME).commit();
+    if (activity.getSupportFragmentManager().findFragmentByTag(TAG_NAME) == null)
+      activity.getSupportFragmentManager().beginTransaction().add(this, TAG_NAME).commit();
 
     binding = FragmentTenantHomeBinding.inflate(inflater, container, false);
-    formatter = new SimpleDateFormat("EEEE, MMMM d");
     setListeners();
 
     return binding.getRoot();
@@ -47,6 +84,103 @@ public class TenantHomeFragment extends Fragment {
   public void onDestroyView() {
     super.onDestroyView();
     binding = null;
+  }
+
+  private void setupMicrophone() {
+    // Insert EditText that will be modified
+    speechEditTexts = new EditText[] {
+      binding.requestTitleEditText,
+      binding.requestDescEditText
+    };
+    speechEditTextHints = new String[] {
+      binding.requestTitleEditText.getText().toString(),
+      binding.requestDescEditText.getText().toString(),
+    };
+
+    activity.setSpeechRecognizer(SpeechRecognizer.createSpeechRecognizer(activity));
+    speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+    speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+    speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+
+    activity.getSpeechRecognizer().setRecognitionListener(new RecognitionListener() {
+      @Override
+      public void onReadyForSpeech(Bundle bundle) {
+        binding.speechImgBtn.setImageResource(R.drawable.ic_baseline_mic_on_24);
+        speechEditTexts[currentSpeechIndex].setText("");
+        speechEditTexts[currentSpeechIndex].setHint("Ready");
+        isStartingSpeech = false;
+      }
+
+      @Override
+      public void onBeginningOfSpeech() {
+        speechEditTexts[currentSpeechIndex].setHint("Listening...");
+      }
+
+      @Override
+      public void onRmsChanged(float v) { }
+
+      @Override
+      public void onBufferReceived(byte[] bytes) { }
+
+      @Override
+      public void onEndOfSpeech() { }
+
+      @Override
+      public void onError(int i) {
+        if (isStartingSpeech)
+          return;
+
+        speechEditTexts[currentSpeechIndex].setText(R.string.speech_error);
+        stopSpeechRecognition();
+      }
+
+      @Override
+      public void onResults(Bundle bundle) {
+        processSpeechRecognitionResult(bundle);
+        stopSpeechRecognition();
+        if (++currentSpeechIndex >= speechEditTexts.length) {
+          currentSpeechIndex = 0;
+        }
+      }
+
+      @Override
+      public void onPartialResults(Bundle bundle) {
+        processSpeechRecognitionResult(bundle);
+      }
+
+      @Override
+      public void onEvent(int i, Bundle bundle) { }
+    });
+  }
+
+  private boolean checkSpeechRecognitionAvailability() {
+    // Check if the device supports speech recognition
+    if (!SpeechRecognizer.isRecognitionAvailable(activity)) {
+      activity.displayErrorMessage("Speech Recognition not supported",
+        "Your device does not support speech recognition." +
+          "Consider downloading the Google app on the Google Play store.");
+      return false;
+    }
+
+    // Request permission for speech recognition
+    if (ContextCompat.checkSelfPermission(activity, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+      ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.RECORD_AUDIO}, TenantCoreActivity.RecordAudioRequestCode);
+      return ContextCompat.checkSelfPermission(activity, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED;
+    }
+    return true;
+  }
+
+  private void processSpeechRecognitionResult(Bundle bundle) {
+    String text = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION).get(0);
+    String capitalizedText = text.substring(0, 1).toUpperCase() + text.substring(1);
+    speechEditTexts[currentSpeechIndex].setText(capitalizedText);
+  }
+
+  private void stopSpeechRecognition() {
+    activity.getSpeechRecognizer().stopListening();
+    speechEditTexts[currentSpeechIndex].setHint(speechEditTextHints[currentSpeechIndex]);
+    binding.speechImgBtn.setImageResource(R.drawable.ic_baseline_mic_off_24);
+    isStartingSpeech = true;
   }
 
   /**
@@ -80,7 +214,7 @@ public class TenantHomeFragment extends Fragment {
    * Opens a date picker to allow for a request date to be selected.
    */
   private void chooseDate() {
-    // Create a date picker fragment and pass in the default date.
+    // Create a date picker fragment and pass in the default date
     DatePickerDialogFragment datePicker = DatePickerDialogFragment.create(
       getDefaultDueDate(), new DatePickerDialog.OnDateSetListener() {
         @Override
@@ -116,18 +250,12 @@ public class TenantHomeFragment extends Fragment {
     Calendar today = Calendar.getInstance();
 
     /*
-     Display an alert if the chosen date is invalid (before today).
-     Otherwise, set the date button text to request date.
+     Display an alert if the chosen date is invalid (before today)
+     Otherwise, set the date button text to request date
      */
     if (requestDate.before(today)) {
       requestDate = null;
-
-      new AlertDialog.Builder(getContext())
-        .setTitle("Invalid Date.")
-        .setMessage("Please select a date in the future.")
-        .setIcon(android.R.drawable.ic_dialog_alert)
-        .setPositiveButton("OK", null)
-        .show();
+      activity.displayErrorMessage("Invalid Date.", "Please select a date in the future.");
     }
     else
       binding.requestDateBtn.setText(formatter.format(requestDate.getTime()));
@@ -154,8 +282,16 @@ public class TenantHomeFragment extends Fragment {
     else if (binding.urgencyHighRadioBtn.isChecked())
       request.setPriority(Priority.HIGH);
 
-    //TODO: Add the request to the database
+    // Set the requests tenant ID
+    request.setTenantId(user.getId());
 
+    // Add the request to the database
+    viewModel.addRequest(request);
+
+    // Display a confirmation pop-up
+    Toast.makeText(activity,"Request submitted", Toast.LENGTH_SHORT).show();
+
+    // Reset the form
     resetForm();
   }
 
@@ -165,17 +301,12 @@ public class TenantHomeFragment extends Fragment {
    * @return True if the request is valid, false otherwise.
    */
   private boolean validRequest() {
-    // If both the request title and description are not empty, return true.
+    // If both the request title and description are not empty, return true
     if (binding.requestTitleEditText.length() != 0 && binding.requestDescEditText.length() != 0)
       return true;
 
-    // Display an alert if the either of the fields are empty.
-    new AlertDialog.Builder(getContext())
-      .setTitle("Invalid request.")
-      .setMessage("A request must have a title and description.")
-      .setIcon(android.R.drawable.ic_dialog_alert)
-      .setPositiveButton("OK", null)
-      .show();
+    // Display an alert if the either of the fields are empty
+    activity.displayErrorMessage("Invalid request.", "A request must have a title and description");
 
     return false;
   }
@@ -196,20 +327,20 @@ public class TenantHomeFragment extends Fragment {
    * Sets all of the listeners for this fragment.
    */
   private void setListeners() {
-    // Navigate to the request list fragment when the view request button is clicked.
+    // Navigate to the request list fragment when the view request button is clicked
     binding.viewRequestsBtn.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        // Get a place holder tenant and set it in the view-model.
-        TenantCoreViewModel viewModel = ((TenantCoreActivity)getActivity()).getTenantViewModel();
-        viewModel.setTenant(viewModel.findTenant(viewModel.getSignedInUser()));
+        // Set the current tenant user in the view-model
+        viewModel.setTenant(user);
 
+        // Navigate to the request list fragment
         NavHostFragment.findNavController(TenantHomeFragment.this)
           .navigate(R.id.action_TenantHomeFragment_to_RequestListFragment);
       }
     });
 
-    // Clear all request form fields when the reset button is clicked.
+    // Clear all request form fields when the reset button is clicked
     binding.formResetBtn.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -217,7 +348,7 @@ public class TenantHomeFragment extends Fragment {
       }
     });
 
-    // Clear the request form urgency field when the clear urgency button is clicked.
+    // Clear the request form urgency field when the clear urgency button is clicked
     binding.urgencyClearBtn.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -225,7 +356,7 @@ public class TenantHomeFragment extends Fragment {
       }
     });
 
-    // Clear the request form date field when the clear date button is clicked.
+    // Clear the request form date field when the clear date button is clicked
     binding.dateClearBtn.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -233,7 +364,7 @@ public class TenantHomeFragment extends Fragment {
       }
     });
 
-    // Open the date picker fragment when the date button is clicked.
+    // Open the date picker fragment when the date button is clicked
     binding.requestDateBtn.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -241,11 +372,27 @@ public class TenantHomeFragment extends Fragment {
       }
     });
 
-    // Submit the request when the submit button is clicked.
+    // Submit the request when the submit button is clicked
     binding.formSubmitBtn.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
         submitRequest();
+      }
+    });
+
+    // Initialize speech recognition
+    binding.speechImgBtn.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        if (!speechRecognitionAvailable) {
+          speechRecognitionAvailable = checkSpeechRecognitionAvailability();
+          if (!speechRecognitionAvailable)
+            return;
+        }
+        if (speechEditTexts == null)
+          setupMicrophone();
+
+        activity.getSpeechRecognizer().startListening(speechRecognizerIntent);
       }
     });
   }
