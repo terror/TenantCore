@@ -1,8 +1,8 @@
 package com.example.tenantcore.ui.tenant.home;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -14,12 +14,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
+
 import com.example.tenantcore.R;
 import com.example.tenantcore.databinding.FragmentTenantHomeBinding;
 import com.example.tenantcore.model.Priority;
@@ -28,6 +30,7 @@ import com.example.tenantcore.model.Tenant;
 import com.example.tenantcore.ui.TenantCoreActivity;
 import com.example.tenantcore.ui.util.DatePickerDialogFragment;
 import com.example.tenantcore.viewmodel.TenantCoreViewModel;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -39,6 +42,8 @@ public class TenantHomeFragment extends Fragment {
 
   private FragmentTenantHomeBinding binding;
   private TenantCoreActivity activity;
+  private TenantCoreViewModel viewModel;
+  private Tenant user;
   private Calendar requestDate;
   private SimpleDateFormat formatter;
 
@@ -50,14 +55,22 @@ public class TenantHomeFragment extends Fragment {
   private boolean isStartingSpeech = true;
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    activity = (TenantCoreActivity)getActivity();
+  public void onAttach(@NonNull Context context) {
+    super.onAttach(context);
 
+    // set the activity, view-model, and tenant user
+    activity = (TenantCoreActivity) context;
+    viewModel = activity.getTenantViewModel();
+    user = viewModel.findTenant(viewModel.getSignedInUser());
+    formatter = new SimpleDateFormat("EEEE, MMMM d");
+  }
+
+  @Override
+  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     if (activity.getSupportFragmentManager().findFragmentByTag(TAG_NAME) == null)
       activity.getSupportFragmentManager().beginTransaction().add(this, TAG_NAME).commit();
 
     binding = FragmentTenantHomeBinding.inflate(inflater, container, false);
-    formatter = new SimpleDateFormat("EEEE, MMMM d");
     setListeners();
 
     return binding.getRoot();
@@ -201,7 +214,7 @@ public class TenantHomeFragment extends Fragment {
    * Opens a date picker to allow for a request date to be selected.
    */
   private void chooseDate() {
-    // Create a date picker fragment and pass in the default date.
+    // Create a date picker fragment and pass in the default date
     DatePickerDialogFragment datePicker = DatePickerDialogFragment.create(
       getDefaultDueDate(), new DatePickerDialog.OnDateSetListener() {
         @Override
@@ -237,18 +250,12 @@ public class TenantHomeFragment extends Fragment {
     Calendar today = Calendar.getInstance();
 
     /*
-     Display an alert if the chosen date is invalid (before today).
-     Otherwise, set the date button text to request date.
+     Display an alert if the chosen date is invalid (before today)
+     Otherwise, set the date button text to request date
      */
     if (requestDate.before(today)) {
       requestDate = null;
-
-      new AlertDialog.Builder(getContext())
-        .setTitle("Invalid Date.")
-        .setMessage("Please select a date in the future.")
-        .setIcon(android.R.drawable.ic_dialog_alert)
-        .setPositiveButton("OK", null)
-        .show();
+      activity.displayErrorMessage("Invalid Date.", "Please select a date in the future.");
     }
     else
       binding.requestDateBtn.setText(formatter.format(requestDate.getTime()));
@@ -275,16 +282,14 @@ public class TenantHomeFragment extends Fragment {
     else if (binding.urgencyHighRadioBtn.isChecked())
       request.setPriority(Priority.HIGH);
 
-    // Grab the view model
-    TenantCoreActivity activity = (TenantCoreActivity) getActivity();
-    TenantCoreViewModel viewModel = activity.getTenantViewModel();
-
-    // Set the tenant id
-    Tenant tenant = viewModel.findTenant(viewModel.getSignedInUser());
-    request.setTenantId(tenant.getId());
+    // Set the requests tenant ID
+    request.setTenantId(user.getId());
 
     // Add the request to the database
-    activity.getTenantViewModel().addRequest(request);
+    viewModel.addRequest(request);
+
+    // Display a confirmation pop-up
+    Toast.makeText(activity,"Request submitted", Toast.LENGTH_SHORT).show();
 
     // Reset the form
     resetForm();
@@ -296,17 +301,12 @@ public class TenantHomeFragment extends Fragment {
    * @return True if the request is valid, false otherwise.
    */
   private boolean validRequest() {
-    // If both the request title and description are not empty, return true.
+    // If both the request title and description are not empty, return true
     if (binding.requestTitleEditText.length() != 0 && binding.requestDescEditText.length() != 0)
       return true;
 
-    // Display an alert if the either of the fields are empty.
-    new AlertDialog.Builder(getContext())
-      .setTitle("Invalid request.")
-      .setMessage("A request must have a title and description.")
-      .setIcon(android.R.drawable.ic_dialog_alert)
-      .setPositiveButton("OK", null)
-      .show();
+    // Display an alert if the either of the fields are empty
+    activity.displayErrorMessage("Invalid request.", "A request must have a title and description");
 
     return false;
   }
@@ -327,20 +327,20 @@ public class TenantHomeFragment extends Fragment {
    * Sets all of the listeners for this fragment.
    */
   private void setListeners() {
-    // Navigate to the request list fragment when the view request button is clicked.
+    // Navigate to the request list fragment when the view request button is clicked
     binding.viewRequestsBtn.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        // Get a place holder tenant and set it in the view-model.
-        TenantCoreViewModel viewModel = activity.getTenantViewModel();
-        viewModel.setTenant(viewModel.findTenant(viewModel.getSignedInUser()));
+        // Set the current tenant user in the view-model
+        viewModel.setTenant(user);
 
+        // Navigate to the request list fragment
         NavHostFragment.findNavController(TenantHomeFragment.this)
           .navigate(R.id.action_TenantHomeFragment_to_RequestListFragment);
       }
     });
 
-    // Clear all request form fields when the reset button is clicked.
+    // Clear all request form fields when the reset button is clicked
     binding.formResetBtn.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -348,7 +348,7 @@ public class TenantHomeFragment extends Fragment {
       }
     });
 
-    // Clear the request form urgency field when the clear urgency button is clicked.
+    // Clear the request form urgency field when the clear urgency button is clicked
     binding.urgencyClearBtn.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -356,7 +356,7 @@ public class TenantHomeFragment extends Fragment {
       }
     });
 
-    // Clear the request form date field when the clear date button is clicked.
+    // Clear the request form date field when the clear date button is clicked
     binding.dateClearBtn.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -364,7 +364,7 @@ public class TenantHomeFragment extends Fragment {
       }
     });
 
-    // Open the date picker fragment when the date button is clicked.
+    // Open the date picker fragment when the date button is clicked
     binding.requestDateBtn.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -372,7 +372,7 @@ public class TenantHomeFragment extends Fragment {
       }
     });
 
-    // Submit the request when the submit button is clicked.
+    // Submit the request when the submit button is clicked
     binding.formSubmitBtn.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {

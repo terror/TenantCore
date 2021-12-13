@@ -3,7 +3,6 @@ package com.example.tenantcore.viewmodel;
 import android.content.Context;
 import com.example.tenantcore.db.DatabaseException;
 import com.example.tenantcore.db.TenantCoreDatabaseHandler;
-import com.example.tenantcore.db.TenantTable;
 import com.example.tenantcore.model.InviteCode;
 import com.example.tenantcore.model.Landlord;
 import com.example.tenantcore.model.Request;
@@ -105,6 +104,10 @@ public class TenantCoreViewModel extends ObservableModel<TenantCoreViewModel> {
 
   public void addLandlord(Landlord landlord) throws DatabaseException {
     dbHandler.getLandlordTable().create(landlord);
+  }
+
+  public void addInviteCode(InviteCode inviteCode) throws DatabaseException {
+    dbHandler.getInviteCodeTable().create(inviteCode);
   }
 
   public void addRequest(Request request) {

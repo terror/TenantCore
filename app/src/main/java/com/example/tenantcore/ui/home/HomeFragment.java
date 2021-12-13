@@ -7,11 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
+
 import com.example.tenantcore.R;
 import com.example.tenantcore.databinding.FragmentHomeBinding;
 import com.example.tenantcore.db.DatabaseException;
@@ -20,6 +20,7 @@ import com.example.tenantcore.model.Landlord;
 import com.example.tenantcore.model.Tenant;
 import com.example.tenantcore.ui.TenantCoreActivity;
 import com.example.tenantcore.viewmodel.TenantCoreViewModel;
+
 import java.util.Date;
 
 public class HomeFragment extends Fragment {
@@ -44,9 +45,11 @@ public class HomeFragment extends Fragment {
     // Logging in
     binding.homeLoginButton.setOnClickListener(view1 -> {
       String usernameEntered = binding.homeLoginUsernameEditText.getText().toString();
+      resetFields();
+
       if (binding.homeIdentityTenantRadioButton.isChecked()) {
 
-        // For now, a user can simply log in by writing any text in the EditText view.
+        // Empty username validation
         if (usernameEntered.isEmpty()) {
           // Failure
           activity.displayErrorMessage("Invalid tenant login.", "Please enter a valid username.");
@@ -101,17 +104,24 @@ public class HomeFragment extends Fragment {
         if (binding.homeIdentityTenantRadioButton.isChecked()) {
           // Empty invite code validation
           String inviteCodeText = binding.homeSignUpInviteEditText.getText().toString();
+          resetFields();
+
           if (inviteCodeText.isEmpty()) {
             activity.displayErrorMessage("No invite code provided.",
               "To create an account, ask your landlord to send you an invite code.");
             return;
           }
 
-          // Invite code validation
+          // Non-existent and expired invite code validation
           InviteCode inviteCode = viewmodel.findInviteCode(inviteCodeText);
           if (inviteCode == null) {
             activity.displayErrorMessage("Invalid invite code.",
               "To create an account, ask your landlord to send you an invite code.");
+            return;
+          }
+          else if (inviteCode.getExpiry().before(new Date())) {
+            activity.displayErrorMessage("Expired invite code.",
+              "To create an account, ask your landlord to send you a new invite code.");
             return;
           }
 
@@ -139,9 +149,7 @@ public class HomeFragment extends Fragment {
 
             // Delete the invite code, make the new tenant account, and navigate to the tenant home
             try {
-              // TODO: Uncomment once Invite Codes can be generated manually
-              // For now the placeholder invite codes do not get deleted after being used
-              // viewmodel.removeInvite(inviteCode);
+              viewmodel.removeInviteCode(inviteCode);
 
               viewmodel.addTenant(new Tenant()
                 .setLandlordId(inviteCode.getLandlordId())
@@ -225,5 +233,10 @@ public class HomeFragment extends Fragment {
   public void onDestroyView() {
     super.onDestroyView();
     binding = null;
+  }
+
+  private void resetFields() {
+    binding.homeLoginUsernameEditText.getText().clear();
+    binding.homeSignUpInviteEditText.getText().clear();
   }
 }
