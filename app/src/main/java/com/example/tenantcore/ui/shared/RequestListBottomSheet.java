@@ -1,22 +1,28 @@
 package com.example.tenantcore.ui.shared;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 import com.example.tenantcore.databinding.BottomSheetRequestInfoBinding;
 import com.example.tenantcore.db.DatabaseException;
 import com.example.tenantcore.model.Priority;
 import com.example.tenantcore.model.Request;
 import com.example.tenantcore.model.Status;
+import com.example.tenantcore.model.Tenant;
 import com.example.tenantcore.ui.TenantCoreActivity;
 import com.example.tenantcore.viewmodel.TenantCoreViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 /**
  * {@link BottomSheetDialog} showing details about the given {@link Request}.
@@ -76,6 +82,8 @@ public class RequestListBottomSheet extends BottomSheetDialog {
       binding.requestSheetApproveBtnImageButton.setOnClickListener(view -> {
         request.setStatus(Status.ACCEPTED);
         onStatusUpdate();
+
+        addRequestToCalendar();
       });
 
       /*
@@ -89,6 +97,28 @@ public class RequestListBottomSheet extends BottomSheetDialog {
     }
 
     setContentView(binding.getRoot());
+  }
+
+  private void addRequestToCalendar(){
+    if(request.getDueDate() == null)
+      return;
+
+    Tenant tenant = viewModel.getTenant();
+
+    Calendar calendar = new GregorianCalendar();
+    calendar.setTime(request.getDueDate());
+
+    Intent intent = new Intent(Intent.ACTION_EDIT);
+    intent.setData(CalendarContract.Events.CONTENT_URI);
+    intent.putExtra(CalendarContract.Events.TITLE, tenant.getName() + " - " + request.getTitle());
+    intent.putExtra(CalendarContract.Events.DESCRIPTION, request.getDescription());
+    intent.putExtra(CalendarContract.Events.EVENT_LOCATION, "At " + tenant.getName() + "'s place");
+    intent.putExtra(CalendarContract.Events.ALL_DAY, true);
+    intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, calendar.getTimeInMillis());
+    intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, calendar.getTimeInMillis());
+
+    ContextCompat.startActivity(getContext(), intent, null);
+
   }
 
   /**
