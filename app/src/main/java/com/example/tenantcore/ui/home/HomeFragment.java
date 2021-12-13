@@ -45,9 +45,11 @@ public class HomeFragment extends Fragment {
     // Logging in
     binding.homeLoginButton.setOnClickListener(view1 -> {
       String usernameEntered = binding.homeLoginUsernameEditText.getText().toString();
+      resetFields();
+
       if (binding.homeIdentityTenantRadioButton.isChecked()) {
 
-        // For now, a user can simply log in by writing any text in the EditText view.
+        // Empty username validation
         if (usernameEntered.isEmpty()) {
           // Failure
           activity.displayErrorMessage("Invalid tenant login.", "Please enter a valid username.");
@@ -102,6 +104,8 @@ public class HomeFragment extends Fragment {
         if (binding.homeIdentityTenantRadioButton.isChecked()) {
           // Empty invite code validation
           String inviteCodeText = binding.homeSignUpInviteEditText.getText().toString();
+          resetFields();
+
           if (inviteCodeText.isEmpty()) {
             activity.displayErrorMessage("No invite code provided.",
               "To create an account, ask your landlord to send you an invite code.");
@@ -229,5 +233,10 @@ public class HomeFragment extends Fragment {
   public void onDestroyView() {
     super.onDestroyView();
     binding = null;
+  }
+
+  private void resetFields() {
+    binding.homeLoginUsernameEditText.getText().clear();
+    binding.homeSignUpInviteEditText.getText().clear();
   }
 }

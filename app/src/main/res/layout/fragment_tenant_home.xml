@@ -45,13 +45,18 @@
         android:id="@+id/speech_imgBtn"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:src="@drawable/ic_baseline_mic_off_24" />
+        android:backgroundTint="#00FFFFFF"
+        android:src="@drawable/ic_baseline_mic_off_24"
+        android:tint="@android:color/secondary_text_light" />
 
       <Button
         android:id="@+id/formReset_btn"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:background="#00FFFFFF"
+        android:gravity="start|center_vertical"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"
         android:text="RESET"
         android:textColor="@android:color/secondary_text_light"
         android:textStyle="bold" />
@@ -69,9 +74,19 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:background="#00FFFFFF"
+        android:gravity="center_vertical|end"
+        android:paddingRight="0dp"
         android:text="SUMBIT"
         android:textColor="@android:color/secondary_text_light"
         android:textStyle="bold" />
+
+      <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:backgroundTint="#00FFFFFF"
+        android:clickable="false"
+        android:src="@drawable/ic_baseline_mic_off_24"
+        android:tint="#00323232" />
     </LinearLayout>
 
   </LinearLayout>
@@ -103,8 +118,10 @@
     android:inputType="textMultiLine"
     app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
     app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="1.0"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/requestTitle_editText" />
+    app:layout_constraintTop_toBottomOf="@+id/requestTitle_editText"
+    app:layout_constraintVertical_bias="0.0" />
 
   <View
     android:id="@+id/divider"

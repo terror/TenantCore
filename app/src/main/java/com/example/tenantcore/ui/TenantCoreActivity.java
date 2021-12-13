@@ -145,7 +145,7 @@ public class TenantCoreActivity extends AppCompatActivity {
     new AlertDialog.Builder(this)
       .setIcon(R.drawable.ic_baseline_warning_24)
       .setTitle("Logout")
-      .setMessage("A new key will be required to access your account.\nWould you like to proceed?")
+      .setMessage("Returning to home will log you out of your account.\n\nWould you like to proceed?")
       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
