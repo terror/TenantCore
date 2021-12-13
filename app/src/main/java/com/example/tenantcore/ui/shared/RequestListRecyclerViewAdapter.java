@@ -135,7 +135,7 @@ public class RequestListRecyclerViewAdapter extends RecyclerView.Adapter<Request
       // Set the request status and color
       if (request.getStatus() != null) {
         this.binding.requestSatusTextView.setText(request.getStatus().name());
-        this.binding.requestSatusTextView.setTextColor(Color.parseColor(getStatusColor(request.getStatus())));
+        this.binding.requestSatusTextView.setTextColor(Color.parseColor(getStatusTextColor(request.getStatus())));
       }
     }
 

@@ -92,7 +92,7 @@ public class TenantCoreViewModel extends ObservableModel<TenantCoreViewModel> {
       return null;
     }
     for (Landlord landlord : landlords) {
-      if (String.valueOf(landlord.getUsername()).equals(username.toLowerCase()))
+      if (landlord.getUsername().equalsIgnoreCase(username))
         return landlord;
     }
     return null;
