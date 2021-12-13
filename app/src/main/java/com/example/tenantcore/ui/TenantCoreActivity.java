@@ -3,6 +3,7 @@ package com.example.tenantcore.ui;
 import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -11,7 +12,9 @@ import android.speech.SpeechRecognizer;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -19,6 +22,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+
 import com.example.tenantcore.R;
 import com.example.tenantcore.databinding.ActivityTenantCoreBinding;
 import com.example.tenantcore.ui.landlord.home.LandlordHomeFragment;
@@ -141,7 +145,7 @@ public class TenantCoreActivity extends AppCompatActivity {
     new AlertDialog.Builder(this)
       .setIcon(R.drawable.ic_baseline_warning_24)
       .setTitle("Logout")
-      .setMessage("A new key will be required to access your account.\nWould you like to proceed?")
+      .setMessage("Returning to home will log you out of your account.\n\nWould you like to proceed?")
       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
@@ -193,5 +197,15 @@ public class TenantCoreActivity extends AppCompatActivity {
 
   public SpeechRecognizer getSpeechRecognizer() {
     return this.speechRecognizer;
+  }
+
+  public void hideKeyboard() {
+    View view = this.getCurrentFocus();
+
+    // If there is currently a view in focus, hide the keyboard
+    if (view != null) {
+      InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+      imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
   }
 }
