@@ -13,6 +13,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.tenantcore.R;
 import com.example.tenantcore.databinding.FragmentRequestListBinding;
 
+/**
+ * A fragment representing a list of Items.
+ * This fragment contains a {@link RequestListRecyclerViewAdapter}
+ */
 public class RequestListFragment extends Fragment {
   private static final String ARG_COLUMN_COUNT = "column-count";
   private int mColumnCount = 1;
@@ -41,7 +45,7 @@ public class RequestListFragment extends Fragment {
     else
       recyclerView.setLayoutManager(new GridLayoutManager(getContext(), mColumnCount));
 
-    // Set adapter
+    // Set recycler view adapter
     recyclerView.setAdapter(new RequestListRecyclerViewAdapter(this));
 
     return binding.getRoot();

@@ -13,15 +13,22 @@ import com.example.tenantcore.model.Status;
 import com.example.tenantcore.model.Tenant;
 import com.example.tenantcore.ui.TenantCoreActivity;
 import com.example.tenantcore.viewmodel.TenantCoreViewModel;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link List<Request>}.
+ * {@link RecyclerView.Adapter} that can display a {@link List<Request>} of {@link Request}.
  */
 public class RequestListRecyclerViewAdapter extends RecyclerView.Adapter<RequestListRecyclerViewAdapter.ViewHolder> {
   private final RequestListFragment requestListFragment;    // The fragment where this recycler view is displayed
   private final Tenant tenant;    // The tenant whose requests are being shown
   private List<Request> tenantRequests;   // The requests to show in this recycler view
+
+  // Date format to use for date displaying
+  private final DateFormat DATE_FORMAT = new SimpleDateFormat("EEE MMMM dd, yyyy", Locale.US);
 
   public RequestListRecyclerViewAdapter(RequestListFragment listFragment) {
     // Set fragment
@@ -113,7 +120,7 @@ public class RequestListRecyclerViewAdapter extends RecyclerView.Adapter<Request
       this.request = request;
 
       // Set the request due date
-      this.binding.requestDueDateTextView.setText(request.getDueDate().toString());
+      this.binding.requestDueDateTextView.setText(DATE_FORMAT.format(request.getDueDate()));
 
       // Set the request status
       this.binding.requestSatusTextView.setText(request.getStatus().name());
