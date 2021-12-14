@@ -113,6 +113,10 @@ public class TenantCoreViewModel extends ObservableModel<TenantCoreViewModel> {
     dbHandler.getTenantTable().create(tenant);
   }
 
+  public boolean updateTenant(Tenant tenant) throws DatabaseException {
+    return dbHandler.getTenantTable().update(tenant);
+  }
+
   public void addLandlord(Landlord landlord) throws DatabaseException {
     dbHandler.getLandlordTable().create(landlord);
   }

@@ -11,42 +11,70 @@
     android:layout_width="50dp"
     android:layout_height="50dp"
     android:layout_marginStart="8dp"
-    android:layout_marginTop="8dp"
+    android:layout_marginTop="16dp"
+    android:background="@drawable/ic_baseline_account_circle_24"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
-    tools:src="@tools:sample/avatars" />
+    tools:srcCompat="@drawable/ic_baseline_account_circle_24" />
 
   <TextView
-    android:id="@+id/request_tenant_name"
+    android:id="@+id/tenantName_TextView"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginStart="8dp"
-    android:layout_marginBottom="8dp"
     android:textColor="@android:color/black"
     android:textSize="20sp"
-    app:layout_constraintBottom_toTopOf="@+id/request_description"
     app:layout_constraintStart_toEndOf="@+id/request_tenant_image"
     app:layout_constraintTop_toTopOf="@+id/request_tenant_image"
     tools:text="@tools:sample/full_names" />
 
   <TextView
-    android:id="@+id/request_description"
-    android:layout_width="285dp"
-    android:layout_height="20dp"
-    android:layout_marginStart="8dp"
-    android:layout_marginEnd="8dp"
-    app:layout_constraintBottom_toBottomOf="@+id/request_tenant_image"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.050"
-    app:layout_constraintStart_toEndOf="@+id/request_tenant_image"
-    tools:text="@tools:sample/lorem[4:10]" />
-
-  <TextView
-    android:id="@+id/request_time"
+    android:id="@+id/remainingRequests_TextView"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginEnd="8dp"
+    android:layout_marginTop="4dp"
+    android:background="@drawable/ic_round_circle_24"
+    android:backgroundTint="#0277BD"
+    android:gravity="center"
+    android:minWidth="25dp"
+    android:minHeight="25dp"
+    android:paddingHorizontal="10dp"
+    android:text="2"
+    android:textColor="@android:color/white"
+    android:textSize="12sp"
+    app:layout_constraintStart_toEndOf="@+id/tenantName_TextView"
+    app:layout_constraintTop_toTopOf="parent" />
+
+  <TextView
+    android:id="@+id/lastLoginHeader_TextView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="8dp"
+    app:layout_constraintBottom_toBottomOf="@+id/request_tenant_image"
+    app:layout_constraintStart_toEndOf="@+id/request_tenant_image"
+    app:layout_constraintTop_toBottomOf="@+id/tenantName_TextView"
+    tools:text="Last Login : " />
+
+  <TextView
+    android:id="@+id/lastLoginDate_TextView"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:text="TextView"
+    app:layout_constraintBottom_toBottomOf="@+id/lastLoginHeader_TextView"
     app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintTop_toTopOf="@+id/request_tenant_image"
-    tools:text="@tools:sample/date/hhmm" />
+    app:layout_constraintStart_toEndOf="@+id/lastLoginHeader_TextView"
+    app:layout_constraintTop_toTopOf="@+id/lastLoginHeader_TextView" />
+
+  <View
+    android:id="@+id/divider"
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:layout_marginTop="8dp"
+    android:background="?android:attr/listDivider"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/lastLoginHeader_TextView" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
