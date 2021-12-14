@@ -1,13 +1,18 @@
 package com.example.tenantcore.ui;
 
 import android.app.AlertDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.speech.SpeechRecognizer;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,6 +30,9 @@ import com.example.tenantcore.ui.tenant.home.TenantHomeFragment;
 import com.example.tenantcore.viewmodel.TenantCoreViewModel;
 
 public class TenantCoreActivity extends AppCompatActivity {
+  public static final String REQUESTS_NOTIFICATION_CHANNEL = "requests-notification-channel";
+  public static final String REQUESTS_NOTIFICATION_GROUP = "requests-notifications";
+
   private AppBarConfiguration appBarConfiguration;
   private ActivityTenantCoreBinding binding;
   private TenantCoreActivity context;
@@ -66,6 +74,18 @@ public class TenantCoreActivity extends AppCompatActivity {
     NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
     appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
     NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+
+    // Create the notification channel
+    createNotificationChannel();
+
+    // Process intent
+    Intent intent = getIntent();
+    Bundle bundle = intent.getExtras();
+    if (bundle != null) {
+      // Navigate to the RequestListFragment
+      NavController controller = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+      controller.navigate(R.id.action_LandlordHomeFragment_to_RequestListFragment);
+    }
   }
 
   @Override
@@ -125,7 +145,7 @@ public class TenantCoreActivity extends AppCompatActivity {
     new AlertDialog.Builder(this)
       .setIcon(R.drawable.ic_baseline_warning_24)
       .setTitle("Logout")
-      .setMessage("A new key will be required to access your account.\nWould you like to proceed?")
+      .setMessage("Returning to home will log you out of your account.\n\nWould you like to proceed?")
       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
@@ -140,6 +160,20 @@ public class TenantCoreActivity extends AppCompatActivity {
       })
       .create()
       .show();
+  }
+
+  private void createNotificationChannel() {
+    String name = "Requests";
+    String description = "Notifications concerning Requests that are overdue";
+
+    int importance = NotificationManager.IMPORTANCE_DEFAULT;
+    NotificationChannel channel = new NotificationChannel(REQUESTS_NOTIFICATION_CHANNEL, name, importance);
+    channel.setDescription(description);
+
+    // Register the channel with the system; you can't change the importance
+    // or other notification behaviors after this
+    NotificationManager notificationManager = getSystemService(NotificationManager.class);
+    notificationManager.createNotificationChannel(channel);
   }
 
   @Override
@@ -163,5 +197,15 @@ public class TenantCoreActivity extends AppCompatActivity {
 
   public SpeechRecognizer getSpeechRecognizer() {
     return this.speechRecognizer;
+  }
+
+  public void hideKeyboard() {
+    View view = this.getCurrentFocus();
+
+    // If there is currently a view in focus, hide the keyboard
+    if (view != null) {
+      InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+      imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
   }
 }

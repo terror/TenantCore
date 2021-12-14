@@ -1,14 +1,19 @@
 package com.example.tenantcore.model;
 
+import android.os.Bundle;
+
 import com.example.tenantcore.db.Identifiable;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * Represents a request made by someone or something.
  */
 public class Request implements Identifiable<Long> {
-
   private Long id;
   private Long tenantId;
   private String title;
@@ -17,7 +22,8 @@ public class Request implements Identifiable<Long> {
   private Status status;
   private Priority priority;
 
-  public Request() {}
+  public Request() {
+  }
 
   /**
    * Creates a new request
@@ -32,6 +38,33 @@ public class Request implements Identifiable<Long> {
     this.dueDate = dueDate;
     this.priority = Priority.LOW;
     this.status = Status.PENDING;
+  }
+
+  /**
+   * Build a new request from a Bundle
+   * @param bundle Bundle that contains the request data
+   * @return A newly instantiated `Request` instance
+   */
+  public static Request fromBundle(Bundle bundle) {
+    Request request = new Request();
+
+    request.setId(bundle.getLong("id"));
+    request.setTenantId(bundle.getLong("tenantId"));
+    request.setTitle(bundle.getString("title"));
+    request.setDescription(bundle.getString("description"));
+    request.setStatus(Status.values()[bundle.getInt("status")]);
+    request.setPriority(Priority.values()[bundle.getInt("priority")]);
+
+    Date ret = null;
+    try {
+      if (bundle.containsKey("date"))
+        ret = new SimpleDateFormat("dd MM yyyy HH:mm:ss").parse(bundle.getString("date"));
+    } catch (ParseException e) {
+      e.printStackTrace();
+    }
+
+    request.setDueDate(ret);
+    return request;
   }
 
   /**
@@ -150,6 +183,37 @@ public class Request implements Identifiable<Long> {
   }
 
   /**
+   * Check if the task is overdue.
+   */
+  public boolean isOverdue() {
+    Calendar curr = Calendar.getInstance();
+    curr.setTime(new Date());
+    if (getDueDate() != null)
+      return curr.getTime().after(getDueDate());
+    return false;
+  }
+
+  /**
+   * Convert a `Request` to a `Bundle`
+   * @return A bundle containing important `Request` data
+   */
+  public Bundle toBundle() {
+    Bundle bundle = new Bundle();
+
+    bundle.putLong("id", getId());
+    bundle.putLong("tenantId", getTenantId());
+    bundle.putString("title", getTitle());
+    bundle.putString("description", getDescription());
+    bundle.putInt("status", getStatus().ordinal());
+    bundle.putInt("priority", getPriority().ordinal());
+
+    if (getDueDate() != null)
+      bundle.putString("date", new SimpleDateFormat("dd MM yyyy HH:mm:ss").format(getDueDate()));
+
+    return bundle;
+  }
+
+  /**
    * static Task Color class containing hex color codes for different task aspects.
    */
   public static class Color {
@@ -161,5 +225,10 @@ public class Request implements Identifiable<Long> {
     public static final String APPROVED_REQUEST = "#6aa84f"; // Green
     public static final String REFUSED_REQUEST = "#FF0000"; // Red
     public static final String TEXT_LOW_PRIORITY_REQUEST = "#6aa84f"; // Green
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, tenantId, description, title, description, dueDate, status, priority);
   }
 }

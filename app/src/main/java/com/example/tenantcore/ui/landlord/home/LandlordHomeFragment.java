@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,15 +17,22 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.tenantcore.R;
 import com.example.tenantcore.databinding.FragmentLandlordHomeBinding;
 import com.example.tenantcore.db.DatabaseException;
+import com.example.tenantcore.model.InviteCode;
+import com.example.tenantcore.model.Landlord;
 import com.example.tenantcore.services.EmailSender;
 import com.example.tenantcore.ui.TenantCoreActivity;
+import com.example.tenantcore.viewmodel.TenantCoreViewModel;
+
+import java.util.regex.Pattern;
 
 public class LandlordHomeFragment extends Fragment {
   public static String TAG_NAME = "landlord_home";
   private static final String ARG_COLUMN_COUNT = "column-count";
   private int mColumnCount = 1;
   private FragmentLandlordHomeBinding binding;
-  private TenantCoreActivity tenantCoreActivity;
+  private TenantCoreActivity activity;
+  private TenantCoreViewModel viewModel;
+  private Landlord user;
 
   public LandlordHomeFragment() {
   }
@@ -33,8 +41,10 @@ public class LandlordHomeFragment extends Fragment {
   public void onAttach(@NonNull Context context) {
     super.onAttach(context);
 
-    // set the activity
-    tenantCoreActivity = (TenantCoreActivity) context;
+    // set the activity, view-model, and landlord user
+    activity = (TenantCoreActivity) context;
+    viewModel = activity.getTenantViewModel();
+    user = viewModel.findLandlord(viewModel.getSignedInUser());
   }
 
   @Override
@@ -62,13 +72,11 @@ public class LandlordHomeFragment extends Fragment {
     else
       recyclerView.setLayoutManager(new GridLayoutManager(getContext(), mColumnCount));
 
-    String signedInLandlord = tenantCoreActivity.getTenantViewModel().getSignedInUser();
-
     // Set the adapter
     try {
       recyclerView.setAdapter(
         new TenantRecyclerViewAdapter(
-          tenantCoreActivity.getTenantViewModel().getTenantsByLandlord(tenantCoreActivity.getTenantViewModel().findLandlord(signedInLandlord)),
+          activity.getTenantViewModel().getTenantsByLandlord(activity.getTenantViewModel().findLandlord(user.getUsername())),
           this
         )
       );
@@ -79,7 +87,11 @@ public class LandlordHomeFragment extends Fragment {
     binding.inviteTenantButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        sendInvitationEmail();
+        try {
+          sendInvitation();
+        } catch (DatabaseException e) {
+          e.printStackTrace();
+        }
       }
     });
 
@@ -91,19 +103,58 @@ public class LandlordHomeFragment extends Fragment {
     super.onViewCreated(view, savedInstanceState);
   }
 
-  private void sendInvitationEmail() {
-    String user = ((TenantCoreActivity)getActivity()).getTenantViewModel().getSignedInUser();
+  private void sendInvitation() throws DatabaseException {
+    String email = binding.inviteTenantEditText.getText().toString();
 
+    // Validate the entered email, if the email is found to be invalid display an error message and return
+    if (!validateEmail(email)) {
+      activity.displayErrorMessage("Invalid Email", "Please enter a valid email address.");
+      return;
+    }
+
+    // Generate the invite code, add it to the database, and send the invitation email
+    InviteCode inviteCode = generateInviteCode();
+    viewModel.addInviteCode(inviteCode);
+    sendInvitationEmail(email, inviteCode);
+
+    // Clear the entered email, hide the keyboard, and display a confirmation pop-up
+    binding.inviteTenantEditText.getText().clear();
+    activity.hideKeyboard();
+    Toast.makeText(activity,"Invitation sent", Toast.LENGTH_SHORT).show();
+  }
+
+  private boolean validateEmail(String email) {
+    // Create a pattern using the valid email regex
+    Pattern pattern = Pattern.compile("^[\\.a-zA-Z0-9]+@[^@\\s]+\\.[^@\\s]+$");
+
+    // Return true if the provided email matches the pattern, otherwise return false
+    return pattern.matcher(email).matches();
+  }
+
+  private InviteCode generateInviteCode() throws DatabaseException {
+    int code = 0;
+
+    // Generate a random code that doesn't already belong to an invite code in the database
+    do {
+      code = InviteCode.generateCode();
+    } while (viewModel.findInviteCode(String.valueOf(code)) != null);
+
+    // Return a new invite code consisting of this landlords ID, the generated code, and the default expiry
+    return new InviteCode()
+      .setLandlordId(user.getId())
+      .setCode(code)
+      .setExpiry(InviteCode.DEFAULT_EXPIRY);
+  }
+
+  private void sendInvitationEmail(String email, InviteCode inviteCode) {
     // Send invitation email to entered email address
     EmailSender emailSender = new EmailSender(
       getContext(),
-      binding.inviteTenantEditText.getText().toString(),
+      email,
       "Invitation code",
-      String.format("%s just invited you to their building!\nYour invitation code is: %2d", user, 12345)
+      String.format("%s just invited you to their building!\nYour invitation code is: %2d", user.getName(), inviteCode.getCode())
     );
 
     emailSender.execute();
-
-    binding.inviteTenantEditText.getText().clear();
   }
 }

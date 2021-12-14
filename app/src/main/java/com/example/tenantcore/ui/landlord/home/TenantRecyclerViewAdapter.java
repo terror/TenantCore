@@ -58,7 +58,7 @@ public class TenantRecyclerViewAdapter extends RecyclerView.Adapter<TenantRecycl
       binding.listRequestItemLayout.setOnClickListener(view -> {
         // Store the tenant clicked on in the ViewModel
         TenantCoreActivity activity = (TenantCoreActivity) landlordHomeFragment.getActivity();
-        activity.getTenantViewModel().setTenant(tenants.get(getLayoutPosition()));
+        activity.getTenantViewModel().setTenant(tenant);
 
         // Navigate to RequestListFragment
         NavController controller = Navigation.findNavController(activity, R.id.nav_host_fragment_content_main);
