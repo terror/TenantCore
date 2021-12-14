@@ -44,8 +44,6 @@ public class RequestListBottomSheet extends BottomSheetDialog {
    *
    * @param activity         the activity where this bottom sheet will be displayed
    * @param request          the request to show details about
-   * @param activity the activity where this bottom sheet will be displayed
-   * @param request the request to show details about
    * @param showLandlordView whether the landlord functionality should be enabled
    */
   public RequestListBottomSheet(@NonNull TenantCoreActivity activity, Request request, boolean showLandlordView) {

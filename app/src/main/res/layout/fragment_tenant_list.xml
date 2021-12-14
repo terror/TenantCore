@@ -10,4 +10,4 @@
   android:layout_marginRight="16dp"
   app:layoutManager="LinearLayoutManager"
   tools:context=".ui.landlord.home.LandlordHomeFragment"
-  tools:listitem="@layout/list_item_tenant_request" />
+  tools:listitem="@layout/list_item_tenant" />

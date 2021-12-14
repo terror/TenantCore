@@ -113,6 +113,10 @@ public class TenantCoreViewModel extends ObservableModel<TenantCoreViewModel> {
     dbHandler.getTenantTable().create(tenant);
   }
 
+  public boolean updateTenant(Tenant tenant) throws DatabaseException {
+    return dbHandler.getTenantTable().update(tenant);
+  }
+
   public void addLandlord(Landlord landlord) throws DatabaseException {
     dbHandler.getLandlordTable().create(landlord);
   }
@@ -154,7 +158,6 @@ public class TenantCoreViewModel extends ObservableModel<TenantCoreViewModel> {
       .filter((tenant) -> tenant.getLandlordId().equals(landlord.getId()))
       .collect(Collectors.toList());
   }
-
   public void removeInviteCode(InviteCode inviteCode) throws DatabaseException {
     dbHandler.getInviteCodeTable().delete(inviteCode);
   }

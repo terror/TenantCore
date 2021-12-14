@@ -22,6 +22,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import com.example.tenantcore.R;
 import com.example.tenantcore.databinding.FragmentTenantHomeBinding;
+import com.example.tenantcore.db.DatabaseException;
 import com.example.tenantcore.model.Priority;
 import com.example.tenantcore.model.Request;
 import com.example.tenantcore.model.Tenant;
@@ -58,6 +59,12 @@ public class TenantHomeFragment extends Fragment {
     activity = (TenantCoreActivity) context;
     viewModel = activity.getTenantViewModel();
     user = viewModel.findTenant(viewModel.getSignedInUser());
+    user.setLastLogin(new Date());
+    try {
+      viewModel.updateTenant(user);
+    } catch (DatabaseException e) {
+      e.printStackTrace();
+    }
     formatter = new SimpleDateFormat("EEEE, MMMM d");
   }
 
@@ -68,6 +75,7 @@ public class TenantHomeFragment extends Fragment {
 
     binding = FragmentTenantHomeBinding.inflate(inflater, container, false);
     setListeners();
+
 
     return binding.getRoot();
   }
