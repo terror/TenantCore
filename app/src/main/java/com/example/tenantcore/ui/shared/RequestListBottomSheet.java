@@ -7,6 +7,7 @@ import android.provider.CalendarContract;
 import android.view.View;
 import androidx.annotation.NonNull;
 import com.example.tenantcore.R;
+import androidx.core.content.ContextCompat;
 import com.example.tenantcore.databinding.BottomSheetRequestInfoBinding;
 import com.example.tenantcore.db.DatabaseException;
 import com.example.tenantcore.model.Priority;
@@ -24,7 +25,8 @@ import java.util.Locale;
 import nl.dionsegijn.konfetti.KonfettiView;
 import nl.dionsegijn.konfetti.models.Shape;
 import nl.dionsegijn.konfetti.models.Size;
-
+import java.util.GregorianCalendar;
+import java.util.Locale;
 /**
  * {@link BottomSheetDialog} showing details about the given {@link Request}.
  * This Dialog also gives the options to Accept/Refuse the given {@link Request}
@@ -42,6 +44,8 @@ public class RequestListBottomSheet extends BottomSheetDialog {
    *
    * @param activity         the activity where this bottom sheet will be displayed
    * @param request          the request to show details about
+   * @param activity the activity where this bottom sheet will be displayed
+   * @param request the request to show details about
    * @param showLandlordView whether the landlord functionality should be enabled
    */
   public RequestListBottomSheet(@NonNull TenantCoreActivity activity, Request request, boolean showLandlordView) {
