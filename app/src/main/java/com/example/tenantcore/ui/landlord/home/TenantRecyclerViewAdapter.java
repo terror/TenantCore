@@ -6,7 +6,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.tenantcore.R;
-import com.example.tenantcore.databinding.ListItemTenantRequestBinding;
+import com.example.tenantcore.databinding.ListItemTenantBinding;
 import com.example.tenantcore.model.Tenant;
 import com.example.tenantcore.ui.TenantCoreActivity;
 import java.util.List;
@@ -23,7 +23,7 @@ public class TenantRecyclerViewAdapter extends RecyclerView.Adapter<TenantRecycl
 
   @Override
   public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    ListItemTenantRequestBinding binding = ListItemTenantRequestBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+    ListItemTenantBinding binding = ListItemTenantBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
     return new ViewHolder(binding);
   }
 
@@ -48,10 +48,10 @@ public class TenantRecyclerViewAdapter extends RecyclerView.Adapter<TenantRecycl
   }
 
   public class ViewHolder extends RecyclerView.ViewHolder {
-    private ListItemTenantRequestBinding binding;
+    private ListItemTenantBinding binding;
     private Tenant tenant;
 
-    public ViewHolder(ListItemTenantRequestBinding binding) {
+    public ViewHolder(ListItemTenantBinding binding) {
       super(binding.getRoot());
       this.binding = binding;
 
