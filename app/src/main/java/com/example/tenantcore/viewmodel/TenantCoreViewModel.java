@@ -1,6 +1,8 @@
 package com.example.tenantcore.viewmodel;
 
 import android.content.Context;
+import android.net.Uri;
+
 import com.example.tenantcore.db.DatabaseException;
 import com.example.tenantcore.db.TenantCoreDatabaseHandler;
 import com.example.tenantcore.model.InviteCode;
@@ -18,6 +20,7 @@ public class TenantCoreViewModel extends ObservableModel<TenantCoreViewModel> {
   private List<Request> requests;
   private List<InviteCode> inviteCodes;
   private Tenant tenant;
+  private Uri imageUri;
 
   @Override
   protected TenantCoreViewModel get() {
@@ -51,6 +54,14 @@ public class TenantCoreViewModel extends ObservableModel<TenantCoreViewModel> {
 
   public void setTenant(Tenant tenant) {
     this.tenant = tenant;
+  }
+
+  public Uri getImageUri() {
+    return imageUri;
+  }
+
+  public void setImageUri(Uri imageUri) {
+    this.imageUri = imageUri;
   }
 
   // Returns whether or not an invite code exists with the provided code.
@@ -143,6 +154,7 @@ public class TenantCoreViewModel extends ObservableModel<TenantCoreViewModel> {
       .filter((tenant) -> tenant.getLandlordId().equals(landlord.getId()))
       .collect(Collectors.toList());
   }
+
   public void removeInviteCode(InviteCode inviteCode) throws DatabaseException {
     dbHandler.getInviteCodeTable().delete(inviteCode);
   }
