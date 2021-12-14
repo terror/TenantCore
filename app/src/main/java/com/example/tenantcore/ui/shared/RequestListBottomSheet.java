@@ -33,7 +33,7 @@ public class RequestListBottomSheet extends BottomSheetDialog {
   private final boolean showLandlordView;   // Whether landlord functionality is enabled
   private BottomSheetRequestInfoBinding binding;
   private final TenantCoreViewModel viewModel;  // The view model
-  private TenantCoreActivity activity;
+  private final TenantCoreActivity activity;
 
   /**
    * Creates a Bottom Sheet Dialog for the given request
@@ -82,7 +82,12 @@ public class RequestListBottomSheet extends BottomSheetDialog {
     binding.approveTextTextView.setVisibility(landlordViewVisibility);
     binding.refuseTextTextView.setVisibility(landlordViewVisibility);
 
+    // Clicking on "ADD TO CALENDAR" btn adds that event to the user's calendar
+    // This works for both the landlord & the tenant.
+    binding.addToCalendarButton.setOnClickListener(view -> addRequestToCalendar());
+
     if (showLandlordView) {
+
       /*
         Clicking the "APPROVE" btn changes request status to ACCEPTED.
         It also updates the request in the db and dismisses the bottom sheet
@@ -94,6 +99,10 @@ public class RequestListBottomSheet extends BottomSheetDialog {
         // Add a notification for due date, @ 12:00PM
         AlarmManager.set(activity, request);
 
+        // Disabling the "Approve" btn and enabling the "Refuse" btn
+        // (Mainly to prevent the notification to be set twice)
+        binding.requestSheetRefuseBtnImageButton.setEnabled(true);
+        binding.requestSheetApproveBtnImageButton.setEnabled(false);
         onStatusUpdate();
       });
 
@@ -108,6 +117,21 @@ public class RequestListBottomSheet extends BottomSheetDialog {
         // Cancel any set alarms
         AlarmManager.cancel(activity, request);
 
+        // Disabling the "Refuse" btn and enabling the "Approve" btn
+        binding.requestSheetRefuseBtnImageButton.setEnabled(false);
+        binding.requestSheetApproveBtnImageButton.setEnabled(true);
+        onStatusUpdate();
+      });
+
+      /*
+       * Clicking the "MARK AS DONE" button changes the request status to DONE.
+       * It also dismisses the bottom sheet and deletes the request in the db
+       * since it has been accomplished and storing it is no longer required.
+       */
+      binding.markDoneButton.setOnClickListener(view -> {
+        // Change the request status
+        request.setStatus(Status.DONE);
+
         onStatusUpdate();
       });
     }
@@ -121,19 +145,19 @@ public class RequestListBottomSheet extends BottomSheetDialog {
 
     Tenant tenant = viewModel.getTenant();
 
-    Calendar calendar = new GregorianCalendar();
+    Calendar calendar = Calendar.getInstance();
     calendar.setTime(request.getDueDate());
 
-    Intent intent = new Intent(Intent.ACTION_EDIT);
-    intent.setData(CalendarContract.Events.CONTENT_URI);
-    intent.putExtra(CalendarContract.Events.TITLE, tenant.getName() + " - " + request.getTitle());
-    intent.putExtra(CalendarContract.Events.DESCRIPTION, request.getDescription());
-    intent.putExtra(CalendarContract.Events.EVENT_LOCATION, "At " + tenant.getName() + "'s place");
-    intent.putExtra(CalendarContract.Events.ALL_DAY, true);
-    intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, calendar.getTimeInMillis());
-    intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, calendar.getTimeInMillis());
+    Intent intent = new Intent(Intent.ACTION_INSERT)
+      .setData(CalendarContract.Events.CONTENT_URI)
+      .putExtra(CalendarContract.Events.TITLE, tenant.getName() + " - " + request.getTitle())
+      .putExtra(CalendarContract.Events.DESCRIPTION, request.getDescription())
+      .putExtra(CalendarContract.Events.EVENT_LOCATION, "At " + tenant.getName() + "'s place")
+      .putExtra(CalendarContract.Events.ALL_DAY, true)
+      .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, calendar.getTimeInMillis())
+      .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, calendar.getTimeInMillis());
 
-    ContextCompat.startActivity(getContext(), intent, null);
+    activity.startActivity(intent);
 
   }
 
@@ -144,11 +168,18 @@ public class RequestListBottomSheet extends BottomSheetDialog {
   private void onStatusUpdate(){
     setStatusInfo();
     try {
-      viewModel.updateTenantRequest(request);
+      if(!request.getStatus().equals(Status.DONE)) {
+        viewModel.updateTenantRequest(request);
+      }
+      else {
+        viewModel.remoteTenantRequest(request);
+        dismiss();
+      }
+
     } catch (DatabaseException e) {
       e.printStackTrace();
     }
-    dismiss();
+    //dismiss();
   }
 
   /**
@@ -157,6 +188,7 @@ public class RequestListBottomSheet extends BottomSheetDialog {
   private void setStatusInfo(){
     binding.requestSheetStatusTextView.setText(request.getStatus().name());
     binding.requestSheetStatusTextView.setTextColor(Color.parseColor(getStatusTextColor(request.getStatus())));
+    binding.markDoneButton.setVisibility(showLandlordView && request.getStatus().equals(Status.ACCEPTED) ? View.VISIBLE : View.GONE);
   }
 
   /**
@@ -183,8 +215,8 @@ public class RequestListBottomSheet extends BottomSheetDialog {
   private String getStatusTextColor(Status status){
     switch (status){
       case REFUSED: return Request.Color.REFUSED_REQUEST;
-      case ACCEPTED: return Request.Color.APPROVED_REQUEST;
-      default: return Request.Color.PENDING_REQUEST;
+      case PENDING: return Request.Color.PENDING_REQUEST;
+      default: return Request.Color.APPROVED_REQUEST;
     }
   }
 

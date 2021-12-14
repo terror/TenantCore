@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
   android:paddingBottom="15dp"
@@ -100,12 +101,12 @@
     app:layout_constraintTop_toTopOf="@+id/requestSheetDueDate_TextView" />
 
   <ImageButton
-    android:id="@+id/requestSheetApproveBtnImageButton"
+    android:id="@+id/requestSheetApproveBtn_ImageButton"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:backgroundTint="#00FFFFFF"
     app:layout_constraintStart_toEndOf="@+id/divider2"
-    app:layout_constraintTop_toBottomOf="@+id/requestSheetStatus_TextView"
+    app:layout_constraintTop_toBottomOf="@+id/calendarAndDoneBtn_LinearLayout"
     app:srcCompat="@drawable/ic_round_check_circle_48"
     app:tint="#43A047" />
 
@@ -115,7 +116,7 @@
     android:layout_height="wrap_content"
     android:backgroundTint="#00FFFFFF"
     app:layout_constraintEnd_toStartOf="@+id/divider2"
-    app:layout_constraintTop_toBottomOf="@+id/requestSheetStatus_TextView"
+    app:layout_constraintTop_toBottomOf="@+id/calendarAndDoneBtn_LinearLayout"
     app:srcCompat="@drawable/ic_round_cancel_48"
     app:tint="#DD1915" />
 
@@ -124,9 +125,9 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:text="Approve"
-    app:layout_constraintEnd_toEndOf="@+id/requestSheetApproveBtnImageButton"
-    app:layout_constraintStart_toStartOf="@+id/requestSheetApproveBtnImageButton"
-    app:layout_constraintTop_toBottomOf="@+id/requestSheetApproveBtnImageButton" />
+    app:layout_constraintEnd_toEndOf="@+id/requestSheetApproveBtn_ImageButton"
+    app:layout_constraintStart_toStartOf="@+id/requestSheetApproveBtn_ImageButton"
+    app:layout_constraintTop_toBottomOf="@+id/requestSheetApproveBtn_ImageButton" />
 
   <TextView
     android:id="@+id/refuseText_TextView"
@@ -136,6 +137,44 @@
     app:layout_constraintEnd_toEndOf="@+id/requestSheetRefuseBtn_ImageButton"
     app:layout_constraintStart_toStartOf="@+id/requestSheetRefuseBtn_ImageButton"
     app:layout_constraintTop_toBottomOf="@+id/requestSheetRefuseBtn_ImageButton" />
+
+  <LinearLayout
+    android:id="@+id/calendarAndDoneBtn_LinearLayout"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:weightSum="2"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/requestSheetStatus_TextView">
+
+    <Button
+      android:id="@+id/addToCalendar_Button"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="15dp"
+      android:layout_marginRight="15dp"
+      android:layout_weight="1"
+      android:backgroundTint="#0277BD"
+      android:fitsSystemWindows="false"
+      android:text="Add To Calendar"
+      android:textColor="@android:color/white"
+      app:cornerRadius="20dp" />
+
+    <Button
+      android:id="@+id/markDone_Button"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="15dp"
+      android:layout_marginRight="15dp"
+      android:layout_weight="1"
+      android:backgroundTint="#0277BD"
+      android:text="Mark As Done"
+      android:textColor="@android:color/white"
+      app:cornerRadius="20dp" />
+
+  </LinearLayout>
 
   <View
     android:id="@+id/divider2"

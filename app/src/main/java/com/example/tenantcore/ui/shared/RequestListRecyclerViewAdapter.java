@@ -101,6 +101,7 @@ public class RequestListRecyclerViewAdapter extends RecyclerView.Adapter<Request
 
         // Layout position will be used to notify change at the right place in the tenantRequests list
         int layoutPosition = getLayoutPosition();
+        int numOfRequests = getItemCount();
 
         // Create + show bottom sheet
         RequestListBottomSheet requestInfoDialog = new RequestListBottomSheet((TenantCoreActivity) requestListFragment.getActivity(), tenantRequests.get(layoutPosition), isLandlord);
@@ -111,7 +112,13 @@ public class RequestListRecyclerViewAdapter extends RecyclerView.Adapter<Request
         if (isLandlord) {
           requestInfoDialog.setOnDismissListener(dialogInterface -> {
             viewModel.notifyChange();
-            notifyItemChanged(layoutPosition);
+            if(getItemCount() < numOfRequests){
+              notifyItemRemoved(layoutPosition);
+            }
+            else {
+              notifyItemChanged(layoutPosition);
+            }
+
           });
         }
       });

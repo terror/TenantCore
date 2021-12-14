@@ -122,6 +122,10 @@ public class TenantCoreViewModel extends ObservableModel<TenantCoreViewModel> {
     return dbHandler.getRequestTable().update(request);
   }
 
+  public boolean remoteTenantRequest(Request request) throws DatabaseException {
+    return dbHandler.getRequestTable().delete(request);
+  }
+
   public List<Request> getRequestsByTenant(Tenant tenant) throws DatabaseException {
     List<Request> allRequests = dbHandler.getRequestTable().readAll();
 
