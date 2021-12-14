@@ -12,9 +12,7 @@ import com.example.tenantcore.model.Request;
 import com.example.tenantcore.model.Status;
 import com.example.tenantcore.model.Tenant;
 import com.example.tenantcore.ui.TenantCoreActivity;
-import com.example.tenantcore.viewmodel.ObservableModel;
 import com.example.tenantcore.viewmodel.TenantCoreViewModel;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -112,18 +110,14 @@ public class RequestListRecyclerViewAdapter extends RecyclerView.Adapter<Request
         if (isLandlord) {
           requestInfoDialog.setOnDismissListener(dialogInterface -> {
             viewModel.notifyChange();
-            if(getItemCount() < numOfRequests){
+            if (getItemCount() < numOfRequests) {
               notifyItemRemoved(layoutPosition);
-            }
-            else {
+            } else {
               notifyItemChanged(layoutPosition);
             }
-
           });
         }
       });
-
-
     }
 
     public void bind(Request request) {

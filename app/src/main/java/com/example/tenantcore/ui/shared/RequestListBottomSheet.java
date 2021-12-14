@@ -6,8 +6,8 @@ import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.view.View;
 import androidx.annotation.NonNull;
+import com.example.tenantcore.R;
 import androidx.core.content.ContextCompat;
-
 import com.example.tenantcore.databinding.BottomSheetRequestInfoBinding;
 import com.example.tenantcore.db.DatabaseException;
 import com.example.tenantcore.model.Priority;
@@ -21,6 +21,10 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
+import nl.dionsegijn.konfetti.KonfettiView;
+import nl.dionsegijn.konfetti.models.Shape;
+import nl.dionsegijn.konfetti.models.Size;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 /**
@@ -37,8 +41,9 @@ public class RequestListBottomSheet extends BottomSheetDialog {
 
   /**
    * Creates a Bottom Sheet Dialog for the given request
-   * @param activity the activity where this bottom sheet will be displayed
-   * @param request the request to show details about
+   *
+   * @param activity         the activity where this bottom sheet will be displayed
+   * @param request          the request to show details about
    * @param showLandlordView whether the landlord functionality should be enabled
    */
   public RequestListBottomSheet(@NonNull TenantCoreActivity activity, Request request, boolean showLandlordView) {
@@ -132,6 +137,20 @@ public class RequestListBottomSheet extends BottomSheetDialog {
         // Change the request status
         request.setStatus(Status.DONE);
 
+        // Play the confetti animation
+        final KonfettiView konfettiView = activity.findViewById(R.id.viewKonfetti);
+        konfettiView.build()
+          .addColors(Color.YELLOW, Color.GREEN, Color.MAGENTA)
+          .setDirection(0.0, 359.0)
+          .setSpeed(1f, 5f)
+          .setFadeOutEnabled(true)
+          .setTimeToLive(2000L)
+          .addShapes(Shape.Square.INSTANCE, Shape.Circle.INSTANCE)
+          .addSizes(new Size(12, 5f))
+          .setPosition(-50f, konfettiView.getWidth() + 50f, -50f, -50f)
+          .streamFor(300, 5000L);
+
+        // Update status
         onStatusUpdate();
       });
     }
@@ -139,8 +158,8 @@ public class RequestListBottomSheet extends BottomSheetDialog {
     setContentView(binding.getRoot());
   }
 
-  private void addRequestToCalendar(){
-    if(request.getDueDate() == null)
+  private void addRequestToCalendar() {
+    if (request.getDueDate() == null)
       return;
 
     Tenant tenant = viewModel.getTenant();
@@ -165,13 +184,12 @@ public class RequestListBottomSheet extends BottomSheetDialog {
    * Updates the request status in the db & dismisses the bottom sheet.
    * Also updates the the status info in the bottom sheet
    */
-  private void onStatusUpdate(){
+  private void onStatusUpdate() {
     setStatusInfo();
     try {
-      if(!request.getStatus().equals(Status.DONE)) {
+      if (!request.getStatus().equals(Status.DONE)) {
         viewModel.updateTenantRequest(request);
-      }
-      else {
+      } else {
         viewModel.remoteTenantRequest(request);
         dismiss();
       }
@@ -185,7 +203,7 @@ public class RequestListBottomSheet extends BottomSheetDialog {
   /**
    * Updates the status info in the bottom sheet
    */
-  private void setStatusInfo(){
+  private void setStatusInfo() {
     binding.requestSheetStatusTextView.setText(request.getStatus().name());
     binding.requestSheetStatusTextView.setTextColor(Color.parseColor(getStatusTextColor(request.getStatus())));
     binding.markDoneButton.setVisibility(showLandlordView && request.getStatus().equals(Status.ACCEPTED) ? View.VISIBLE : View.GONE);
@@ -194,14 +212,18 @@ public class RequestListBottomSheet extends BottomSheetDialog {
   /**
    * Gets the Hex color code to be used for the given Priority.
    * The Hex color code indicates the text color of the priority.
+   *
    * @param priority The priority for which to get the Hex text color code
    * @return String containing the Hex color code indicating the given priority's text color
    */
-  private String getPriorityColor(Priority priority){
-    switch (priority){
-      case LOW: return Request.Color.TEXT_LOW_PRIORITY_REQUEST;
-      case MEDIUM: return Request.Color.MEDIUM_PRIORITY_REQUEST;
-      default: return Request.Color.HIGH_PRIORITY_REQUEST;
+  private String getPriorityColor(Priority priority) {
+    switch (priority) {
+      case LOW:
+        return Request.Color.TEXT_LOW_PRIORITY_REQUEST;
+      case MEDIUM:
+        return Request.Color.MEDIUM_PRIORITY_REQUEST;
+      default:
+        return Request.Color.HIGH_PRIORITY_REQUEST;
     }
   }
 
@@ -212,11 +234,14 @@ public class RequestListBottomSheet extends BottomSheetDialog {
    * @param status Status for which to get the Hex color code
    * @return String containing the Hex color code indicating the given status' text color
    */
-  private String getStatusTextColor(Status status){
-    switch (status){
-      case REFUSED: return Request.Color.REFUSED_REQUEST;
-      case PENDING: return Request.Color.PENDING_REQUEST;
-      default: return Request.Color.APPROVED_REQUEST;
+  private String getStatusTextColor(Status status) {
+    switch (status) {
+      case REFUSED:
+        return Request.Color.REFUSED_REQUEST;
+      case PENDING:
+        return Request.Color.PENDING_REQUEST;
+      default:
+        return Request.Color.APPROVED_REQUEST;
     }
   }
 
