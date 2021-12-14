@@ -92,7 +92,7 @@ public class TenantCoreViewModel extends ObservableModel<TenantCoreViewModel> {
       return null;
     }
     for (Landlord landlord : landlords) {
-      if (String.valueOf(landlord.getUsername()).equals(username.toLowerCase()))
+      if (landlord.getUsername().equalsIgnoreCase(username))
         return landlord;
     }
     return null;
@@ -122,6 +122,10 @@ public class TenantCoreViewModel extends ObservableModel<TenantCoreViewModel> {
     return dbHandler.getRequestTable().update(request);
   }
 
+  public boolean remoteTenantRequest(Request request) throws DatabaseException {
+    return dbHandler.getRequestTable().delete(request);
+  }
+
   public List<Request> getRequestsByTenant(Tenant tenant) throws DatabaseException {
     List<Request> allRequests = dbHandler.getRequestTable().readAll();
 
@@ -139,7 +143,6 @@ public class TenantCoreViewModel extends ObservableModel<TenantCoreViewModel> {
       .filter((tenant) -> tenant.getLandlordId().equals(landlord.getId()))
       .collect(Collectors.toList());
   }
-
   public void removeInviteCode(InviteCode inviteCode) throws DatabaseException {
     dbHandler.getInviteCodeTable().delete(inviteCode);
   }
