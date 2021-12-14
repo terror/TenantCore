@@ -179,7 +179,9 @@ public class TenantCoreActivity extends AppCompatActivity {
   @Override
   protected void onDestroy() {
     super.onDestroy();
-    speechRecognizer.destroy();
+    if (speechRecognizer != null) {
+      speechRecognizer.destroy();
+    }
   }
 
   @Override

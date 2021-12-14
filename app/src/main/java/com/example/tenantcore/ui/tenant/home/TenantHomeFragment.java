@@ -157,7 +157,7 @@ public class TenantHomeFragment extends Fragment {
     // Check if the device supports speech recognition
     if (!SpeechRecognizer.isRecognitionAvailable(activity)) {
       activity.displayErrorMessage("Speech Recognition not supported",
-        "Your device does not support speech recognition." +
+        "Your device does not support speech recognition. " +
           "Consider downloading the Google app on the Google Play store.");
       return false;
     }

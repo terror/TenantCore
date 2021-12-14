@@ -119,10 +119,13 @@ public class HomeFragment extends Fragment {
               "To create an account, ask your landlord to send you an invite code.");
             return;
           }
-          else if (inviteCode.getExpiry().before(new Date())) {
-            activity.displayErrorMessage("Expired invite code.",
-              "To create an account, ask your landlord to send you a new invite code.");
-            return;
+          else {
+            Date expiry = inviteCode.getExpiry();
+            if (expiry != null && expiry.before(new Date())) {
+              activity.displayErrorMessage("Expired invite code.",
+                "To create an account, ask your landlord to send you a new invite code.");
+              return;
+            }
           }
 
           createButton.setOnClickListener(_view -> {
