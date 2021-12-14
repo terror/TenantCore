@@ -41,21 +41,31 @@ public class RequestTable extends Table<Request> {
     values.put(COLUMN_DATE, Table.dateAsString(element.getDueDate()));
     values.put(COLUMN_STATUS, element.getStatus().ordinal());
     values.put(COLUMN_PRIORITY, element.getPriority().ordinal());
-    values.put(COLUMN_IMAGE, element.getImageUri().toString());
+    values.put(COLUMN_IMAGE, element.getImageUri() == null ? null : element.getImageUri().toString());
     return values;
   }
 
   @Override
   protected Request fromCursor(Cursor cursor) {
-    return new Request()
+
+    Request request = new Request();
+     request
       .setId(cursor.getLong(0))
       .setTenantId(cursor.getLong(1))
       .setTitle(cursor.getString(2))
       .setDescription(cursor.getString(3))
       .setDueDate(Table.stringAsDate(cursor.getString(4)))
       .setStatus(Status.values()[cursor.getInt(5)])
-      .setPriority(Priority.values()[cursor.getInt(6)])
-      .setImageUri(Uri.parse(cursor.getString(7)));
+      .setPriority(Priority.values()[cursor.getInt(6)]);
+     try {
+       request.setImageUri(Uri.parse(cursor.getString(7)));
+     }
+     catch (Exception e){
+       request.setImageUri(null);
+     }
+
+
+     return request;
   }
 
   @Override

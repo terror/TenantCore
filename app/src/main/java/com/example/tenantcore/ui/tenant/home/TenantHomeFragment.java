@@ -408,7 +408,8 @@ public class TenantHomeFragment extends Fragment {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), TenantCoreActivity.PICK_IMAGE);
+        intent.putExtra(Intent.EXTRA_TITLE, "Select Picture");
+        activity.startActivityFromFragment(TenantHomeFragment.this, intent, TenantCoreActivity.PICK_IMAGE);
       }
     });
   }
