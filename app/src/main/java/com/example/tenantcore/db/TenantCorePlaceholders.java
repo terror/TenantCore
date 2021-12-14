@@ -4,7 +4,6 @@ import com.example.tenantcore.model.InviteCode;
 import com.example.tenantcore.model.Landlord;
 import com.example.tenantcore.model.Priority;
 import com.example.tenantcore.model.Request;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -12,7 +11,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class TenantCorePlaceholders {
-
   private static List<InviteCode> inviteCodes;
   private static List<List<Request>> tenantRequests;
   private static List<Landlord> landlords;
@@ -22,7 +20,6 @@ public class TenantCorePlaceholders {
 
   private static void loadInviteCodes() {
     inviteCodes = new ArrayList<>();
-
     inviteCodes.add(new InviteCode().setLandlordId(DEFAULT_LANDLORD_ID).setCode(12345));
   }
 
@@ -76,5 +73,4 @@ public class TenantCorePlaceholders {
   public static List<List<Request>> getTenantRequests(){
     return tenantRequests;
   }
-
 }

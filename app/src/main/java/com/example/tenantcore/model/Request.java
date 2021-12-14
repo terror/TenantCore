@@ -1,5 +1,6 @@
 package com.example.tenantcore.model;
 
+import android.net.Uri;
 import android.os.Bundle;
 
 import com.example.tenantcore.db.Identifiable;
@@ -21,9 +22,9 @@ public class Request implements Identifiable<Long> {
   private Date dueDate;
   private Status status;
   private Priority priority;
+  private Uri imageUri;
 
-  public Request() {
-  }
+  public Request() {}
 
   /**
    * Creates a new request
@@ -159,6 +160,25 @@ public class Request implements Identifiable<Long> {
    */
   public Request setDueDate(Date dueDate) {
     this.dueDate = dueDate;
+    return this;
+  }
+
+  /**
+   * Gets the request image uri
+   *
+   * @return the image uri of the request
+   */
+  public Uri getImageUri() {
+    return imageUri;
+  }
+
+  /**
+   * Sets the image uri of the request
+   *
+   * @param imageUri the image uri to set for the request
+   */
+  public Request setImageUri(Uri imageUri) {
+    this.imageUri = imageUri;
     return this;
   }
 

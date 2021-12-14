@@ -5,15 +5,11 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
-import com.example.tenantcore.model.InviteCode;
 import com.example.tenantcore.model.Tenant;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class TenantTable extends Table<Tenant> {
-
   private static final String TABLE_NAME = "Tenant";
   private static final String COLUMN_LANDLORD_ID = "landlord_id";
   private static final String COLUMN_USERNAME = "username";
@@ -64,8 +60,7 @@ public class TenantTable extends Table<Tenant> {
       try {
         ContentValues values = toContentValues(tenant);
         insertId = database.insertOrThrow(super.getName(), null, values);
-      }
-      catch (SQLException e) {
+      } catch (SQLException e) {
         throw new DatabaseException(e.getMessage());
       }
 
@@ -73,7 +68,7 @@ public class TenantTable extends Table<Tenant> {
     }
   }
 
-  private List<Tenant> getInitialTenants(){
+  private List<Tenant> getInitialTenants() {
     // The 3 tenants to seed
     List<Tenant> tenants = new ArrayList<>(TenantCorePlaceholders.NUM_DEFAULT_TENANTS);
     tenants.add(new Tenant("joe.doug", "Joe Doug", TenantCorePlaceholders.DEFAULT_LANDLORD_ID));
