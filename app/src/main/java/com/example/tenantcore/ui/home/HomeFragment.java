@@ -66,17 +66,17 @@ public class HomeFragment extends Fragment {
 
       } else {
 
-        if (viewmodel.findLandlord(binding.homeLoginUsernameEditText.getText().toString()) == null) {
+        if (viewmodel.findLandlord(usernameEntered) == null) {
           // Failure
           activity.displayErrorMessage("Invalid landlord login.", "Please enter a valid username.");
 
         } else {
-          if (binding.homeLoginUsernameEditText.getText().toString().isEmpty()) {
+          if (usernameEntered.isEmpty()) {
             // Failure
             activity.displayErrorMessage("Invalid landlord login.", "Please enter a valid username.");
           } else {
             // Check for a landlord matching the entered in username
-            if (viewmodel.findLandlord(binding.homeLoginUsernameEditText.getText().toString()) != null) {
+            if (viewmodel.findLandlord(usernameEntered) != null) {
               // Success
               viewmodel.setSignedInUser(usernameEntered);
               NavHostFragment.findNavController(HomeFragment.this)
