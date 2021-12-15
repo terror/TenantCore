@@ -37,7 +37,7 @@ public class TenantCoreActivity extends AppCompatActivity {
   private AppBarConfiguration appBarConfiguration;
   private ActivityTenantCoreBinding binding;
   private TenantCoreActivity context;
-  private TenantCoreViewModel tenantCoreViewModel;
+  private final TenantCoreViewModel tenantCoreViewModel;
 
   // Microphone settings
   public static final Integer RecordAudioRequestCode = 1;
@@ -207,31 +207,6 @@ public class TenantCoreActivity extends AppCompatActivity {
     // or other notification behaviors after this
     NotificationManager notificationManager = getSystemService(NotificationManager.class);
     notificationManager.createNotificationChannel(channel);
-  }
-
-  @Override
-  protected void onDestroy() {
-    super.onDestroy();
-    if (speechRecognizer != null) {
-      speechRecognizer.destroy();
-    }
-  }
-
-  @Override
-  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    if (requestCode == RecordAudioRequestCode && grantResults.length > 0 ){
-      if(grantResults[0] == PackageManager.PERMISSION_GRANTED)
-        Toast.makeText(this,"Permission Granted", Toast.LENGTH_SHORT).show();
-    }
-  }
-
-  public void setSpeechRecognizer(SpeechRecognizer speechRecognizer) {
-    this.speechRecognizer = speechRecognizer;
-  }
-
-  public SpeechRecognizer getSpeechRecognizer() {
-    return this.speechRecognizer;
   }
 
   public void hideKeyboard() {
