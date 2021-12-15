@@ -56,7 +56,7 @@ public class TenantRecyclerViewAdapter extends RecyclerView.Adapter<TenantRecycl
   }
 
   public class ViewHolder extends RecyclerView.ViewHolder {
-    private ListItemTenantBinding binding;
+    private final ListItemTenantBinding binding;
     private Tenant tenant;
 
     public ViewHolder(ListItemTenantBinding binding) {

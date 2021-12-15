@@ -9,8 +9,8 @@ import java.util.Random;
 
 public class InviteCode implements Identifiable<Long> {
 
-  private static int MIN_CODE = 10000;
-  private static int MAX_CODE = 99999;
+  private static final int MIN_CODE = 10000;
+  private static final int MAX_CODE = 99999;
   public static Date DEFAULT_EXPIRY = Date.from(LocalDateTime.now().plusDays(1).atZone(ZoneId.systemDefault()).toInstant());
 
   private Long id;

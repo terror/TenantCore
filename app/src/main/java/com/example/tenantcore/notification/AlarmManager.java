@@ -9,7 +9,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 
 public class AlarmManager {
-  private static HashMap<Request, PendingIntent> alarms = new HashMap<>();
+  private static final HashMap<Request, PendingIntent> alarms = new HashMap<>();
 
   public static void set(TenantCoreActivity activity, Request request) {
     // Don't set alarms in the past and don't process tasks without a due date

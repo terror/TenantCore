@@ -17,11 +17,11 @@ import javax.mail.internet.MimeMessage;
 
 public class EmailSender extends AsyncTask {
 
-  private Context context;
+  private final Context context;
   private Session session;
-  private String email;
-  private String subject;
-  private String message;
+  private final String email;
+  private final String subject;
+  private final String message;
 
   public EmailSender(Context context, String email, String subject, String message) {
     this.context = context;

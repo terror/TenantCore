@@ -37,7 +37,7 @@ public class TenantCoreActivity extends AppCompatActivity {
   private AppBarConfiguration appBarConfiguration;
   private ActivityTenantCoreBinding binding;
   private TenantCoreActivity context;
-  private TenantCoreViewModel tenantCoreViewModel;
+  private final TenantCoreViewModel tenantCoreViewModel;
 
   // Microphone settings
   public static final Integer RecordAudioRequestCode = 1;
