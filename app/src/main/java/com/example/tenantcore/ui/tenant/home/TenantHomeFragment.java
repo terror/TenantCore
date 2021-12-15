@@ -227,7 +227,7 @@ public class TenantHomeFragment extends Fragment {
         }
       });
 
-    datePicker.show(getFragmentManager(), "datePicker");
+    datePicker.show(getParentFragmentManager(), "datePicker");
   }
 
   /**
@@ -306,16 +306,16 @@ public class TenantHomeFragment extends Fragment {
 
   /**
    * Validates the request by ensuring that the
-   * title and description fields are filled.
+   * title, description, date & priority fields are filled.
    * @return True if the request is valid, false otherwise.
    */
   private boolean validRequest() {
     // If both the request title and description are not empty, return true
-    if (binding.requestTitleEditText.length() != 0 && binding.requestDescEditText.length() != 0)
+    if (binding.requestTitleEditText.length() != 0 && binding.requestDescEditText.length() != 0 && binding.requestDateBtn.getText().length() != 0 && binding.maintenanceFormUrgencyRadioGrp.getCheckedRadioButtonId() != -1)
       return true;
 
     // Display an alert if the either of the fields are empty
-    activity.displayErrorMessage("Invalid request.", "A request must have a title and description");
+    activity.displayErrorMessage("Invalid request.", "A request must have a title, description, potential due date and urgency");
 
     return false;
   }
@@ -327,7 +327,8 @@ public class TenantHomeFragment extends Fragment {
    */
   private Date getDefaultDueDate() {
     Date defaultDate = new Date();
-    defaultDate.setDate(defaultDate.getDate() + 7); // Advance today's date by 7 days
+    long sevenDayMs = 604800000;
+    defaultDate.setTime(defaultDate.getTime() + sevenDayMs); // Advance today's date by 7 days
 
     return defaultDate;
   }
