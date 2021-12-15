@@ -76,7 +76,7 @@
         android:background="#00FFFFFF"
         android:gravity="center_vertical|end"
         android:paddingRight="0dp"
-        android:text="SUMBIT"
+        android:text="SUBMIT"
         android:textColor="@android:color/secondary_text_light"
         android:textStyle="bold" />
 
