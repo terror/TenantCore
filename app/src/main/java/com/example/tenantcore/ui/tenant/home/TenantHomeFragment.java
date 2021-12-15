@@ -15,29 +15,26 @@ import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
-
 import com.example.tenantcore.R;
 import com.example.tenantcore.databinding.FragmentTenantHomeBinding;
+import com.example.tenantcore.db.DatabaseException;
 import com.example.tenantcore.model.Priority;
 import com.example.tenantcore.model.Request;
 import com.example.tenantcore.model.Tenant;
 import com.example.tenantcore.ui.TenantCoreActivity;
 import com.example.tenantcore.ui.util.DatePickerDialogFragment;
 import com.example.tenantcore.viewmodel.TenantCoreViewModel;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
 public class TenantHomeFragment extends Fragment {
-
   public static String TAG_NAME = "tenant_home";
 
   private FragmentTenantHomeBinding binding;
@@ -62,6 +59,12 @@ public class TenantHomeFragment extends Fragment {
     activity = (TenantCoreActivity) context;
     viewModel = activity.getTenantViewModel();
     user = viewModel.findTenant(viewModel.getSignedInUser());
+    user.setLastLogin(new Date());
+    try {
+      viewModel.updateTenant(user);
+    } catch (DatabaseException e) {
+      e.printStackTrace();
+    }
     formatter = new SimpleDateFormat("EEEE, MMMM d");
   }
 
@@ -72,6 +75,7 @@ public class TenantHomeFragment extends Fragment {
 
     binding = FragmentTenantHomeBinding.inflate(inflater, container, false);
     setListeners();
+
 
     return binding.getRoot();
   }
@@ -285,6 +289,11 @@ public class TenantHomeFragment extends Fragment {
     // Set the requests tenant ID
     request.setTenantId(user.getId());
 
+    // Set the imageUri if it exists
+    if (activity.getTenantViewModel().getImageUri() != null) {
+      request.setImageUri(activity.getTenantViewModel().getImageUri());
+    }
+
     // Add the request to the database
     viewModel.addRequest(request);
 
@@ -393,6 +402,22 @@ public class TenantHomeFragment extends Fragment {
           setupMicrophone();
 
         activity.getSpeechRecognizer().startListening(speechRecognizerIntent);
+      }
+    });
+
+    // Select image from filesystem
+    binding.selectImageButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        // Purge the old imageUri from the viewModel
+        activity.getTenantViewModel().setImageUri(null);
+
+        // Create and launch intent
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.putExtra(Intent.EXTRA_TITLE, "Select Picture");
+        activity.startActivityFromFragment(TenantHomeFragment.this, intent, TenantCoreActivity.PICK_IMAGE);
       }
     });
   }

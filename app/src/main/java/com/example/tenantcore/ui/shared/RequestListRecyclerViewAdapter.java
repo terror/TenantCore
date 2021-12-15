@@ -12,19 +12,32 @@ import com.example.tenantcore.model.Request;
 import com.example.tenantcore.model.Status;
 import com.example.tenantcore.model.Tenant;
 import com.example.tenantcore.ui.TenantCoreActivity;
-import com.example.tenantcore.viewmodel.ObservableModel;
 import com.example.tenantcore.viewmodel.TenantCoreViewModel;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
+/**
+ * {@link RecyclerView.Adapter} that can display a {@link List<Request>} of {@link Request}.
+ */
 public class RequestListRecyclerViewAdapter extends RecyclerView.Adapter<RequestListRecyclerViewAdapter.ViewHolder> {
-  private final RequestListFragment requestListFragment;
-  private Tenant tenant;
-  private List<Request> tenantRequests;
+  private final RequestListFragment requestListFragment;    // The fragment where this recycler view is displayed
+  private final Tenant tenant;    // The tenant whose requests are being shown
+  private List<Request> tenantRequests;   // The requests to show in this recycler view
+
+  // Date format to use for date displaying
+  private final DateFormat DATE_FORMAT = new SimpleDateFormat("EEE MMMM dd, yyyy", Locale.US);
 
   public RequestListRecyclerViewAdapter(RequestListFragment listFragment) {
+    // Set fragment
     this.requestListFragment = listFragment;
+
+    // Set tenant
     TenantCoreActivity activity = (TenantCoreActivity) this.requestListFragment.getActivity();
     this.tenant = activity.getTenantViewModel().getTenant();
+
+    // Set requests
     try {
       this.tenantRequests = activity.getTenantViewModel().getRequestsByTenant(this.tenant);
     } catch (DatabaseException e) {
@@ -60,7 +73,10 @@ public class RequestListRecyclerViewAdapter extends RecyclerView.Adapter<Request
       TenantCoreActivity activity = (TenantCoreActivity) requestListFragment.getActivity();
       if (activity != null) {
 
-        // Update listener for view model
+        /*
+         * The on update listener for the view model.
+         * This listener sets the tenantRequests using the database
+         */
         activity.getTenantViewModel().addOnUpdateListener(item -> {
           try {
             tenantRequests = item.getRequestsByTenant(tenant);
@@ -70,24 +86,38 @@ public class RequestListRecyclerViewAdapter extends RecyclerView.Adapter<Request
         });
       }
 
-      // clicking on a request item in the recycler view
+      /*
+       * On click listener for a request item in the recycler view
+       *
+       * Clicking on a request bring up the bottom sheet with more info on the request
+       */
       this.binding.requestItemConstraintLayout.setOnClickListener(view -> {
         TenantCoreViewModel viewModel = ((TenantCoreActivity) requestListFragment.getActivity()).getTenantViewModel();
 
+        // Check for landlord
         boolean isLandlord = viewModel.findLandlord(viewModel.getSignedInUser()) != null;
+
+        // Layout position will be used to notify change at the right place in the tenantRequests list
         int layoutPosition = getLayoutPosition();
+        int numOfRequests = getItemCount();
+
+        // Create + show bottom sheet
         RequestListBottomSheet requestInfoDialog = new RequestListBottomSheet((TenantCoreActivity) requestListFragment.getActivity(), tenantRequests.get(layoutPosition), isLandlord);
         requestInfoDialog.show();
 
+        // On dismiss listener only if user is landlord
+        // (nothing can be changed in bottom sheet if user is not a landlord)
         if (isLandlord) {
           requestInfoDialog.setOnDismissListener(dialogInterface -> {
             viewModel.notifyChange();
-            notifyItemChanged(layoutPosition);
+            if (getItemCount() < numOfRequests) {
+              notifyItemRemoved(layoutPosition);
+            } else {
+              notifyItemChanged(layoutPosition);
+            }
           });
         }
       });
-
-
     }
 
     public void bind(Request request) {
@@ -101,12 +131,12 @@ public class RequestListRecyclerViewAdapter extends RecyclerView.Adapter<Request
 
       // Set the request due date
       if (request.getDueDate() != null)
-        this.binding.requestDueDateTextView.setText(request.getDueDate().toString());
+        this.binding.requestDueDateTextView.setText(DATE_FORMAT.format(request.getDueDate()));
 
       // Set the request status and color
       if (request.getStatus() != null) {
         this.binding.requestSatusTextView.setText(request.getStatus().name());
-        this.binding.requestSatusTextView.setTextColor(Color.parseColor(getStatusColor(request.getStatus())));
+        this.binding.requestSatusTextView.setTextColor(Color.parseColor(getStatusTextColor(request.getStatus())));
       }
     }
 
@@ -119,7 +149,14 @@ public class RequestListRecyclerViewAdapter extends RecyclerView.Adapter<Request
       return request.getPriority().equals(Priority.HIGH) ? Request.Color.HIGH_PRIORITY_REQUEST : request.getPriority().equals(Priority.MEDIUM) ? Request.Color.MEDIUM_PRIORITY_REQUEST : Request.Color.LOW_PRIORITY_REQUEST;
     }
 
-    private String getStatusColor(Status status) {
+    /**
+     * Gets the Hex color code to be used for the given Status.
+     * The Hex color code indicates the text color of the status.
+     *
+     * @param status Status for which to get the Hex color code
+     * @return String containing the Hex color code indicating the given status' text color
+     */
+    private String getStatusTextColor(Status status) {
       switch (status) {
         case REFUSED:
           return Request.Color.REFUSED_REQUEST;

@@ -48,6 +48,11 @@ public class InviteCode implements Identifiable<Long> {
   }
 
   public Date getExpiry() {
+    if(expiry == null) {
+      Date date = new Date();
+      long oneDayMs = 86400000L;
+      return new Date(date.getTime() + oneDayMs);
+    }
     return expiry;
   }
 

@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.speech.SpeechRecognizer;
 import android.view.Menu;
@@ -14,15 +15,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-
 import com.example.tenantcore.R;
 import com.example.tenantcore.databinding.ActivityTenantCoreBinding;
 import com.example.tenantcore.ui.landlord.home.LandlordHomeFragment;
@@ -32,6 +32,7 @@ import com.example.tenantcore.viewmodel.TenantCoreViewModel;
 public class TenantCoreActivity extends AppCompatActivity {
   public static final String REQUESTS_NOTIFICATION_CHANNEL = "requests-notification-channel";
   public static final String REQUESTS_NOTIFICATION_GROUP = "requests-notifications";
+  public static final int PICK_IMAGE = 1;
 
   private AppBarConfiguration appBarConfiguration;
   private ActivityTenantCoreBinding binding;
@@ -60,6 +61,13 @@ public class TenantCoreActivity extends AppCompatActivity {
     return this.tenantCoreViewModel;
   }
 
+  public void setSpeechRecognizer(SpeechRecognizer speechRecognizer) {
+    this.speechRecognizer = speechRecognizer;
+  }
+
+  public SpeechRecognizer getSpeechRecognizer() {
+    return this.speechRecognizer;
+  }
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -125,10 +133,35 @@ public class TenantCoreActivity extends AppCompatActivity {
     // Display a logout warning if the currently displayed fragment is the tenant home fragment or the landlord home fragment
     Fragment tenantHomeFragment = getSupportFragmentManager().findFragmentByTag(TenantHomeFragment.TAG_NAME);
     Fragment landlordHomeFragment = getSupportFragmentManager().findFragmentByTag(LandlordHomeFragment.TAG_NAME);
-    if ( (tenantHomeFragment == null || tenantHomeFragment.getView() == null) && (landlordHomeFragment == null || landlordHomeFragment.getView() == null))
+    if ((tenantHomeFragment == null || tenantHomeFragment.getView() == null) && (landlordHomeFragment == null || landlordHomeFragment.getView() == null))
       super.onBackPressed();
     else
       displayLogoutWarning();
+  }
+
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    // If they picked an image, set the image uri
+    if (requestCode == PICK_IMAGE) {
+      Uri imageUri = data.getData();
+      tenantCoreViewModel.setImageUri(imageUri);
+    }
+  }
+
+  @Override
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    if (requestCode == RecordAudioRequestCode && grantResults.length > 0) {
+      if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+        Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
+    }
+  }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    speechRecognizer.destroy();
   }
 
   public void displayErrorMessage(String title, String msg) {
@@ -206,7 +239,7 @@ public class TenantCoreActivity extends AppCompatActivity {
 
     // If there is currently a view in focus, hide the keyboard
     if (view != null) {
-      InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+      InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
       imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
   }

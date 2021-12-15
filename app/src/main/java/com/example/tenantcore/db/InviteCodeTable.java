@@ -5,11 +5,9 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
 import com.example.tenantcore.model.InviteCode;
 
 public class InviteCodeTable extends Table<InviteCode> {
-
   private static final String TABLE_NAME = "InviteCode";
   private static final String COLUMN_LANDLORD_ID = "landlord_id";
   private static final String COLUMN_CODE = "code";
@@ -56,8 +54,7 @@ public class InviteCodeTable extends Table<InviteCode> {
       try {
         ContentValues values = toContentValues(element);
         insertId = database.insertOrThrow(super.getName(), null, values);
-      }
-      catch (SQLException e) {
+      } catch (SQLException e) {
         //database.close();
         throw new DatabaseException(e);
       }

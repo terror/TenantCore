@@ -1,6 +1,8 @@
 package com.example.tenantcore.viewmodel;
 
 import android.content.Context;
+import android.net.Uri;
+
 import com.example.tenantcore.db.DatabaseException;
 import com.example.tenantcore.db.TenantCoreDatabaseHandler;
 import com.example.tenantcore.model.InviteCode;
@@ -18,6 +20,7 @@ public class TenantCoreViewModel extends ObservableModel<TenantCoreViewModel> {
   private List<Request> requests;
   private List<InviteCode> inviteCodes;
   private Tenant tenant;
+  private Uri imageUri;
 
   @Override
   protected TenantCoreViewModel get() {
@@ -51,6 +54,14 @@ public class TenantCoreViewModel extends ObservableModel<TenantCoreViewModel> {
 
   public void setTenant(Tenant tenant) {
     this.tenant = tenant;
+  }
+
+  public Uri getImageUri() {
+    return imageUri;
+  }
+
+  public void setImageUri(Uri imageUri) {
+    this.imageUri = imageUri;
   }
 
   // Returns whether or not an invite code exists with the provided code.
@@ -92,7 +103,7 @@ public class TenantCoreViewModel extends ObservableModel<TenantCoreViewModel> {
       return null;
     }
     for (Landlord landlord : landlords) {
-      if (String.valueOf(landlord.getUsername()).equals(username.toLowerCase()))
+      if (landlord.getUsername().equalsIgnoreCase(username))
         return landlord;
     }
     return null;
@@ -100,6 +111,10 @@ public class TenantCoreViewModel extends ObservableModel<TenantCoreViewModel> {
 
   public void addTenant(Tenant tenant) throws DatabaseException {
     dbHandler.getTenantTable().create(tenant);
+  }
+
+  public boolean updateTenant(Tenant tenant) throws DatabaseException {
+    return dbHandler.getTenantTable().update(tenant);
   }
 
   public void addLandlord(Landlord landlord) throws DatabaseException {
@@ -122,6 +137,10 @@ public class TenantCoreViewModel extends ObservableModel<TenantCoreViewModel> {
     return dbHandler.getRequestTable().update(request);
   }
 
+  public boolean remoteTenantRequest(Request request) throws DatabaseException {
+    return dbHandler.getRequestTable().delete(request);
+  }
+
   public List<Request> getRequestsByTenant(Tenant tenant) throws DatabaseException {
     List<Request> allRequests = dbHandler.getRequestTable().readAll();
 
@@ -139,7 +158,6 @@ public class TenantCoreViewModel extends ObservableModel<TenantCoreViewModel> {
       .filter((tenant) -> tenant.getLandlordId().equals(landlord.getId()))
       .collect(Collectors.toList());
   }
-
   public void removeInviteCode(InviteCode inviteCode) throws DatabaseException {
     dbHandler.getInviteCodeTable().delete(inviteCode);
   }

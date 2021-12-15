@@ -3,16 +3,13 @@ package com.example.tenantcore.db;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
 import androidx.annotation.Nullable;
-
 import com.example.tenantcore.model.InviteCode;
 import com.example.tenantcore.model.Landlord;
 import com.example.tenantcore.model.Request;
 import com.example.tenantcore.model.Tenant;
 
 public class TenantCoreDatabaseHandler extends SQLiteOpenHelper {
-
   public static final String DATABASE_FILE_NAME = "tenantcore.db";
   public static final int DATABASE_VERSION = 1;
 
@@ -34,21 +31,17 @@ public class TenantCoreDatabaseHandler extends SQLiteOpenHelper {
     try {
       TenantCorePlaceholders.loadLandLord();
       TenantCorePlaceholders.loadTenantRequests();
-
       inviteCodeTable.createTable(database);
       landlordTable.createTable(database);
       tenantTable.createTable(database);
       requestTable.createTable(database);
-
     } catch (DatabaseException e) {
       System.err.println("Database table creation exception.");
     }
   }
 
   @Override
-  public void onUpgrade(SQLiteDatabase database, int i, int i1) {
-
-  }
+  public void onUpgrade(SQLiteDatabase database, int i, int i1) {}
 
   public Table<Tenant> getTenantTable() {
     return tenantTable;

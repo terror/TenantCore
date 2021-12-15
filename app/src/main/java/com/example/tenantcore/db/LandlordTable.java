@@ -5,12 +5,9 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
-import com.example.tenantcore.model.InviteCode;
 import com.example.tenantcore.model.Landlord;
 
 public class LandlordTable extends Table<Landlord> {
-
   private static final String TABLE_NAME = "Landlord";
   private static final String COLUMN_USERNAME = "username";
   private static final String COLUMN_NAME = "name";
@@ -57,8 +54,7 @@ public class LandlordTable extends Table<Landlord> {
       try {
         ContentValues values = toContentValues(element);
         insertId = database.insertOrThrow(super.getName(), null, values);
-      }
-      catch (SQLException e) {
+      } catch (SQLException e) {
         throw new DatabaseException(e);
       }
 
