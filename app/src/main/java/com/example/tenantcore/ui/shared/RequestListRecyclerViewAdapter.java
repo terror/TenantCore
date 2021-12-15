@@ -63,7 +63,7 @@ public class RequestListRecyclerViewAdapter extends RecyclerView.Adapter<Request
 
   public class ViewHolder extends RecyclerView.ViewHolder {
 
-    private ListItemRequestBinding binding;
+    private final ListItemRequestBinding binding;
     private Request request;
 
     public ViewHolder(ListItemRequestBinding binding) {

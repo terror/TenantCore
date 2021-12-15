@@ -41,7 +41,7 @@ public abstract class ObservableModel<T> {
         }
     }
 
-    private List<LifecycleListener<T>> lifecycleListeners;
+    private final List<LifecycleListener<T>> lifecycleListeners;
 
     /**
      * Create an new observable model.
